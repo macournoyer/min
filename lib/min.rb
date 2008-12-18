@@ -1,0 +1,3 @@
+module Min
+  
+end
