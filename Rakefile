@@ -1,4 +1,7 @@
-GENERATED_PARSER = "lib/min/parser.rb"
+require "rake/clean"
+
+GENERATED_PARSER = "lib/min/generated_parser.rb"
+CLOBBER.include GENERATED_PARSER
 
 file GENERATED_PARSER => "lib/parser.y" do |t|
   if ENV['DEBUG']

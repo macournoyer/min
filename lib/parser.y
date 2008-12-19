@@ -1,4 +1,4 @@
-class Min::Parser
+class Min::GeneratedParser
 
 /* literals */
 token NIL TRUE FALSE
