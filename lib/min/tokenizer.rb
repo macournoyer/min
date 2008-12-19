@@ -1,13 +1,21 @@
-# See http://www.secnetix.de/~olli/Python/block_indentation.hawk "How does the compiler parse the indentation?"
 module Min
+  # Indentation sensitive-Python-like tokenizer.
+  # Based on http://www.secnetix.de/~olli/Python/block_indentation.hawk,
+  #          "How does the compiler parse the indentation?"
   class Tokenizer
     class Matcher < Struct.new(:name, :pattern, :block); end
+    
+    class Token < Struct.new(:name, :value)
+      def inspect
+        "<#{name}:#{value.inspect}>"
+      end
+    end
     
     def initialize
       @matchers = []
       
       # Rules declaration
-    
+      
       keyword :if
       keyword :else
       keyword :true
@@ -17,30 +25,38 @@ module Min
       keyword :block, ":"
       keyword :cmp, "=="
       keyword :eq,  "="
-    
+      
       token :INDENT, /\A\n(\s+)/m do |_, level|
         indent = level.size
         if indent > @indent
-          [:INDENT, @indent = level.size]
+          @indents.push(indent)
+          @indent = indent
+          Token.new(:INDENT, indent)
         elsif indent < @indent
-          [:DEDENT, @indent = @indent - level.size]
+          @indent = indent
+          Token.new(:DEDENT, @indents.pop)
         end
       end
-
+      
       token :DEDENT, /\A\n/m do |value|
-        unless @indent == 0
-          indent  = @indent
-          @indent = 0
-          [:DEDENT, indent]
+        tokens = @indents.map do |indent|
+          Token.new(:DEDENT, indent)
         end
+        @indent = 0
+        @indents.clear
+        tokens
       end
-    
-      token :NUMBER, /\A\d+/ do |value|
-        [:NUMBER, value.to_i]
+      
+      token :NUMBER, /\A\d+(?:\.\d+)?/ do |value|
+        Token.new(:NUMBER, eval(value))
       end
-    
+      
+      token :STRING, /\A\"(.*?)\"/ do |_, value|
+        Token.new(:STRING, value)
+      end
+      
       token :ID, /\A\w+/ do |value|
-        [:ID, value]
+        Token.new(:ID, value)
       end
 
       token :SPACE, /\A\s+/
@@ -50,12 +66,13 @@ module Min
       @tokens  = []
       @nparsed = 0
       @indent  = 0
+      @indents = []
       
       while @nparsed < string.size
         @matchers.each do |matcher|
           if matches = matcher.pattern.match(string[@nparsed..-1])
             if token = matcher.block.call(*matches)
-              @tokens << token
+              @tokens += [token].flatten
             end
             @nparsed += matches[0].size
             break
@@ -74,7 +91,7 @@ module Min
       def keyword(name, pattern=name)
         token_name = name.to_s.upcase.to_sym
         token token_name, /\A#{pattern}/ do |value|
-          [token_name, value]
+          Token.new(token_name, value)
         end
       end
       
@@ -89,9 +106,8 @@ if foo:
 else:
   print foo
 EOS
-  
   tokens.each do |token|
-    puts if [:INDENT, :DEDENT].include?(token.first)
+    puts if [:INDENT, :DEDENT].include?(token.name)
     print token.inspect, " "
   end
 end
