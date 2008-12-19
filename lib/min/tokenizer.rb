@@ -80,7 +80,7 @@ module Min
         end
       end
       
-      @tokens
+      @tokens.map { |t| t.to_a }
     end
     
     private
@@ -95,19 +95,5 @@ module Min
         end
       end
       
-  end
-end
-
-if __FILE__ == $PROGRAM_NAME
-  tokens = Min::Tokenizer.new.tokenize(<<-EOS)
-if foo:
-  if bar:
-    x = 42
-else:
-  print foo
-EOS
-  tokens.each do |token|
-    puts if [:INDENT, :DEDENT].include?(token.name)
-    print token.inspect, " "
   end
 end

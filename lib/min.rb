@@ -1,3 +1,2 @@
-module Min
-  
-end
+require "min/tokenizer"
+require "min/parser"

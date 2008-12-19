@@ -3,19 +3,13 @@ class Min::GeneratedParser
 /* literals */
 token NIL TRUE FALSE
 
-/* keywords */
-token BLOCK
-
 /* Terminal types */
-/* token REGEXP */
+token BLOCK
 token NUMBER
 token STRING
 token IDENT
-
-/* precedance table */
-/* prechigh
-  nonassoc ELSE
-preclow */
+token DEDENT
+token ID
 
 rule
   SourceElement:
