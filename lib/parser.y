@@ -13,7 +13,10 @@ token ID
 
 rule
   SourceElement:
-    NIL
+    NIL | Number
   ;
-
+  
+  Number:
+    NUMBER
+  ;
 end

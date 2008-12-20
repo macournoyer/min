@@ -1,19 +1,23 @@
-require "min/generated_parser"
+require "generated_parser"
+require "tokenizer"
 
 module Min
   class Parser < GeneratedParser
     def initialize
       @tokens = []
-      @logger = nil
-      @terminator = false
-      @prev_token = nil
-      @comments = []
     end
 
     def parse(string)
-      @tokens = TOKENIZER.tokenize(string)
-      @position = 0
+      @tokens = Tokenizer.new.tokenize(string)
       do_parse
     end
+    
+    def next_token
+      @tokens.pop
+    end
   end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  puts Min::Parser.new.parse("4").inspect
 end
