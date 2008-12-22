@@ -1,13 +1,13 @@
-items = [1, 2, 3, 4]
+items = 1..4 # => [1, 2, 3, 4]
 
 items.each:
   print it
 
-items.each: i, y| print i
+items.each: i, y | print i
+items.each { i, y | print i }
 
-items.map: i|
+items.map: i |
   i * 2
-.compact
-.join("\n")
+.join "\n"
 
-items.map:{ i | i * 2 }.compact.join("\n")
+items.map{ it * 2 }.join("\n")

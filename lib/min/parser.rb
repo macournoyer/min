@@ -1,3 +1,4 @@
+$: << File.dirname(__FILE__) + "/.."
 require "generated_parser"
 require "tokenizer"
 
@@ -13,11 +14,11 @@ module Min
     end
     
     def next_token
-      @tokens.pop
+      @tokens.shift || [false, false]
     end
   end
 end
 
 if __FILE__ == $PROGRAM_NAME
-  puts Min::Parser.new.parse("4").inspect
+  puts Min::Parser.new.parse(%Q{print "ohaie"}).inspect
 end
