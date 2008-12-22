@@ -1,0 +1,15 @@
+def add: x, y|
+  x + y
+
+add(1, 2) # => 3
+add 1, 2 # => 3
+
+method(:add).code # => "x + y"
+method(:add).args # => [:x, :y]
+
+def holy_method: x, &block, *many, &end_block|
+  print x, block, many, end_block
+
+holy_method 1, x+1, 2, 3:
+  y+2
+# => 1, <Block:"x+1">, [2, 3], <Block:"y+2">

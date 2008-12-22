@@ -12,11 +12,18 @@ token DEDENT
 token ID
 
 rule
-  SourceElement:
-    NIL | Number
+  Script:
+    Statement
   ;
   
-  Number:
-    NUMBER
+  Statement:
+    Literal
+  ;
+  
+  Literal:
+    NIL
+  | NUMBER
+  | STRING
+  ! ID
   ;
 end

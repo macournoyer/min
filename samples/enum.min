@@ -1,0 +1,13 @@
+items = [1, 2, 3, 4]
+
+items.each:
+  print it
+
+items.each: i, y| print i
+
+items.map: i|
+  i * 2
+.compact
+.join("\n")
+
+items.map:{ i | i * 2 }.compact.join("\n")
