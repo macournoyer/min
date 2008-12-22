@@ -10,13 +10,15 @@ describe Min::Tokenizer do
 if foo:
   if bar:
     x = 42
+    y = x
 else:
   print foo
 EOS
     tokens.should == [
       [:IF, "if"], [:ID, "foo"], [:BLOCK, ":"],
       [:INDENT, 2], [:IF, "if"], [:ID, "bar"], [:BLOCK, ":"],
-      [:INDENT, 4], [:ID, "x"], [:EQ, "="], [:NUMBER, 42],
+      [:INDENT, 4], [:ID, "x"], [:EQ, "="], [:NUMBER, 42], [:SEP, "\n"],
+                    [:ID, "y"], [:EQ, "="], [:ID, "x"],
       [:DEDENT, 2], [:DEDENT, 4], [:ELSE, "else"], [:BLOCK, ":"],
       [:INDENT, 2], [:ID, "print"], [:ID, "foo"],
       [:DEDENT, 2]

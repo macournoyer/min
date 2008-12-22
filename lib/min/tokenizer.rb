@@ -35,6 +35,8 @@ module Min
         elsif indent < @indent
           @indent = indent
           Token.new(:DEDENT, @indents.pop)
+        else
+          Token.new(:SEP, "\n")
         end
       end
       
@@ -45,6 +47,10 @@ module Min
         @indent = 0
         @indents.clear
         tokens
+      end
+      
+      token :SEP, /\A;+/ do |value|
+        Token.new(:SEP, value)
       end
       
       token :NUMBER, /\A\d+(?:\.\d+)?/ do |value|
@@ -58,7 +64,8 @@ module Min
       token :ID, /\A\w+/ do |value|
         Token.new(:ID, value)
       end
-
+      
+      # Ignored tokens
       token :SPACE, /\A\s+/
     end
     

@@ -4,6 +4,7 @@ module Min
       Struct.new(*args)
     end
 
+    class Block < NodeClass(:nodes); end
     class Call < NodeClass(:message, :arguments); end
     
     class String < NodeClass(:value); end

@@ -1,2 +1,2 @@
 require "min/tokenizer"
-require "min/parser"
+# require "min/parser"

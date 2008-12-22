@@ -7,7 +7,7 @@ token NIL TRUE FALSE
 token BLOCK
 token NUMBER
 token STRING
-token IDENT
+token INDENT
 token DEDENT
 token ID
 
@@ -18,8 +18,8 @@ rule
   ;
   
   Statements:
-    Statement
-  | Statements Statement
+    Statement            { result = Block.new([val[0]]) }
+  | Statements Statement { result = Block.new([val[1], val[2]].flatten) }
   ;
 
   Statement:
