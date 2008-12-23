@@ -20,7 +20,6 @@ module Min
       keyword :false
       keyword :nil
       
-      keyword :block, ":"
       keyword :eq,  "=="
       keyword :lt,  "<"
       keyword :gt,  ">"
@@ -47,11 +46,8 @@ module Min
         end
         @indent = 0
         @indents.clear
-        if tokens.empty?
-          Token.new(:SEP, "\n")
-        else
-          tokens
-        end
+        tokens << Token.new(:SEP, "\n")
+        tokens
       end
       
       token :SEP, /\A;+/ do |value|
@@ -121,11 +117,8 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   puts Min::Tokenizer.new.tokenize(<<-EOS).inspect
-x = 1
-
-
-print    "ohaie"
-
-
+if true:
+  print "ohaie"
+1
 EOS
 end

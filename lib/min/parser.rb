@@ -10,6 +10,7 @@ module Min
 
     def parse(string)
       @tokens = Tokenizer.new.tokenize(string)
+      puts @tokens.inspect
       do_parse
     end
     
@@ -21,7 +22,8 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   puts Min::Parser.new.parse(<<-EOS).inspect
-if x == 1:
+if true:
   print "ohaie"
+1
 EOS
 end

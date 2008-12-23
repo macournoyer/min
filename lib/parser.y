@@ -4,7 +4,6 @@ class Min::GeneratedParser
 token NIL TRUE FALSE
 
 /* Terminal types */
-token BLOCK
 token NUMBER
 token STRING
 token INDENT
@@ -26,7 +25,6 @@ rule
   Statement:
     Call
   | Assign
-  | Var
   | Literal
   ;
   
@@ -39,20 +37,21 @@ rule
   ;
   
   Call:
-    ID ArgList { result = Call.new(val[0], val[1]) }
+  | ID ArgList          { result = Call.new(val[0], val[1], nil) }
+  | ID ArgList ':'
+      INDENT Statements
+      DEDENT            { result = Call.new(val[0], val[1], val[4]) }
   ;
 
   Assign:
-    Var '=' Statement { result = Assign.new(val[0], val[2]) }
-  ;
-
-  Var:
-    ID { result = Var.new(val[0]) }
+    ID '=' Statement { result = Assign.new(val[0], val[2]) }
   ;
   
   ArgList:
-    Statement             { result = [val[0]] }
+    /* nothing */         { result = [] }
+  | Statement             { result = [val[0]] }
   | Statement "," ArgList { result = [val[1], val[2]].flatten }
+  | '(' ArgList ')'       { result = val[1] }
   ;
 end
 
