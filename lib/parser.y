@@ -9,6 +9,7 @@ token NUMBER
 token STRING
 token INDENT
 token DEDENT
+token SEP
 token ID
 
 rule
@@ -18,13 +19,15 @@ rule
   ;
   
   Statements:
-    Statement            { result = Block.new([val[0]]) }
-  | Statements Statement { result = Block.new([val[1], val[2]].flatten) }
+    Statement                { result = Block.new([val[0]]) }
+  | Statements SEP Statement { result = Block.new([val[0].nodes, val[2]].flatten) }
   ;
 
   Statement:
-    Literal
-  | Call
+    Call
+  | Assign
+  | Var
+  | Literal
   ;
   
   Literal:
@@ -37,6 +40,14 @@ rule
   
   Call:
     ID ArgList { result = Call.new(val[0], val[1]) }
+  ;
+
+  Assign:
+    Var '=' Statement { result = Assign.new(val[0], val[2]) }
+  ;
+
+  Var:
+    ID { result = Var.new(val[0]) }
   ;
   
   ArgList:

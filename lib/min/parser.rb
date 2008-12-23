@@ -20,5 +20,10 @@ module Min
 end
 
 if __FILE__ == $PROGRAM_NAME
-  puts Min::Parser.new.parse(%Q{print "ohaie"}).inspect
+  puts Min::Parser.new.parse(<<-EOS).inspect
+x = 1
+
+
+print "ohaie"
+EOS
 end

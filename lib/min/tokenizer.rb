@@ -23,10 +23,13 @@ module Min
       keyword :nil
       
       keyword :block, ":"
-      keyword :cmp, "=="
-      keyword :eq,  "="
+      keyword :eq,  "=="
+      keyword :lt,  "<"
+      keyword :gt,  ">"
+      keyword :let,  "<="
+      keyword :get,  ">="
       
-      token :INDENT, /\A\n(\s+)/m do |_, level|
+      token :INDENT, /\A\n([ \t]+)/m do |v, level|
         indent = level.size
         if indent > @indent
           @indents.push(indent)
@@ -40,13 +43,17 @@ module Min
         end
       end
       
-      token :DEDENT, /\A\n/m do |value|
+      token :DEDENT, /\A\n+/m do |value|
         tokens = @indents.map do |indent|
           Token.new(:DEDENT, indent)
         end
         @indent = 0
         @indents.clear
-        tokens
+        if tokens.empty?
+          Token.new(:SEP, "\n")
+        else
+          tokens
+        end
       end
       
       token :SEP, /\A;+/ do |value|
@@ -67,6 +74,10 @@ module Min
       
       # Ignored tokens
       token :SPACE, /\A\s+/
+      
+      token :CHAR, /\A./ do |value|
+        Token.new(value, value)
+      end
     end
     
     def tokenize(string)
@@ -87,6 +98,10 @@ module Min
         end
       end
       
+      # cleanup
+      @tokens.shift while @tokens.first.name == :SEP
+      @tokens.pop while @tokens.last.name == :SEP
+      
       @tokens.map { |t| t.to_a }
     end
     
@@ -103,4 +118,16 @@ module Min
       end
       
   end
+end
+
+
+if __FILE__ == $PROGRAM_NAME
+  puts Min::Tokenizer.new.tokenize(<<-EOS).inspect
+x = 1
+
+
+print    "ohaie"
+
+
+EOS
 end
