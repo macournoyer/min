@@ -1,5 +1,4 @@
 require File.dirname(__FILE__) + "/spec_helper"
-require "min/tokenizer"
 
 describe Min::Tokenizer do
   before do
@@ -20,7 +19,7 @@ EOS
       [:INDENT, 2], [:ID, "if"], [:ID, "bar"], [":", ":"],
       [:INDENT, 4], [:ID, "x"], ["=", "="], [:NUMBER, 42], [:SEP, "\n"],
                     [:ID, "y"], ["=", "="], [:ID, "x"],
-      [:DEDENT, 2], [:DEDENT, 4], [:ID, "else"], [":", ":"],
+      [:DEDENT, 2], [:DEDENT, 4], [:SEP, "\n"], [:ID, "else"], [":", ":"],
       [:INDENT, 2], [:ID, "print"], [:ID, "foo"],
       [:DEDENT, 2]
     ]

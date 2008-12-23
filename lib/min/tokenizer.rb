@@ -113,12 +113,3 @@ module Min
       
   end
 end
-
-
-if __FILE__ == $PROGRAM_NAME
-  puts Min::Tokenizer.new.tokenize(<<-EOS).inspect
-if true:
-  print "ohaie"
-1
-EOS
-end

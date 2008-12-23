@@ -7,7 +7,6 @@ module Min
     class Block < NodeClass(:nodes); end
     class Call < NodeClass(:message, :arguments, :block); end
     class Assign < NodeClass(:var, :value); end
-    class Var < NodeClass(:name); end
     
     class String < NodeClass(:value); end
     class Number < NodeClass(:value); end

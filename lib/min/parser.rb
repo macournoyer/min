@@ -1,7 +1,3 @@
-$: << File.dirname(__FILE__) + "/.."
-require "generated_parser"
-require "tokenizer"
-
 module Min
   class Parser < GeneratedParser
     def initialize
@@ -10,7 +6,6 @@ module Min
 
     def parse(string)
       @tokens = Tokenizer.new.tokenize(string)
-      puts @tokens.inspect
       do_parse
     end
     
@@ -18,12 +13,4 @@ module Min
       @tokens.shift || [false, false]
     end
   end
-end
-
-if __FILE__ == $PROGRAM_NAME
-  puts Min::Parser.new.parse(<<-EOS).inspect
-if true:
-  print "ohaie"
-1
-EOS
 end

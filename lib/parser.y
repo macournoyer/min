@@ -37,10 +37,15 @@ rule
   ;
   
   Call:
-  | ID ArgList          { result = Call.new(val[0], val[1], nil) }
-  | ID ArgList ':'
+    ID ArgList       { result = Call.new(val[0], val[1], nil) }
+  | ID ArgList Block { result = Call.new(val[0], val[1], val[2]) }
+  ;
+  
+  Block:
+    ':'
       INDENT Statements
-      DEDENT            { result = Call.new(val[0], val[1], val[4]) }
+      DEDENT            { result = val[2] }
+  | '{' Statements '}'  { result = val[1] }
   ;
 
   Assign:
@@ -50,7 +55,7 @@ rule
   ArgList:
     /* nothing */         { result = [] }
   | Statement             { result = [val[0]] }
-  | Statement "," ArgList { result = [val[1], val[2]].flatten }
+  | Statement "," ArgList { result = [val[0], val[2]].flatten }
   | '(' ArgList ')'       { result = val[1] }
   ;
 end
