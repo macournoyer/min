@@ -5,7 +5,7 @@ module Min
     end
 
     class Block < NodeClass(:nodes); end
-    class Call < NodeClass(:message, :arguments, :receiver, :block); end
+    class Call < NodeClass(:receiver, :message, :arguments); end
     class Assign < NodeClass(:var, :value); end
     
     class String < NodeClass(:value); end
