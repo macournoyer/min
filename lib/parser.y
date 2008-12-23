@@ -16,9 +16,9 @@ prechigh
 preclow
 
 rule
-  Script:
-    /* nothing */
-  | Statements
+  Root:
+    /* nothing */ { result = Tree.new([]) }
+  | Statements    { result = Tree.new(val[0].nodes) }
   ;
   
   Statements:

@@ -4,6 +4,7 @@ module Min
       Struct.new(*args)
     end
 
+    class Tree < NodeClass(:nodes); end
     class Block < NodeClass(:nodes); end
     class Call < NodeClass(:receiver, :message, :arguments); end
     class Assign < NodeClass(:var, :value); end
