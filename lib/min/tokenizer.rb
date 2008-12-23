@@ -16,8 +16,6 @@ module Min
       
       # Rules declaration
       
-      keyword :if
-      keyword :else
       keyword :true
       keyword :false
       keyword :nil

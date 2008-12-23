@@ -21,9 +21,7 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   puts Min::Parser.new.parse(<<-EOS).inspect
-x = 1
-
-
-print "ohaie"
+if x == 1:
+  print "ohaie"
 EOS
 end
