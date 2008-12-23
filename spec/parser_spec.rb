@@ -28,4 +28,12 @@ describe Min::Parser do
   it_should_parse %{x(1)}, :as => [N::Call.new("x", [N::Number.new(1)], nil)]
   it_should_parse %{x(1, "1")}, :as => [N::Call.new("x", [N::Number.new(1), N::String.new("1")], nil)]
   it_should_parse %{x 1, "1"}, :as => [N::Call.new("x", [N::Number.new(1), N::String.new("1")], nil)]
+  it_should_parse %{x:\n  1\n}, :as => [N::Call.new("x", [], N::Block.new(
+                                                               [N::Number.new(1)]
+                                                             ))]
+  it_should_parse %{x(1):\n  1\n  2\n}, :as => [N::Call.new("x", [N::Number.new(1)], N::Block.new(
+                                                                   [N::Number.new(1), N::Number.new(2)]
+                                                                 ))]
+  it_should_parse %{x:\n  1\n2\n}, :as => [N::Call.new("x", [], N::Block.new([N::Number.new(1)])),
+                                           N::Number.new(2)]
 end
