@@ -11,6 +11,10 @@ token DEDENT
 token SEP
 token ID
 
+prechigh
+  nonassoc EQ
+preclow
+
 rule
   Script:
     /* nothing */
@@ -41,6 +45,8 @@ rule
   | ID ArgList Block               { result = Call.new(nil, val[0], val[1] << val[2]) }
   | Statement '.' ID ArgList       { result = Call.new(val[0], val[2], val[3]) }
   | Statement '.' ID ArgList Block { result = Call.new(val[0], val[2], val[3] << val[4]) }
+  | Statement '.' ID '=' Statement { result = Call.new(val[0], val[2] + "=", [val[4]]) }
+  | Statement EQ Statement         { result = Call.new(val[0], "==", [val[2]]) }
   ;
   
   Block:
@@ -51,7 +57,7 @@ rule
   ;
 
   Assign:
-    ID '=' Statement                { result = Assign.new(val[0], val[2]) }
+    ID '=' Statement { result = Assign.new(val[0], val[2]) }
   ;
   
   ArgList:

@@ -20,7 +20,6 @@ describe Min::Parser do
   
   # Assign
   it_should_parse %{x = 1}, :as => [N::Assign.new("x", N::Number.new(1))]
-  # it_should_parse %{a.x = 1}, :as => [N::Assign.new("x", N::Number.new(1))]
   
   # Call
   it_should_parse %{x}, :as => [N::Call.new(nil, "x", [])]
@@ -39,9 +38,13 @@ describe Min::Parser do
   it_should_parse %{x:\n  1\n2\n}, :as => [N::Call.new(nil, "x", [N::Block.new([N::Number.new(1)])]),
                                            N::Number.new(2)]
   
-  # Object
+  # Object calls
   it_should_parse %{1.x}, :as => [N::Call.new(N::Number.new(1), "x", [])]
   it_should_parse %{x.y}, :as => [N::Call.new(N::Call.new(nil, "x", []), "y", [])]
   it_should_parse %{1.x.y}, :as => [N::Call.new(N::Call.new(N::Number.new(1), "x", []),
                                                 "y", [])]
+  
+  # Special object calls
+  it_should_parse %{a.x = 1}, :as => [N::Call.new(N::Call.new(nil, "a", []), "x=", [N::Number.new(1)])]
+  it_should_parse %{x == 1}, :as => [N::Call.new(N::Call.new(nil, "x", []), "==", [N::Number.new(1)])]
 end
