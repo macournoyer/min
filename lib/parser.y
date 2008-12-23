@@ -37,8 +37,10 @@ rule
   ;
   
   Call:
-    ID ArgList       { result = Call.new(val[0], val[1], nil) }
-  | ID ArgList Block { result = Call.new(val[0], val[1], val[2]) }
+    ID ArgList                     { result = Call.new(val[0], val[1], nil, nil) }
+  | ID ArgList Block               { result = Call.new(val[0], val[1], nil, val[2]) }
+  | Statement '.' ID ArgList       { result = Call.new(val[2], val[3], val[0], nil) }
+  | Statement '.' ID ArgList Block { result = Call.new(val[0], val[1], nil, val[2]) }
   ;
   
   Block:
@@ -49,7 +51,7 @@ rule
   ;
 
   Assign:
-    ID '=' Statement { result = Assign.new(val[0], val[2]) }
+    ID '=' Statement                { result = Assign.new(val[0], val[2]) }
   ;
   
   ArgList:

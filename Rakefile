@@ -1,6 +1,8 @@
 require "rake/clean"
 require "spec/rake/spectask"
 
+CLEAN.include "**/*.out", "**/*.output"
+
 GENERATED_PARSER = "lib/min/generated_parser.rb"
 CLOBBER.include GENERATED_PARSER
 
