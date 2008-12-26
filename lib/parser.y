@@ -14,21 +14,21 @@ token EQ ADD REM
 
 rule
   Root:
-    /* nothing */ { result = Block.new([]) }
+    /* nothing */ { result = Block.new }
   | Statements
   ;
   
   Statements:
     Statement                { result = Block.new([val[0]]) }
-  | Statements SEP Statement { result = Block.new([val[0].nodes, val[2]].flatten) }
+  | Statements SEP Statement { result = Block.new([val[0].objects, val[2]].flatten) }
   ;
 
   Statement:
     Call
   | Assign
   | Literal
-  | ConstSet
-  | ConstGet
+  | Constant
+  | AssignConstant
   ;
   
   Literal:
@@ -62,12 +62,12 @@ rule
     ID '=' Statement { result = Assign.new(val[0], val[2]) }
   ;
 
-  ConstSet:
-    CONST '=' Statement { result = ConstSet.new(val[0], val[2]) }
+  AssignConstant:
+    CONST '=' Statement { result = AssignConstant.new(val[0], val[2]) }
   ;
   
-  ConstGet:
-    CONST { result = ConstGet.new(val[0]) }
+  Constant:
+    CONST { result = Constant.new(val[0]) }
   ;
   
   ArgList:
@@ -77,9 +77,3 @@ rule
   | '(' ArgList ')'       { result = val[1] }
   ;
 end
-
----- header
-  require "min/nodes"
-
----- inner
-  include Min::Nodes
