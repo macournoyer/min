@@ -8,7 +8,7 @@ module Min
     class Block < NodeClass(:nodes); end
     class Tree < Block; end
     class Call < NodeClass(:receiver, :message, :arguments); end
-    class Assign < NodeClass(:var, :value); end
+    class Assign < NodeClass(:name, :value); end
     class ConstSet < NodeClass(:name, :value); end
     class ConstGet < NodeClass(:name); end
     

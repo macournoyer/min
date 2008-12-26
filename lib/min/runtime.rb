@@ -18,5 +18,10 @@ module Min
 end
 
 if __FILE__ == $PROGRAM_NAME
-  Min::Runtime.new.eval(%{def "ohaie":\n  puts "ohaie"\nohaie;ohaie\n})
+  Min::Runtime.new.eval(<<-EOS)
+def "print_x":
+  x = "ohaie"
+  puts x
+print_x
+EOS
 end
