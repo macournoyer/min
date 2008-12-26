@@ -16,7 +16,6 @@ describe Min::Parser do
   # Literals
   it_should_parse %{1}, :as => [N::Number.new(1)]
   it_should_parse %{"ohaie"}, :as => [N::String.new("ohaie")]
-  it_should_parse %{true}, :as => [N::True.new("true")]
   
   # Assign
   it_should_parse %{x = 1}, :as => [N::Assign.new("x", N::Number.new(1))]

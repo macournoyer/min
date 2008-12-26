@@ -3,7 +3,7 @@ module Min
   # Based on http://www.secnetix.de/~olli/Python/block_indentation.hawk,
   #          "How does the compiler parse the indentation?"
   class Tokenizer
-    class Matcher < Struct.new(:name, :pattern, :block); end
+    class Matcher < Struct.new(:pattern, :block); end
     
     class Token < Struct.new(:name, :value)
       def inspect
@@ -16,19 +16,15 @@ module Min
       
       # Rules declaration
       
-      keyword :true
-      keyword :false
-      keyword :nil
+      operator :eq,  "=="
+      operator :add, "+"
+      operator :rem, "-"
+      operator :lt,  "<"
+      operator :gt,  ">"
+      operator :let, "<="
+      operator :get, ">="
       
-      keyword :eq,  "=="
-      keyword :add, "+"
-      keyword :rem, "-"
-      keyword :lt,  "<"
-      keyword :gt,  ">"
-      keyword :let, "<="
-      keyword :get, ">="
-      
-      token :INDENT, /\A\n([ \t]+)/m do |v, level|
+      token(/\A\n([ \t]+)/m) do |v, level|
         indent = level.size
         if indent > @indent
           @indents.push(indent)
@@ -42,7 +38,7 @@ module Min
         end
       end
       
-      token :DEDENT, /\A\n+/m do |value|
+      token(/\A\n+/m) do |value|
         tokens = @indents.map do |indent|
           Token.new(:DEDENT, indent)
         end
@@ -52,26 +48,25 @@ module Min
         tokens
       end
       
-      token :SEP, /\A;+/ do |value|
+      token(/\A;+/) do |value|
         Token.new(:SEP, value)
       end
       
-      token :NUMBER, /\A\d+(?:\.\d+)?/ do |value|
+      token(/\A\d+(?:\.\d+)?/) do |value|
         Token.new(:NUMBER, eval(value))
       end
       
-      token :STRING, /\A\"(.*?)\"/ do |_, value|
+      token(/\A\"(.*?)\"/) do |_, value|
         Token.new(:STRING, value)
       end
       
-      token :ID, /\A\w+/ do |value|
+      token(/\A\w+/) do |value|
         Token.new(:ID, value)
       end
       
-      # Ignored tokens
-      token :SPACE, /\A\s+/
+      token(/\A\s+/) # Ignore spaces
       
-      token :CHAR, /\A./ do |value|
+      token(/\A./) do |value|
         Token.new(value, value)
       end
     end
@@ -102,14 +97,13 @@ module Min
     end
     
     private
-      def token(name, pattern, &block)
-        @matchers << Matcher.new(name, pattern, block || proc { nil })
+      def token(pattern, &block)
+        @matchers << Matcher.new(pattern, block || proc { nil })
       end
 
-      def keyword(name, pattern=name)
-        token_name = name.to_s.upcase.to_sym
-        token token_name, /\A#{Regexp.escape(pattern.to_s)}/ do |value|
-          Token.new(token_name, value)
+      def operator(name, pattern=name)
+        token(/\A#{Regexp.escape(pattern.to_s)}/) do |value|
+          Token.new(name.to_s.upcase.to_sym, value)
         end
       end
       
