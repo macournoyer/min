@@ -47,4 +47,5 @@ describe Min::Parser do
   # Special object calls
   it_should_parse %{a.x = 1}, :as => [N::Call.new(N::Call.new(nil, "a", []), "x=", [N::Number.new(1)])]
   it_should_parse %{x == 1}, :as => [N::Call.new(N::Call.new(nil, "x", []), "==", [N::Number.new(1)])]
+  it_should_parse %{x + 1}, :as => [N::Call.new(N::Call.new(nil, "x", []), "+", [N::Number.new(1)])]
 end

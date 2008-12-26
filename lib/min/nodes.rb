@@ -3,16 +3,42 @@ module Min
     def self.NodeClass(*args)
       Struct.new(*args)
     end
-
-    class Tree < NodeClass(:nodes); end
+    
+    # Constructs
     class Block < NodeClass(:nodes); end
+    class Tree < Block; end
     class Call < NodeClass(:receiver, :message, :arguments); end
     class Assign < NodeClass(:var, :value); end
     
-    class String < NodeClass(:value); end
-    class Number < NodeClass(:value); end
-    class False < NodeClass(:value); end
-    class True < NodeClass(:value); end
-    class Nil < NodeClass(:value); end
+    # Literals
+    class String < NodeClass(:value)
+      def to_ruby
+        value
+      end
+    end
+    
+    class Number < NodeClass(:value)
+      def to_ruby
+        value
+      end
+    end
+    
+    class False < NodeClass(:value)
+      def to_ruby
+        false
+      end
+    end
+    
+    class True < NodeClass(:value)
+      def to_ruby
+        true
+      end
+    end
+    
+    class Nil < NodeClass(:value)
+      def to_ruby
+        nil
+      end
+    end
   end
 end

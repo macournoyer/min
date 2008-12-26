@@ -21,10 +21,12 @@ module Min
       keyword :nil
       
       keyword :eq,  "=="
+      keyword :add, "+"
+      keyword :rem, "-"
       keyword :lt,  "<"
       keyword :gt,  ">"
-      keyword :let,  "<="
-      keyword :get,  ">="
+      keyword :let, "<="
+      keyword :get, ">="
       
       token :INDENT, /\A\n([ \t]+)/m do |v, level|
         indent = level.size
@@ -106,7 +108,7 @@ module Min
 
       def keyword(name, pattern=name)
         token_name = name.to_s.upcase.to_sym
-        token token_name, /\A#{pattern}/ do |value|
+        token token_name, /\A#{Regexp.escape(pattern.to_s)}/ do |value|
           Token.new(token_name, value)
         end
       end

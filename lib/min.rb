@@ -1,3 +1,7 @@
 require "min/tokenizer"
 require "min/generated_parser"
 require "min/parser"
+require "min/nodes"
+require "min/eval"
+require "min/context"
+require "min/object"

@@ -12,7 +12,7 @@ token SEP
 token ID
 
 prechigh
-  nonassoc EQ
+  nonassoc EQ ADD REM
 preclow
 
 rule
@@ -40,13 +40,19 @@ rule
   | STRING { result = String.new(val[0]) }
   ;
   
+  Op:
+    EQ
+  | ADD
+  | REM
+  ;
+  
   Call:
     ID ArgList                     { result = Call.new(nil, val[0], val[1]) }
   | ID ArgList Block               { result = Call.new(nil, val[0], val[1] << val[2]) }
   | Statement '.' ID ArgList       { result = Call.new(val[0], val[2], val[3]) }
   | Statement '.' ID ArgList Block { result = Call.new(val[0], val[2], val[3] << val[4]) }
   | Statement '.' ID '=' Statement { result = Call.new(val[0], val[2] + "=", [val[4]]) }
-  | Statement EQ Statement         { result = Call.new(val[0], "==", [val[2]]) }
+  | Statement Op Statement         { result = Call.new(val[0], val[1], [val[2]]) }
   ;
   
   Block:
