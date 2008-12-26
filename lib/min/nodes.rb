@@ -11,34 +11,7 @@ module Min
     class Assign < NodeClass(:var, :value); end
     
     # Literals
-    class String < NodeClass(:value)
-      def to_ruby
-        value
-      end
-    end
-    
-    class Number < NodeClass(:value)
-      def to_ruby
-        value
-      end
-    end
-    
-    class False < NodeClass(:value)
-      def to_ruby
-        false
-      end
-    end
-    
-    class True < NodeClass(:value)
-      def to_ruby
-        true
-      end
-    end
-    
-    class Nil < NodeClass(:value)
-      def to_ruby
-        nil
-      end
-    end
+    class String < NodeClass(:value); end
+    class Number < NodeClass(:value); end
   end
 end

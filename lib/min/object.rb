@@ -26,7 +26,7 @@ module Min
     end
     
     def ruby_method(name, object, method)
-      @min_methods[name] = proc { |context, args| object.send(method, *args.map { |arg| arg.to_ruby }) }
+      @min_methods[name] = proc { |context, args| object.send(method, *args.map { |arg| context.eval(arg) }) }
     end
   end
 end
