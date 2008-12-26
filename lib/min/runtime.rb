@@ -10,5 +10,9 @@ module Min
     def eval(string)
       @parser.parse(string).eval(@context)
     end
+    
+    def eval_file(filename)
+      eval File.read(filename)
+    end
   end
 end

@@ -3,6 +3,10 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe Min::Object do
   class UberAwesomeObject < Min::Object
     attributes :ubersome, :awesomeness
+    
+    min_def :test do |context, *args|
+      Number.new(1)
+    end
   end
   
   class ExtraAwesomeObject < Min::Object
@@ -32,5 +36,9 @@ describe Min::Object do
     UberAwesomeObject.attributes.should == [:ubersome, :awesomeness]
     ExtraAwesomeObject.attributes.should == [:indeed]
     Min::Object.attributes.should == []
+  end
+  
+  it "should send message" do
+    @object.min_send(mock("context"), :test).should == Number.new(1)
   end
 end
