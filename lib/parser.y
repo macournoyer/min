@@ -14,8 +14,8 @@ token EQ ADD REM
 
 rule
   Root:
-    /* nothing */ { result = Tree.new([]) }
-  | Statements    { result = Tree.new(val[0].nodes) }
+    /* nothing */ { result = Block.new([]) }
+  | Statements
   ;
   
   Statements:
