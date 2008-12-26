@@ -25,6 +25,18 @@ EOS
     ]
   end
   
+  it "should tokenize id" do
+    tokens = @tokenizer.tokenize("something_cool_with_123")
+    
+    tokens.should == [[:ID, "something_cool_with_123"]]
+  end
+
+  it "should tokenize const" do
+    tokens = @tokenizer.tokenize("Class")
+    
+    tokens.should == [[:CONST, "Class"]]
+  end
+
   it "should remove leading sep" do
     tokens = @tokenizer.tokenize("\n\n\nx")
     

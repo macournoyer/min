@@ -1,8 +1,5 @@
 class Min::GeneratedParser
 
-/* literals */
-token NIL TRUE FALSE
-
 /* Terminal types */
 token NUMBER
 token STRING
@@ -10,10 +7,10 @@ token INDENT
 token DEDENT
 token SEP
 token ID
+token CONST
 
-prechigh
-  nonassoc EQ ADD REM
-preclow
+/* Operators */
+token EQ ADD REM
 
 rule
   Root:
@@ -30,13 +27,12 @@ rule
     Call
   | Assign
   | Literal
+  | ConstSet
+  | ConstGet
   ;
   
   Literal:
-    NIL    { result = Nil.new(val[0]) }
-  | TRUE   { result = True.new(val[0]) }
-  | FALSE  { result = False.new(val[0]) }
-  | NUMBER { result = Number.new(val[0]) }
+    NUMBER { result = Number.new(val[0]) }
   | STRING { result = String.new(val[0]) }
   ;
   
@@ -64,6 +60,14 @@ rule
 
   Assign:
     ID '=' Statement { result = Assign.new(val[0], val[2]) }
+  ;
+
+  ConstSet:
+    CONST '=' Statement { result = ConstSet.new(val[0], val[2]) }
+  ;
+  
+  ConstGet:
+    CONST { result = ConstGet.new(val[0]) }
   ;
   
   ArgList:

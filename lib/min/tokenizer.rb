@@ -60,8 +60,12 @@ module Min
         Token.new(:STRING, value)
       end
       
-      token(/\A\w+/) do |value|
+      token(/\A[a-z]\w*/) do |value|
         Token.new(:ID, value)
+      end
+      
+      token(/\A[A-Z]\w*/) do |value|
+        Token.new(:CONST, value)
       end
       
       token(/\A\s+/) # Ignore spaces

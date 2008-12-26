@@ -20,6 +20,10 @@ describe Min::Parser do
   # Assign
   it_should_parse %{x = 1}, :as => [N::Assign.new("x", N::Number.new(1))]
   
+  # Consts
+  it_should_parse %{Const = 1}, :as => [N::ConstSet.new("Const", N::Number.new(1))]
+  it_should_parse %{Const}, :as => [N::ConstGet.new("Const")]
+  
   # Call
   it_should_parse %{x}, :as => [N::Call.new(nil, "x", [])]
   it_should_parse %{x()}, :as => [N::Call.new(nil, "x", [])]
