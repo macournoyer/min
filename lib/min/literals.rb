@@ -3,7 +3,7 @@ module Min
     attributes :value
     
     def eval(context)
-      value
+      self
     end
   end
 
@@ -11,7 +11,7 @@ module Min
     attributes :value
     
     def eval(context)
-      value
+      self
     end
   end
 end

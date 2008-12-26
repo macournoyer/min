@@ -6,7 +6,7 @@ describe Runtime do
   end
   
   it "should eval 1" do
-    @runtime.eval("1").should == 1
+    @runtime.eval("1").should == Number.new(1)
   end
   
   it "should eval def" do
@@ -16,6 +16,6 @@ def "two_leggit_to_quit":
 two_leggit_to_quit
 EOS
     
-    @runtime.eval(code).should == 2
+    @runtime.eval(code).should == Number.new(2)
   end
 end
