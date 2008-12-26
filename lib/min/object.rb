@@ -2,10 +2,9 @@ module Min
   class MethodNotFound < RuntimeError; end
   
   class Object
-    attr_accessor :min_class, :min_methods
+    attr_accessor :min_methods
     
     def initialize(*attributes)
-      @min_class   = nil
       @min_methods = {}
       
       self.class.attributes.zip(attributes).each do |attr, value|
