@@ -1,10 +1,10 @@
 require File.dirname(__FILE__) + "/spec_helper"
 
-describe Min::Parser do
-  N = Min::Nodes
+describe Parser do
+  N = Nodes
   
   before do
-    @parser = Min::Parser.new
+    @parser = Parser.new
   end
   
   def self.it_should_parse(code, options)

@@ -8,7 +8,7 @@ module Min
     def initialize
       @parser  = Parser.new
       root     = Min::Object.new
-      @context = Context.new(self, root, root.min_class)
+      @context = Context.new(root)
     end
     
     def eval(string)

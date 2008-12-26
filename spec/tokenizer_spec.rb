@@ -1,8 +1,8 @@
 require File.dirname(__FILE__) + "/spec_helper"
 
-describe Min::Tokenizer do
+describe Tokenizer do
   before do
-    @tokenizer = Min::Tokenizer.new
+    @tokenizer = Tokenizer.new
   end
   
   it "should tokenize indents" do
