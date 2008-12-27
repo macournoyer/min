@@ -25,8 +25,12 @@ module Min
       puts *args
     end
     
-    min_def :def do |context, (name, block)|
-      min_methods[name.value.to_sym] = proc { context.eval(block) }
+    min_def :def do |context, name, block|
+      self.class.min_methods[name.value.to_sym] = proc { context.eval(block) }
+    end
+    
+    min_def :methods do |context|
+      Min::Array.new(min_methods.to_min)
     end
     
     def initialize(*attributes)
@@ -35,10 +39,18 @@ module Min
       end
     end
     
+    def min_methods
+      self.class.min_methods.keys
+    end
+    
     def min_send(context, message, *arguments)
       method = self.class.min_methods[message.to_sym]
-      raise MethodNotFound, "Method not found: #{message}" unless method
-      method.call(context, arguments)
+      raise MethodNotFound, "Method not found: #{self.class}\##{message}" unless method
+      method.bind(self).call(context, *arguments)
+    end
+    
+    def eval(context)
+      self
     end
     
     def ==(other)

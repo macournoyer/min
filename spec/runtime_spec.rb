@@ -18,4 +18,8 @@ EOS
     
     @runtime.eval(code).should == Number.new(2)
   end
+
+  it "should eval methods" do
+    @runtime.eval("methods.get(0)").should be_instance_of(Min::String)
+  end
 end
