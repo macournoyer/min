@@ -23,6 +23,7 @@ module Min
       operator :gt,  ">"
       operator :let, "<="
       operator :get, ">="
+      operator :rsh, "<<"
       
       token(/\A\n([ \t]+)/m) do |v, level|
         indent = level.size

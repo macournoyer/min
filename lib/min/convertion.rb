@@ -18,6 +18,6 @@ end
 
 class Array
   def to_min
-    map { |item| item.to_min }
+    Min::Array.new(map { |item| item.to_min })
   end
 end

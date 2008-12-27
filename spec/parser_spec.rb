@@ -39,6 +39,9 @@ describe Parser do
   it_should_parse %{x:\n  1\n2\n}, :as => [Call.new(nil, "x", [Block.new([Number.new(1)])]),
                                            Number.new(2)]
   
+  it_should_parse %{1[2]}, :as => [Call.new(Number.new(1), "[]", [Number.new(2)])]
+  it_should_parse %{1[2] = 3}, :as => [Call.new(Number.new(1), "[]=", [Number.new(2), Number.new(3)])]
+  
   # Object calls
   it_should_parse %{1.x}, :as => [Call.new(Number.new(1), "x", [])]
   it_should_parse %{x.y}, :as => [Call.new(Call.new(nil, "x", []), "y", [])]

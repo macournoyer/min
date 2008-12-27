@@ -20,6 +20,6 @@ EOS
   end
 
   it "should eval methods" do
-    @runtime.eval("methods.get(0)").should be_instance_of(Min::String)
+    @runtime.eval("methods[0]").should be_instance_of(Min::String)
   end
 end

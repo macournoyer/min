@@ -30,7 +30,7 @@ module Min
     end
     
     min_def :methods do |context|
-      Min::Array.new(min_methods.to_min)
+      min_methods.to_min
     end
     
     def initialize(*attributes)

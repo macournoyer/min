@@ -6,11 +6,11 @@ module Min
       @array = array
     end
     
-    min_def :add do |context, value|
+    min_def :<< do |context, value|
       @array << value
     end
 
-    min_def :get do |context, index|
+    min_def :[] do |context, index|
       @array[index.value]
     end
     
