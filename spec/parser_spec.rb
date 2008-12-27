@@ -7,7 +7,7 @@ describe Parser do
   
   def self.it_should_parse(code, options)
     it "should parse #{code}" do
-      @parser.parse(code).objects.should == options[:as]
+      @parser.parse(code).nodes.should == options[:as]
     end
   end
   
@@ -27,8 +27,8 @@ describe Parser do
   it_should_parse %{x()}, :as => [Call.new(nil, "x", [])]
   it_should_parse %{x 1}, :as => [Call.new(nil, "x", [Number.new(1)])]
   it_should_parse %{x(1)}, :as => [Call.new(nil, "x", [Number.new(1)])]
-  it_should_parse %{x(1, "1")}, :as => [Call.new(nil, "x", [Number.new(1), String.new("1")])]
-  it_should_parse %{x 1, "1"}, :as => [Call.new(nil, "x", [Number.new(1), String.new("1")])]
+  it_should_parse %{x(1, "1")}, :as => [Call.new(nil, "x", [Number.new(1), Min::String.new("1")])]
+  it_should_parse %{x 1, "1"}, :as => [Call.new(nil, "x", [Number.new(1), Min::String.new("1")])]
   it_should_parse %{x:\n  1\n}, :as => [Call.new(nil, "x", [Block.new(
                                                                 [Number.new(1)])
                                                               ])]

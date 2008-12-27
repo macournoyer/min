@@ -20,7 +20,7 @@ rule
   
   Statements:
     Statement                { result = Block.new([val[0]]) }
-  | Statements SEP Statement { result = Block.new([val[0].objects, val[2]].flatten) }
+  | Statements SEP Statement { result = Block.new([val[0].nodes, val[2]].flatten) }
   ;
 
   Statement:
