@@ -8,7 +8,7 @@ token DEDENT
 token SEP
 token ID
 token CONST
-token COMMENT
+token SYMBOL
 
 /* Operators */
 token EQ ADD REM RSH
@@ -33,8 +33,9 @@ rule
   ;
   
   Literal:
-    NUMBER { result = Number.new(val[0]) }
-  | STRING { result = String.new(val[0]) }
+    NUMBER { result = Min::Number.new(val[0]) }
+  | STRING { result = Min::String.new(val[0]) }
+  | SYMBOL { result = Min::Symbol.new(val[0]) }
   ;
   
   Op:

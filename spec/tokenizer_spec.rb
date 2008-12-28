@@ -47,6 +47,10 @@ EOS
       [:ID, "lol"]
     ]
   end
+  
+  it "should tokenize symbol" do
+    @tokenizer.tokenize(":ohaie").should == [[:SYMBOL, "ohaie"]]
+  end
 
   it "should remove leading sep" do
     tokens = @tokenizer.tokenize("\n\n\nx")

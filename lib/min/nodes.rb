@@ -10,6 +10,7 @@ module Min
   class Constant < NodeClass(:name); end
   class AssignConstant < NodeClass(:name, :value); end
   
+  class Symbol < NodeClass(:value); end
   class String < NodeClass(:value); end
   class Number < NodeClass(:value); end
 end

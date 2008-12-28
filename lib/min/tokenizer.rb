@@ -64,6 +64,10 @@ module Min
       token(/\A\"(.*?)\"/) do |_, value|
         Token.new(:STRING, value)
       end
+
+      token(/\A\:(\w+)/) do |_, value|
+        Token.new(:SYMBOL, value)
+      end
       
       token(/\A[a-z]\w*/) do |value|
         Token.new(:ID, value)

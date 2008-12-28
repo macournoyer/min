@@ -55,4 +55,7 @@ describe Parser do
   
   # Comments
   it_should_parse %{# I IZ COMMENTZIN}, :as => []
+  
+  # Symbol
+  it_should_parse %{:ohaie}, :as => [Min::Symbol.new("ohaie")]
 end

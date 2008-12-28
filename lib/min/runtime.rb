@@ -41,23 +41,18 @@ module Min
         vtable_vt.parent = object_vt
         object = @context.constants["Object"] = object_vt.allocate
         
-        symbol_vt = object_vt.delegated
-        @context.constants["Symbol"] = symbol_vt.allocate
-        
         @context.min_self = object_vt.allocate
         
         vtable_vt.add_method(:lookup, call_method(:lookup))
         vtable_vt.add_method(:add_method, call_method(:add_method))
         vtable_vt.add_method(:allocate, call_method(:allocate))
         
-        symbol_vt.add_method(:intern, proc { |str| str.to_sym })
-        
         vtable_vt.add_method(:delegated, call_method(:delegated))
         
         # Crap
         object_vt.add_method(:vtable, proc { |o| o.vtable })
-        object_vt.add_method(:debug, proc { |o| puts "holy crap!" })
-        # load "class"
+        object_vt.add_method(:puts, proc { |o, str| puts str.to_ruby })
+        load "class"
       end
   end
 end

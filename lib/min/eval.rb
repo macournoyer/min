@@ -11,7 +11,7 @@ module Min
         # local var
         return value
       end
-      (receiver || context.min_self).eval(context).min_send(message.to_sym, *arguments)
+      (receiver || context.min_self).min_send(message.to_sym, *arguments)
     end
   end
   
@@ -37,11 +37,29 @@ module Min
     def eval(context)
       self
     end
+    
+    def to_ruby
+      value
+    end
   end
 
   class String
     def eval(context)
       self
+    end
+    
+    def to_ruby
+      value
+    end
+  end
+
+  class Symbol
+    def eval(context)
+      self
+    end
+    
+    def to_ruby
+      value.to_sym
     end
   end
 end
