@@ -46,22 +46,26 @@ rule
   ;
   
   Call:
-    ID ArgList                      { result = Call.new(nil, val[0].to_sym, val[1]) }
-  | ID ArgList Block                { result = Call.new(nil, val[0].to_sym, val[1] << val[2]) }
-  | Statement '.' ID ArgList        { result = Call.new(val[0], val[2].to_sym, val[3]) }
-  | Statement '.' ID ArgList Block  { result = Call.new(val[0], val[2].to_sym, val[3] << val[4]) }
-  | Statement '.' ID '=' Statement  { result = Call.new(val[0], "#{val[2]}=".to_sym, [val[4]]) }
-  | Statement Op Statement          { result = Call.new(val[0], val[1].to_sym, [val[2]]) }
-  | Statement '[' Statement ']'     { result = Call.new(val[0], :[], [val[2]]) }
-  | Statement '[' Statement ']'
-    '=' Statement                   { result = Call.new(val[0], :[]=, [val[2], val[5]]) }
+    ID CallArgList                       { result = Call.new(nil, val[0].to_sym, val[1]) }
+  | ID CallArgList Closure               { result = Call.new(nil, val[0].to_sym, val[1] << val[2]) }
+  | Statement '.' ID CallArgList         { result = Call.new(val[0], val[2].to_sym, val[3]) }
+  | Statement '.' ID CallArgList Closure { result = Call.new(val[0], val[2].to_sym, val[3] << val[4]) }
+  | Statement '.' ID '=' Statement       { result = Call.new(val[0], "#{val[2]}=".to_sym, [val[4]]) }
+  | Statement Op Statement               { result = Call.new(val[0], val[1].to_sym, [val[2]]) }
+  | Statement '[' Statement ']'          { result = Call.new(val[0], :[], [val[2]]) }
+  | Statement '[' Statement ']'          
+    '=' Statement                        { result = Call.new(val[0], :[]=, [val[2], val[5]]) }
   ;
   
-  Block:
+  Closure:
     ':'
       INDENT Statements
-      DEDENT            { result = val[2] }
-  | '{' Statements '}'  { result = val[1] }
+      DEDENT                        { result = Closure.new(val[2], []) }
+  | ':' ArgList '|'                 
+      INDENT Statements             
+      DEDENT                        { result = Closure.new(val[4], val[1]) }
+  | '{' Statements '}'              { result = Closure.new(val[1], []) }
+  | '{' ArgList '|' Statements '}'  { result = Closure.new(val[3], val[1]) }
   ;
 
   Assign:
@@ -80,6 +84,9 @@ rule
     /* nothing */         { result = [] }
   | Statement             { result = [val[0]] }
   | Statement "," ArgList { result = [val[0], val[2]].flatten }
-  | '(' ArgList ')'       { result = val[1] }
   ;
+  
+  CallArgList:
+    ArgList
+  | '(' ArgList ')' { result = val[1] }
 end

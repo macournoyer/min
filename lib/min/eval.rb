@@ -3,10 +3,16 @@ module Min
     def eval(context)
       nodes.map { |node| node.eval(context) }.last
     end
+  end
+  
+  class Closure
+    def eval(context)
+      self
+    end
     
     def call(context, receiver, *args)
       # TODO pass args
-      eval(context)
+      block.eval(context)
     end
   end
   

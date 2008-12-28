@@ -29,14 +29,14 @@ describe Parser do
   it_should_parse %{x(1)}, :as => [Call.new(nil, :x, [Number.new(1)])]
   it_should_parse %{x(1, "1")}, :as => [Call.new(nil, :x, [Number.new(1), Min::String.new("1")])]
   it_should_parse %{x 1, "1"}, :as => [Call.new(nil, :x, [Number.new(1), Min::String.new("1")])]
-  it_should_parse %{x:\n  1\n}, :as => [Call.new(nil, :x, [Block.new(
-                                                            [Number.new(1)])
+  it_should_parse %{x:\n  1\n}, :as => [Call.new(nil, :x, [Closure.new(
+                                                            Block.new([Number.new(1)]), [])
                                                           ])]
   it_should_parse %{x(1):\n  1\n  2\n}, :as => [Call.new(nil, :x, [Number.new(1),
-                                                                    Block.new(
-                                                                      [Number.new(1), Number.new(2)])
+                                                                    Closure.new(
+                                                                      Block.new([Number.new(1), Number.new(2)]), [])
                                                                    ])]
-  it_should_parse %{x:\n  1\n2\n}, :as => [Call.new(nil, :x, [Block.new([Number.new(1)])]),
+  it_should_parse %{x:\n  1\n2\n}, :as => [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [])]),
                                            Number.new(2)]
   
   it_should_parse %{1[2]}, :as => [Call.new(Number.new(1), :[], [Number.new(2)])]
