@@ -24,7 +24,7 @@ module Min
     # queries the associations to ﬁnd an implementation
     # corresponding to a message name
     def lookup(message)
-      @methods[message] || parent && parent.lookup(message)
+      @methods[message] # || parent && parent.lookup(message)
     end
     
     # creates a new vtable that will delegate unhandled

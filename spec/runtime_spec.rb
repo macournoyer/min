@@ -5,7 +5,15 @@ describe Runtime do
     @runtime = Runtime.new
   end
   
-  xit "should eval 1" do
+  it "should eval 1" do
     @runtime.eval("1").should == Number.new(1)
+  end
+
+  it "should eval Object" do
+    @runtime.eval("Object").should be_instance_of(Min::Object)
+  end
+
+  it "should eval VTable" do
+    @runtime.eval("VTable").should be_instance_of(VTable)
   end
 end

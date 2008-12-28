@@ -1,7 +1,7 @@
 module Min
   class Context
-    attr_reader :min_self, :locals, :constants
-    attr_accessor :parent
+    attr_reader   :locals, :constants
+    attr_accessor :min_self, :parent
     
     def initialize(min_self, parent=nil)
       @parent    = parent
