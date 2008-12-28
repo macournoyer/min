@@ -1,7 +1,6 @@
 require "min/tokenizer"
 require "min/nodes"
 require "min/eval"
-require "min/apply"
 require "min/generated_parser"
 require "min/parser"
 require "min/hash_with_parent"
