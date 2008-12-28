@@ -11,7 +11,7 @@ module Min
         # local var
         return value
       end
-      (receiver || context.min_self).min_send(message.to_sym, *arguments)
+      (receiver || context.min_self).min_send(message, *arguments)
     end
   end
   
