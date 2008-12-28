@@ -16,11 +16,11 @@ describe Parser do
   it_should_parse %{"ohaie"}, :as => [Min::String.new("ohaie")]
   
   # Assign
-  it_should_parse %{x = 1}, :as => [Assign.new("x", Number.new(1))]
+  it_should_parse %{x = 1}, :as => [Assign.new(:x, Number.new(1))]
   
   # Consts
-  it_should_parse %{Const = 1}, :as => [AssignConstant.new("Const", Number.new(1))]
-  it_should_parse %{Const}, :as => [Constant.new("Const")]
+  it_should_parse %{Const = 1}, :as => [AssignConstant.new(:Const, Number.new(1))]
+  it_should_parse %{Const}, :as => [Constant.new(:Const)]
   
   # Call
   it_should_parse %{x}, :as => [Call.new(nil, :x, [])]
@@ -57,5 +57,5 @@ describe Parser do
   it_should_parse %{# I IZ COMMENTZIN}, :as => []
   
   # Symbol
-  it_should_parse %{:ohaie}, :as => [Min::Symbol.new("ohaie")]
+  it_should_parse %{:ohaie}, :as => [Min::Symbol.new(:ohaie)]
 end

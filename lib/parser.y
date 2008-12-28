@@ -46,11 +46,11 @@ rule
   ;
   
   Call:
-    ID CallArgList                       { result = Call.new(nil, val[0].to_sym, val[1]) }
-  | ID CallArgList Closure               { result = Call.new(nil, val[0].to_sym, val[1] << val[2]) }
-  | Statement '.' ID CallArgList         { result = Call.new(val[0], val[2].to_sym, val[3]) }
-  | Statement '.' ID CallArgList Closure { result = Call.new(val[0], val[2].to_sym, val[3] << val[4]) }
-  | Statement '.' ID '=' Statement       { result = Call.new(val[0], "#{val[2]}=".to_sym, [val[4]]) }
+    ID CallArgList                       { result = Call.new(nil, val[0], val[1]) }
+  | ID CallArgList Closure               { result = Call.new(nil, val[0], val[1] << val[2]) }
+  | Statement '.' ID CallArgList         { result = Call.new(val[0], val[2], val[3]) }
+  | Statement '.' ID CallArgList Closure { result = Call.new(val[0], val[2], val[3] << val[4]) }
+  | Statement '.' ID '=' Statement       { result = Call.new(val[0], :"#{val[2]}=", [val[4]]) }
   | Statement Op Statement               { result = Call.new(val[0], val[1].to_sym, [val[2]]) }
   | Statement '[' Statement ']'          { result = Call.new(val[0], :[], [val[2]]) }
   | Statement '[' Statement ']'          

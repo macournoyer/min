@@ -76,7 +76,7 @@ module Min
     end
     
     def to_ruby
-      value.to_sym
+      value
     end
   end
 end

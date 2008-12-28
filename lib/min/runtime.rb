@@ -29,13 +29,13 @@ module Min
       end
       
       def bootstrap
-        vtable_vt = @context.constants["VTable"] = VTable.new
+        vtable_vt = @context.constants[:VTable] = VTable.new
         vtable_vt.vtable = vtable_vt
         
         object_vt = VTable.new
         object_vt.vtable = vtable_vt
         vtable_vt.parent = object_vt
-        object = @context.constants["Object"] = object_vt.allocate
+        object = @context.constants[:Object] = object_vt.allocate
         
         @context.min_self = object_vt.allocate
         

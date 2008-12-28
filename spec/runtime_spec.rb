@@ -31,6 +31,6 @@ Object.vtable.add_method(:test):
   "test"
 test
     EOS
-    @runtime.context.constants["Object"].vtable.methods.should include(:test)
+    @runtime.context.constants[:Object].vtable.methods.should include(:test)
   end
 end

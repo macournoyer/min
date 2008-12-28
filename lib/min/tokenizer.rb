@@ -66,15 +66,15 @@ module Min
       end
 
       token(/\A\:(\w+)/) do |_, value|
-        Token.new(:SYMBOL, value)
+        Token.new(:SYMBOL, value.to_sym)
       end
       
       token(/\A[a-z]\w*/) do |value|
-        Token.new(:ID, value)
+        Token.new(:ID, value.to_sym)
       end
       
       token(/\A[A-Z]\w*/) do |value|
-        Token.new(:CONST, value)
+        Token.new(:CONST, value.to_sym)
       end
       
       token(/\A\s+/) # Ignore spaces
