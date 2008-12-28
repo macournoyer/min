@@ -40,14 +40,14 @@ module Min
         @context.min_self = object_vt.allocate
         
         vtable_vt.add_method(:lookup, RubyMethod.new(:lookup))
-        vtable_vt.add_method(:add_method, proc { |context, vtable, message, block| vtable.add_method(message.to_ruby, block) })
+        vtable_vt.add_method(:add_method, proc { |context, vtable, message, block| vtable.add_method(message.value, block) })
         vtable_vt.add_method(:allocate, RubyMethod.new(:allocate))
         
         vtable_vt.add_method(:delegated, RubyMethod.new(:delegated))
         
         # Crap
         object_vt.add_method(:vtable, RubyMethod.new(:vtable))
-        object_vt.add_method(:puts, proc { |context, object, str| puts str.eval(context).to_ruby })
+        object_vt.add_method(:puts, proc { |context, object, str| puts str.eval(context).value })
         load "class"
       end
   end

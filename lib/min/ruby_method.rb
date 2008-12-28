@@ -5,7 +5,7 @@ module Min
     end
     
     def call(context, receiver, *args)
-      receiver.send(@message, *args.map { |arg| arg.eval(context).to_ruby })
+      receiver.send(@message, *args.map { |arg| arg.eval(context).value })
     end
   end
 end

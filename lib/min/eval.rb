@@ -63,29 +63,17 @@ module Min
     def eval(context)
       self
     end
-    
-    def to_ruby
-      value
-    end
   end
 
   class String
     def eval(context)
       self
     end
-    
-    def to_ruby
-      value
-    end
   end
 
   class Symbol
     def eval(context)
       self
-    end
-    
-    def to_ruby
-      value
     end
   end
 end
