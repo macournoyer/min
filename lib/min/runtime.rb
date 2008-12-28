@@ -28,10 +28,6 @@ module Min
         end
       end
       
-      def call_method(method)
-        proc { |obj, *args| obj.send(method, *args) }
-      end
-      
       def bootstrap
         vtable_vt = @context.constants["VTable"] = VTable.new
         vtable_vt.vtable = vtable_vt
@@ -43,15 +39,15 @@ module Min
         
         @context.min_self = object_vt.allocate
         
-        vtable_vt.add_method(:lookup, call_method(:lookup))
-        vtable_vt.add_method(:add_method, call_method(:add_method))
-        vtable_vt.add_method(:allocate, call_method(:allocate))
+        vtable_vt.add_method(:lookup, RubyMethod.new(:lookup))
+        vtable_vt.add_method(:add_method, proc { |context, vtable, message, block| vtable.add_method(message.to_ruby, block) })
+        vtable_vt.add_method(:allocate, RubyMethod.new(:allocate))
         
-        vtable_vt.add_method(:delegated, call_method(:delegated))
+        vtable_vt.add_method(:delegated, RubyMethod.new(:delegated))
         
         # Crap
-        object_vt.add_method(:vtable, proc { |o| o.vtable })
-        object_vt.add_method(:puts, proc { |o, str| puts str.to_ruby })
+        object_vt.add_method(:vtable, RubyMethod.new(:vtable))
+        object_vt.add_method(:puts, proc { |context, object, str| puts str.eval(context).to_ruby })
         load "class"
       end
   end

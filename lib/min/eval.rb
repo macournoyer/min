@@ -11,7 +11,7 @@ module Min
         # local var
         return value
       end
-      (receiver || context.min_self).min_send(message, *arguments)
+      (receiver || context.min_self).eval(context).min_send(context, message, *arguments)
     end
   end
   
@@ -30,6 +30,12 @@ module Min
   class AssignConstant
     def eval(context)
       context.constants[name] = value.eval(context)
+    end
+  end
+  
+  class Object
+    def eval(context)
+      self
     end
   end
   

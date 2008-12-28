@@ -27,6 +27,10 @@ module Min
       @methods[message] # || parent && parent.lookup(message)
     end
     
+    def methods
+      @methods.keys
+    end
+    
     # creates a new vtable that will delegate unhandled
     # messages to the receiver
     def delegated

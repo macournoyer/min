@@ -24,4 +24,13 @@ describe Runtime do
   it "should eval VTable" do
     @runtime.eval("VTable").should be_instance_of(VTable)
   end
+
+  it "should add method" do
+    @runtime.eval(<<-EOS).should == Min::String.new("test")
+Object.vtable.add_method(:test):
+  "test"
+test
+    EOS
+    @runtime.context.constants["Object"].vtable.methods.should include(:test)
+  end
 end

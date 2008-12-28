@@ -6,11 +6,11 @@ module Min
       @vtable = vtable
     end
     
-    def min_send(message, *args)
+    def min_send(context, message, *args)
       if method = @vtable.lookup(message)
-        method.call(self, *args)
+        method.call(context, self, *args)
       else
-        raise "Method not found #{message.inspect} on #{inspect}"
+        raise "Method not found #{message} on #{inspect}"
       end
     end
   end
