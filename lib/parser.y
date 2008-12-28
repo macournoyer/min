@@ -8,13 +8,14 @@ token DEDENT
 token SEP
 token ID
 token CONST
+token COMMENT
 
 /* Operators */
 token EQ ADD REM RSH
 
 rule
   Root:
-    /* nothing */ { result = Block.new }
+    /* nothing */ { result = Block.new([]) }
   | Statements
   ;
   

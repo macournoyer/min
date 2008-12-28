@@ -25,6 +25,10 @@ module Min
       operator :get, ">="
       operator :rsh, "<<"
       
+      token(/\A\#+\s+(.*)/) do |_, value|
+        # eat comments
+      end
+      
       token(/\A\n([ \t]+)/m) do |v, level|
         indent = level.size
         if indent > @indent
@@ -95,8 +99,8 @@ module Min
       end
       
       # cleanup
-      @tokens.shift while @tokens.first.name == :SEP
-      @tokens.pop while @tokens.last.name == :SEP
+      @tokens.shift while !@tokens.empty? && @tokens.first.name == :SEP
+      @tokens.pop   while !@tokens.empty? && @tokens.last.name == :SEP
       
       @tokens.map { |t| t.to_a }
     end

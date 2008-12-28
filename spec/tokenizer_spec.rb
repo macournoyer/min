@@ -36,6 +36,17 @@ EOS
     
     tokens.should == [[:CONST, "Class"]]
   end
+  
+  it "should tokenize comments" do
+    @tokenizer.tokenize("# ohaie").should == []
+  end
+
+  it "should tokenize whole line in comments" do
+    @tokenizer.tokenize("1 # ohaie\nlol").should == [
+      [:NUMBER, 1], [:SEP, "\n"],
+      [:ID, "lol"]
+    ]
+  end
 
   it "should remove leading sep" do
     tokens = @tokenizer.tokenize("\n\n\nx")
