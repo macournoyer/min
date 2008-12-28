@@ -34,7 +34,7 @@ module Min
     # creates a new vtable that will delegate unhandled
     # messages to the receiver
     def delegated
-      VTable.new(self)
+      self.class.new(self)
     end
   end
 end

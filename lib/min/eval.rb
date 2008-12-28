@@ -11,8 +11,17 @@ module Min
     end
     
     def call(context, receiver, *args)
-      # TODO pass args
-      block.eval(context)
+      closure_context = context.create
+      
+      # Special local vars
+      closure_context.locals[:it] = args.first
+      
+      # Pass args as local vars
+      arguments.zip(args).each do |name, value|
+        closure_context.locals[name] = value
+      end
+      
+      block.eval(closure_context)
     end
   end
   

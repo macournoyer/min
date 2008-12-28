@@ -26,11 +26,8 @@ describe Runtime do
   end
 
   it "should add method" do
-    @runtime.eval(<<-EOS).should == Min::String.new("test")
-Object.vtable.add_method(:test):
-  "test"
-test
-    EOS
-    @runtime.context.constants[:Object].vtable.methods.should include(:test)
+    @runtime.eval("Object.vtable.add_method :return_itself { it }")
+    @runtime.context.constants[:Object].vtable.methods.should include(:return_itself)
+    @runtime.eval('return_itself "test"').should == Min::String.new("test")
   end
 end
