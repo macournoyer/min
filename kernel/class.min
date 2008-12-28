@@ -1,2 +1,1 @@
-class Class:
-  def ...
+Object.debug

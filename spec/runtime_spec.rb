@@ -5,6 +5,14 @@ describe Runtime do
     @runtime = Runtime.new
   end
   
+  it "should load file in load path" do
+    @runtime.load("class")
+  end
+  
+  it "should raise when cant file file in load path" do
+    proc { @runtime.load("poop") }.should raise_error
+  end
+  
   it "should eval 1" do
     @runtime.eval("1").should == Number.new(1)
   end

@@ -1,10 +1,13 @@
+require "pathname"
+
 module Min
   class Runtime
     attr_reader :context
     
     def initialize
-      @parser  = Parser.new
-      @context = Context.new(nil)
+      @parser    = Parser.new
+      @context   = Context.new(nil)
+      @load_path = [File.dirname(__FILE__) + "/../../kernel"]
       
       bootstrap
     end
@@ -13,13 +16,20 @@ module Min
       @parser.parse(string).eval(@context)
     end
     
-    def load(filename)
-      eval File.read(filename)
+    def load(file)
+      path = find_file_in_load_path(file) || raise("File not found: #{file}")
+      eval File.read(path)
     end
     
     private
+      def find_file_in_load_path(file)
+        if path = @load_path.detect { |path| File.file?("#{path}/#{file}.min") }
+          "#{path}/#{file}.min"
+        end
+      end
+      
       def call_method(method)
-        proc { |obj, *args| puts "calling: #{method}"; obj.send(method, *args) }
+        proc { |obj, *args| obj.send(method, *args) }
       end
       
       def bootstrap
@@ -43,6 +53,11 @@ module Min
         symbol_vt.add_method(:intern, proc { |str| str.to_sym })
         
         vtable_vt.add_method(:delegated, call_method(:delegated))
+        
+        # Crap
+        object_vt.add_method(:vtable, proc { |o| o.vtable })
+        object_vt.add_method(:debug, proc { |o| puts "holy crap!" })
+        # load "class"
       end
   end
 end
