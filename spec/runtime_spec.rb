@@ -3,10 +3,11 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe Runtime do
   before do
     @runtime = Runtime.new
+    @runtime.load_path << File.dirname(__FILE__) + "/fixtures"
   end
   
   it "should load file in load path" do
-    @runtime.load("class")
+    @runtime.load("empty")
   end
   
   it "should raise when cant file file in load path" do
@@ -26,7 +27,15 @@ describe Runtime do
   end
 
   it "should eval VTable" do
-    @runtime.eval("VTable").should be_instance_of(VTable)
+    @runtime.eval("VTable").should be_a(VTable)
+  end
+
+  it "should eval eval" do
+    @runtime.eval('eval("1")').should == Number.new(1)
+  end
+
+  it "should eval load" do
+    @runtime.eval('load("empty")')
   end
 
   it "should add method" do

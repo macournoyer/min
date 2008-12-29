@@ -2,7 +2,7 @@ require "pathname"
 
 module Min
   class Runtime
-    attr_reader :context
+    attr_reader :context, :load_path
     
     def initialize
       @parser    = Parser.new
@@ -12,8 +12,8 @@ module Min
       bootstrap
     end
     
-    def eval(string)
-      @parser.parse(string).eval(@context)
+    def eval(string, context=@context)
+      @parser.parse(string).eval(context)
     end
     
     def load(file)
@@ -35,21 +35,26 @@ module Min
         object_vt = VTable.new
         object_vt.vtable = vtable_vt
         vtable_vt.parent = object_vt
-        object = @context.constants[:Object] = object_vt.allocate
         
+        # VTable init
         vtable_vt.add_method(:lookup, RubyMethod.new(:lookup))
         vtable_vt.add_method(:add_method, RubyMethod.new(:add_method))
         vtable_vt.add_method(:allocate, RubyMethod.new(:allocate))
         vtable_vt.add_method(:delegated, RubyMethod.new(:delegated))
         
-        # Kernel stuff
+        # Object init
+        object = @context.constants[:Object] = object_vt.allocate
         object.vtable.add_method(:vtable, RubyMethod.new(:vtable))
-        object.vtable.add_method(:puts, proc { |context, object, str| puts str.eval(context).value })
+        object.vtable.add_method(:puts, proc { |context, obj, str| puts str.eval(context).value })
+        object.vtable.add_method(:eval, proc { |context, obj, code| eval(code.value, context) })
+        object.vtable.add_method(:load, proc { |context, obj, file| load(file.value) })
         
+        # Runtime init
         @context.min_self = object.vtable.allocate
         
         load "object"
         load "class"
+        load "string"
       end
   end
 end

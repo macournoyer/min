@@ -1,11 +1,11 @@
 module Min
   class Parser < GeneratedParser
     def initialize
-      @tokens = []
+      @tokenizer = Tokenizer.new
     end
 
     def parse(string)
-      @tokens = Tokenizer.new.tokenize(string)
+      @tokens = @tokenizer.tokenize(string)
       do_parse
     end
     
