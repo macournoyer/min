@@ -18,7 +18,11 @@ describe Runtime do
   end
 
   it "should eval Object" do
-    @runtime.eval("Object").should be_instance_of(Min::Object)
+    @runtime.eval("Object").should be_a(Min::Object)
+  end
+
+  it "should eval Object.new" do
+    @runtime.eval("Object.new").should be_a(Min::Object)
   end
 
   it "should eval VTable" do
@@ -27,7 +31,7 @@ describe Runtime do
 
   it "should add method" do
     @runtime.eval("Object.vtable.add_method :return_itself { it }")
-    @runtime.context.constants[:Object].vtable.methods.should include(:return_itself)
+    @runtime.context.constants[:Object].vtable.lookup(:return_itself).should be_a(Closure)
     @runtime.eval('return_itself "test"').should == Min::String.new("test")
   end
 end

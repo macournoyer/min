@@ -37,17 +37,18 @@ module Min
         vtable_vt.parent = object_vt
         object = @context.constants[:Object] = object_vt.allocate
         
-        @context.min_self = object_vt.allocate
-        
         vtable_vt.add_method(:lookup, RubyMethod.new(:lookup))
-        vtable_vt.add_method(:add_method, proc { |context, vtable, message, block| vtable.add_method(message.value, block) })
+        vtable_vt.add_method(:add_method, RubyMethod.new(:add_method))
         vtable_vt.add_method(:allocate, RubyMethod.new(:allocate))
-        
         vtable_vt.add_method(:delegated, RubyMethod.new(:delegated))
         
-        # Crap
-        object_vt.add_method(:vtable, RubyMethod.new(:vtable))
-        object_vt.add_method(:puts, proc { |context, object, str| puts str.eval(context).value })
+        # Kernel stuff
+        object.vtable.add_method(:vtable, RubyMethod.new(:vtable))
+        object.vtable.add_method(:puts, proc { |context, object, str| puts str.eval(context).value })
+        
+        @context.min_self = object.vtable.allocate
+        
+        load "object"
         load "class"
       end
   end

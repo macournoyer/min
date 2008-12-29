@@ -12,7 +12,7 @@ module Min
     # creates a new object within the vtable's family (by copying
     # the receiver into the new object's vtable slot).
     def allocate
-      Min::Object.new(self)
+      Min::Object.new(delegated)
     end
     
     # creates an association from a message name to 
@@ -24,11 +24,7 @@ module Min
     # queries the associations to ﬁnd an implementation
     # corresponding to a message name
     def lookup(message)
-      @methods[message] # || parent && parent.lookup(message)
-    end
-    
-    def methods
-      @methods.keys
+      @methods[message] || parent && parent.lookup(message)
     end
     
     # creates a new vtable that will delegate unhandled

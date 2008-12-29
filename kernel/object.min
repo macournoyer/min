@@ -1,0 +1,4 @@
+Object.vtable.add_method(:new):
+  obj = Object.vtable.allocate
+  obj.vtable.add_method(:class) { Object }
+  obj
