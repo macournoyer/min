@@ -2,7 +2,7 @@
 # 
 # Class.vtable.add_method(:new): name |
 #   c = allocate
-#   eval(name + " = c")
+#   constant_set name, c
 #   c
 # 
 # Object.vtable.add_method(:class): name, declaration |

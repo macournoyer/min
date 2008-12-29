@@ -51,11 +51,12 @@ module Min
         object = @context.constants[:Object] = object_vt.allocate
         object.vtable.add_method(:vtable, RubyMethod.new(:vtable))
         object.vtable.add_method(:puts, proc { |context, obj, str| puts str.eval(context).value })
-        object.vtable.add_method(:eval, proc { |context, obj, code| eval(code.value, context) })
-        object.vtable.add_method(:load, proc { |context, obj, file| load(file.value) })
+        object.vtable.add_method(:eval, proc { |context, obj, code| eval(code.eval(context).value, context) })
+        object.vtable.add_method(:load, proc { |context, obj, file| load(file.eval(context).value) })
         
         # Runtime init
         @context.min_self = object.vtable.allocate
+        @context.locals[:self] = @context.min_self
         
         load "object"
         load "class"

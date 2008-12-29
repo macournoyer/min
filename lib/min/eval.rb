@@ -11,10 +11,11 @@ module Min
     end
     
     def call(context, receiver, *args)
-      closure_context = context.create
+      closure_context = context.create(receiver)
       
       # Special local vars
       closure_context.locals[:it] = args.first
+      closure_context.locals[:self] = receiver
       
       # Pass args as local vars
       arguments.zip(args).each do |name, value|

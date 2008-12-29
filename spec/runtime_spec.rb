@@ -17,6 +17,10 @@ describe Runtime do
     @runtime.eval("1").should == Number.new(1)
   end
 
+  it "should eval self" do
+    @runtime.eval("self").should == @runtime.context.min_self
+  end
+
   it "should eval Object" do
     @runtime.eval("Object").should be_a(Min::Object)
   end

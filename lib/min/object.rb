@@ -13,5 +13,9 @@ module Min
         raise "Method not found #{message} on #{inspect}"
       end
     end
+    
+    def value
+      inspect # for debug
+    end
   end
 end
