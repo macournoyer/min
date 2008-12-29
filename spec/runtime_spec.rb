@@ -2,8 +2,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe Runtime do
   before do
-    @runtime = Runtime.new
-    @runtime.load_path << File.dirname(__FILE__) + "/fixtures"
+    @runtime = TestRuntime.new
   end
   
   it "should load file in load path" do

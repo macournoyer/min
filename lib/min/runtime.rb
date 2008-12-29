@@ -1,8 +1,13 @@
 require "pathname"
+require "forwardable"
 
 module Min
   class Runtime
+    extend Forwardable
+    
     attr_reader :context, :load_path
+    
+    def_delegators :@context, :constants
     
     def initialize
       @parser    = Parser.new
