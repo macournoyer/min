@@ -1,5 +1,4 @@
-* Implement RubyMethod
-* Implement MinMethod (Block node)
-* Implement Symbol
+* Refactor all nodes into Min::Object
+* Implement macros to define class "statement"
 * Define Class in Min lang
 * Implement mixin
