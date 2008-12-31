@@ -2,6 +2,8 @@ require "pathname"
 require "forwardable"
 
 module Min
+  class BootstrapError < StandardError; end
+  
   class Runtime
     extend Forwardable
     
@@ -34,30 +36,23 @@ module Min
       end
       
       def bootstrap
-        vtable_vt = @context.constants[:VTable] = VTable.new
-        vtable_vt.vtable = vtable_vt
+        vtable = @context.constants[:VTable] = VTable.new
+        vtable.vtable = vtable
         
         object_vt = VTable.new
-        object_vt.vtable = vtable_vt
-        vtable_vt.parent = object_vt
-        
-        # VTable init
-        vtable_vt.add_method(:lookup, RubyMethod.new(:lookup))
-        vtable_vt.add_method(:add_method, RubyMethod.new(:add_method))
-        vtable_vt.add_method(:allocate, RubyMethod.new(:allocate))
-        vtable_vt.add_method(:delegated, RubyMethod.new(:delegated))
-        
-        # Object init
+        object_vt.vtable = vtable
+        vtable.parent = object_vt
         object = @context.constants[:Object] = object_vt.allocate
-        object.vtable.add_method(:vtable, RubyMethod.new(:vtable))
-        object.vtable.add_method(:puts, proc { |context, obj, str| puts str.eval(context).value })
-        object.vtable.add_method(:eval, proc { |context, obj, code| eval(code.eval(context).value, context) })
-        object.vtable.add_method(:load, proc { |context, obj, file| load(file.eval(context).value) })
         
-        # Runtime init
+        # Base classes bootstrap
+        VTable.bootstrap(self)
+        Min::Object.bootstrap(self)
+        
+        # Root context init
         @context.min_self = object.vtable.allocate
         @context.locals[:self] = @context.min_self
         
+        # Load kernel
         load "object"
         load "class"
         load "string"

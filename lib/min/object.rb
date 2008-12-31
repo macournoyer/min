@@ -1,4 +1,6 @@
 module Min
+  class MethodNotFound < RuntimeError; end
+  
   class Object
     attr_accessor :vtable
     
@@ -10,12 +12,18 @@ module Min
       if method = @vtable.lookup(message)
         method.call(context, self, *args)
       else
-        raise "Method not found #{message} on #{inspect}"
+        raise MethodNotFound, "Method not found #{message} on #{inspect}"
       end
     end
     
-    def value
-      inspect # for debug
+    def self.bootstrap(runtime)
+      object = runtime.constants[:Object]
+      raise BootstrapError, "Object can't be found in context" unless object
+      
+      object.vtable.add_method(:vtable, RubyMethod.new(:vtable))
+      object.vtable.add_method(:puts, proc { |context, obj, str| puts str.eval(context).value })
+      object.vtable.add_method(:eval, proc { |context, obj, code| runtime.eval(code.eval(context).value, context) })
+      object.vtable.add_method(:load, proc { |context, obj, file| runtime.load(file.eval(context).value) })
     end
   end
 end
