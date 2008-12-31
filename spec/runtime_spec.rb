@@ -46,4 +46,8 @@ describe Runtime do
     @runtime.context.constants[:Object].vtable.lookup(:return_itself).should be_a(Closure)
     @runtime.eval('return_itself "test"').should == Min::String.new("test")
   end
+  
+  it "should raise when constant not found" do
+    proc { @runtime[:Waaaaa?] }.should raise_error(ConstantNotFound)
+  end
 end

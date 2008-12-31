@@ -1,19 +1,21 @@
 module Min
-  class BootstrapError < StandardError; end
+  class ConstantNotFound < StandardError; end
   
   class Runtime
     attr_reader :context, :load_path
     
     def initialize
-      @parser    = Parser.new
-      @context   = Context.new(nil)
-      @load_path = [File.dirname(__FILE__) + "/../../kernel"]
+      @parser       = Parser.new
+      @context      = Context.new(nil)
+      @load_path    = [File.dirname(__FILE__) + "/../../kernel"]
+      @bootstrapped = false
       
       bootstrap
     end
     
-    def constants
-      @context.constants
+    def [](name)
+      @context.constants[name] ||
+      raise(ConstantNotFound, "#{name} class can't be found in context.")
     end
     
     def eval(string, context=@context)
@@ -61,11 +63,7 @@ module Min
       @runtime ||= Runtime.new
     end
     
-    def [](name)
-      runtime.context.constants[name]
-    end
-    
     # Delegates
-    [:eval, :load].each { |method| define_method(method) { |*a| runtime.send(method, *a) } }
+    [:[], :eval, :load].each { |method| define_method(method) { |*a| runtime.send(method, *a) } }
   end
 end
