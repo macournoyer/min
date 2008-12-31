@@ -13,6 +13,7 @@ file GENERATED_PARSER => "lib/parser.y" do |t|
     sh "racc -o #{t.name} #{t.prerequisites.first}"
   end
 end
+desc "Generate the parser"
 task :parser => GENERATED_PARSER
 
 task :default => :spec
@@ -22,3 +23,8 @@ Spec::Rake::SpecTask.new do |t|
   t.spec_files = FileList["spec/**_spec.rb"]
 end
 task :spec => :parser
+
+desc "Show num LOC in lib"
+task :loc do
+  sh 'cat `find lib -name *.rb` | grep -v "^ *#" | grep -v "^ *$" | wc -l'
+end
