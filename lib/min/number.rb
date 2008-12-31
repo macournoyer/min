@@ -2,11 +2,9 @@ module Min
   class Number < Min::Object
     attr_reader :value
     
-    def initialize(context, value)
+    def initialize(value)
       @value = value
-      const = context.constants[:Number]
-      raise BootstrapError, "Number can't be found in context" unless const
-      super const.vtable
+      super Min[:Number].vtable
     end
     
     def ==(other)
@@ -14,13 +12,13 @@ module Min
     end
     
     def self.bootstrap(runtime)
-      number_vt = runtime.constants[:Object].vtable.delegated
+      number_vt = runtime[:Object].vtable.delegated
       
       [:+, :-, :*, :/].each do |op|
         number_vt.add_method(op, RubyMethod.new(op, :value))
       end
       
-      runtime.constants[:Number] = number_vt.allocate
+      runtime[:Number] = number_vt.allocate
     end
   end
 end

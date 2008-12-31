@@ -33,7 +33,7 @@ rule
   ;
   
   Literal:
-    NUMBER { result = Min::Number.new(context, val[0]) }
+    NUMBER { result = Min::Number.new(val[0]) }
   | STRING { result = Min::String.new(val[0]) }
   | SYMBOL { result = Min::Symbol.new(val[0]) }
   ;

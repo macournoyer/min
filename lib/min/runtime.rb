@@ -5,10 +5,9 @@ module Min
     attr_reader :context, :load_path
     
     def initialize
-      @parser       = Parser.new
-      @context      = Context.new(nil)
-      @load_path    = [File.dirname(__FILE__) + "/../../kernel"]
-      @bootstrapped = false
+      @parser    = Parser.new
+      @context   = Context.new(nil)
+      @load_path = [File.dirname(__FILE__) + "/../../kernel"]
       
       bootstrap
     end
@@ -16,6 +15,10 @@ module Min
     def [](name)
       @context.constants[name] ||
       raise(ConstantNotFound, "#{name} class can't be found in context.")
+    end
+    
+    def []=(name, value)
+      @context.constants[name] = value
     end
     
     def eval(string, context=@context)

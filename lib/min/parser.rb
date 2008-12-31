@@ -1,14 +1,7 @@
 module Min
   class Parser < GeneratedParser
-    attr_reader :runtime
-    
-    def initialize(runtime)
-      @runtime   = runtime
+    def initialize
       @tokenizer = Tokenizer.new
-    end
-    
-    def context
-      @runtime.context
     end
 
     def parse(string)
