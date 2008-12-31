@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe Runtime do
   before do
-    @runtime = TestRuntime.new
+    @runtime = Min.runtime
   end
   
   it "should load file in load path" do

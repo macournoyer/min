@@ -55,4 +55,17 @@ module Min
         load "string"
       end
   end
+  
+  class << self
+    def runtime
+      @runtime ||= Runtime.new
+    end
+    
+    def [](name)
+      runtime.context.constants[name]
+    end
+    
+    # Delegates
+    [:eval, :load].each { |method| define_method(method) { |*a| runtime.send(method, *a) } }
+  end
 end
