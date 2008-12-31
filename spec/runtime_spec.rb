@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe Runtime do
   before do
-    @runtime = TestRuntime.new
+    @runtime = Min.runtime
   end
   
   it "should load file in load path" do
@@ -45,5 +45,9 @@ describe Runtime do
     @runtime.eval("Object.vtable.add_method :return_itself { it }")
     @runtime.context.constants[:Object].vtable.lookup(:return_itself).should be_a(Closure)
     @runtime.eval('return_itself "test"').should == Min::String.new("test")
+  end
+  
+  it "should raise when constant not found" do
+    proc { @runtime[:Waaaaa?] }.should raise_error(ConstantNotFound)
   end
 end

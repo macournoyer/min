@@ -1,22 +1,21 @@
-require "pathname"
-require "forwardable"
-
 module Min
-  class BootstrapError < StandardError; end
+  class ConstantNotFound < StandardError; end
   
   class Runtime
-    extend Forwardable
-    
     attr_reader :context, :load_path
     
-    def_delegators :@context, :constants
-    
     def initialize
-      @parser    = Parser.new(self)
-      @context   = Context.new(nil)
-      @load_path = [File.dirname(__FILE__) + "/../../kernel"]
+      @parser       = Parser.new
+      @context      = Context.new(nil)
+      @load_path    = [File.dirname(__FILE__) + "/../../kernel"]
+      @bootstrapped = false
       
       bootstrap
+    end
+    
+    def [](name)
+      @context.constants[name] ||
+      raise(ConstantNotFound, "#{name} class can't be found in context.")
     end
     
     def eval(string, context=@context)
@@ -58,5 +57,14 @@ module Min
         load "class"
         load "string"
       end
+  end
+  
+  class << self
+    def runtime
+      @runtime ||= Runtime.new
+    end
+    
+    # Delegates
+    [:[], :eval, :load].each { |method| define_method(method) { |*a| runtime.send(method, *a) } }
   end
 end

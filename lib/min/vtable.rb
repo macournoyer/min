@@ -34,9 +34,7 @@ module Min
     end
     
     def self.bootstrap(runtime)
-      vtable = runtime.constants[:VTable]
-      raise BootstrapError, "VTable can't be found in context" unless vtable
-      
+      vtable = runtime[:VTable]
       vtable.add_method(:lookup, RubyMethod.new(:lookup))
       vtable.add_method(:add_method, RubyMethod.new(:add_method))
       vtable.add_method(:allocate, RubyMethod.new(:allocate))
