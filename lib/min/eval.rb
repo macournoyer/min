@@ -54,18 +54,6 @@ module Min
     end
   end
   
-  class Object
-    def eval(context)
-      self
-    end
-  end
-  
-  class Number
-    def eval(context)
-      self
-    end
-  end
-
   class String
     def eval(context)
       self

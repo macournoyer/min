@@ -16,6 +16,10 @@ module Min
       end
     end
     
+    def eval(context)
+      self
+    end
+    
     def self.bootstrap(runtime)
       object = runtime.constants[:Object]
       raise BootstrapError, "Object can't be found in context" unless object

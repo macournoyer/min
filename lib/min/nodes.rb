@@ -17,5 +17,4 @@ module Min
   
   class Symbol < NodeClass(:value); end
   class String < NodeClass(:value); end
-  class Number < NodeClass(:value); end
 end

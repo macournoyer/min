@@ -12,7 +12,7 @@ module Min
     def_delegators :@context, :constants
     
     def initialize
-      @parser    = Parser.new
+      @parser    = Parser.new(self)
       @context   = Context.new(nil)
       @load_path = [File.dirname(__FILE__) + "/../../kernel"]
       
@@ -47,6 +47,7 @@ module Min
         # Base classes bootstrap
         VTable.bootstrap(self)
         Min::Object.bootstrap(self)
+        Min::Number.bootstrap(self)
         
         # Root context init
         @context.min_self = object.vtable.allocate

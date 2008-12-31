@@ -14,7 +14,7 @@ describe Runtime do
   end
   
   it "should eval 1" do
-    @runtime.eval("1").should == Number.new(1)
+    @runtime.eval("1").should == Number.new(@runtime.context, 1)
   end
 
   it "should eval self" do
@@ -34,7 +34,7 @@ describe Runtime do
   end
 
   it "should eval eval" do
-    @runtime.eval('eval("1")').should == Number.new(1)
+    @runtime.eval('eval("1")').should == Number.new(@runtime.context, 1)
   end
 
   it "should eval load" do
