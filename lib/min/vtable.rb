@@ -12,7 +12,7 @@ module Min
     # creates a new object within the vtable's family (by copying
     # the receiver into the new object's vtable slot).
     def allocate
-      Min::Object.new(delegated)
+      Min::Object.new(self)
     end
     
     # creates an association from a message name to 
