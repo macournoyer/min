@@ -4,11 +4,6 @@ module Min
   end
   
   class Block < NodeClass(:nodes); end
-  class Closure < NodeClass(:block, :arguments)
-    def value
-      self
-    end
-  end
   class Call < NodeClass(:receiver, :message, :arguments); end
   class Assign < NodeClass(:name, :value); end
   
