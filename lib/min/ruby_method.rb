@@ -32,3 +32,9 @@ class String
     Min::String.new(self)
   end
 end
+
+class Symbol
+  def to_min
+    Min::Symbol.new(self)
+  end
+end

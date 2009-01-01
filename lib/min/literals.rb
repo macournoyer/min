@@ -18,7 +18,7 @@ module Min
     def self.bootstrap(runtime)
       vtable = runtime[:Object].vtable.delegated
       
-      @@exposed_methods.each do |op|
+      @exposed_methods.each do |op|
         vtable.add_method(op, RubyMethod.new(op, :value))
       end
       
@@ -26,15 +26,19 @@ module Min
     end
     
     def self.exposed_methods(*methods)
-      @@exposed_methods = methods
+      @exposed_methods = methods
     end
   end
   
   class Number < Literal
-    exposed_methods :+, :-, :*, :/
+    exposed_methods :+, :-, :*, :/, :to_s
   end
-
+  
   class String < Literal
-    exposed_methods :+
+    exposed_methods :+, :to_sym
+  end
+  
+  class Symbol < Literal
+    exposed_methods :to_s
   end
 end

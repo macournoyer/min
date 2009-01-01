@@ -53,10 +53,4 @@ module Min
       context.constants[name] = value.eval(context)
     end
   end
-  
-  class Symbol
-    def eval(context)
-      self
-    end
-  end
 end

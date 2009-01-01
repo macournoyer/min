@@ -8,4 +8,8 @@ describe "String" do
   it "should concat" do
     Min.eval(%{"oh" + "aie"}).should == Min::String.new("ohaie")
   end
+
+  it "should convert to symbol" do
+    Min.eval(%{"ohaie".to_sym}).should == Min::Symbol.new(:ohaie)
+  end
 end

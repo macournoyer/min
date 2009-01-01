@@ -43,6 +43,7 @@ module Min
       Min::Object.bootstrap(self)
       Min::Number.bootstrap(self)
       Min::String.bootstrap(self)
+      Min::Symbol.bootstrap(self)
       
       # Root context init
       @context.min_self = object.vtable.allocate
