@@ -54,12 +54,6 @@ module Min
     end
   end
   
-  class String
-    def eval(context)
-      self
-    end
-  end
-
   class Symbol
     def eval(context)
       self

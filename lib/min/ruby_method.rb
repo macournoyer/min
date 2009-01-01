@@ -9,20 +9,26 @@ module Min
       if @attribute
         receiver = receiver.send(@attribute)
       end
-      receiver.send(@message, *args.map { |arg| arg.eval(context).value }).to_min(context)
+      receiver.send(@message, *args.map { |arg| arg.eval(context).value }).to_min
     end
   end
 end
 
 # Convertions from Ruby object to Min object
 class Object
-  def to_min(context)
+  def to_min
     self
   end
 end
 
 class Fixnum
-  def to_min(context)
-    Min::Number.new(context, self)
+  def to_min
+    Min::Number.new(self)
+  end
+end
+
+class String
+  def to_min
+    Min::String.new(self)
   end
 end
