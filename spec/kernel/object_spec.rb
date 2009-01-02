@@ -10,10 +10,10 @@ describe "Object" do
   end
 
   it "should set constant" do
-    Min.eval(%{Object.constant_set("Test", 1)}).should == Number.new(1)
+    Min.eval(%{Object.constant_set(:Test, 1)}).should == Number.new(1)
   end
 
   it "should get constant" do
-    Min.eval(%{Object.constant_get("Object")}).should == Min[:Object]
+    Min.eval(%{Object.constant_get(:Object)}).should == Min[:Object]
   end
 end

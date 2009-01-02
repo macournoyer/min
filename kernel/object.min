@@ -4,8 +4,8 @@ Object.vtable.add_method(:new):
   obj
 
 Object.vtable.add_method(:constant_set): name, value |
-  eval(name + " = value")
+  eval(name.to_s + " = value")
   value
 
 Object.vtable.add_method(:constant_get): name |
-  eval(name)
+  eval(name.to_s)

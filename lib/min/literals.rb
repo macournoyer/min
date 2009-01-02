@@ -35,7 +35,7 @@ module Min
   end
   
   class String < Literal
-    exposed_methods :+, :to_sym
+    exposed_methods :+, :to_sym, :to_s
   end
   
   class Symbol < Literal
