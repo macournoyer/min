@@ -27,6 +27,12 @@ class Fixnum
   end
 end
 
+class Float
+  def to_min
+    Min::Number.new(self)
+  end
+end
+
 class String
   def to_min
     Min::String.new(self)
@@ -42,5 +48,11 @@ end
 class Array
   def to_min
     Min::Array.new(self)
+  end
+end
+
+class Hash
+  def to_min
+    Min::Hash.new(self)
   end
 end
