@@ -1,10 +1,10 @@
 Object.vtable.add_method(:new):
   obj = Object.vtable.allocate
-  obj.vtable.add_method(:class) { Object }
+  obj.vtable.add_method(:class, { Object })
   obj
 
 Object.vtable.add_method(:constant_set): name, value |
-  eval(name + "= value")
+  eval(name + " = value")
   value
 
 Object.vtable.add_method(:constant_get): name |

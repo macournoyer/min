@@ -46,7 +46,7 @@ describe Parser do
   it_should_parse(%{x:\n  1\n2\n}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [])]),
                                            Number.new(2)] }
   it_should_parse(%{x {1}\n}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [])])] }
-  it_should_parse(%{x(2) {1}\n}) { [Call.new(nil, :x, [Number.new(2), Closure.new(Block.new([Number.new(1)]), [])])] }
+  it_should_parse(%{x(2, {1})\n}) { [Call.new(nil, :x, [Number.new(2), Closure.new(Block.new([Number.new(1)]), [])])] }
   it_should_parse(%{x { a | 1}\n}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [:a])])] }
   it_should_parse(%{x: 1\n}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [])])] }
   it_should_parse(%{x: a | 1\n}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [:a])])] }
