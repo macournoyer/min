@@ -10,6 +10,11 @@ module Min
     def ==(other)
       self.class === other && value == other.value
     end
+    alias :eql? :==
+    
+    def hash
+      value.hash
+    end
     
     def self.min_constant_name
       self.name[/::(\w+)$/, 1].to_sym
@@ -44,5 +49,9 @@ module Min
 
   class Array < Literal
     exposed_methods :[], :[]=, :size, :<<
+  end
+
+  class Hash < Literal
+    exposed_methods :[], :[]=, :size
   end
 end

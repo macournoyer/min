@@ -77,4 +77,10 @@ describe Parser do
   # Array
   it_should_parse(%{[1]}) { [Min::Array.new([Number.new(1)])] }
   it_should_parse(%{[1, 2]}) { [Min::Array.new([Number.new(1), Number.new(2)])] }
+
+  # Hash
+  it_should_parse(%{[:]}) { [Min::Hash.new({})] }
+  it_should_parse(%{[1: 2]}) { [Min::Hash.new(Number.new(1) => Number.new(2))] }
+  it_should_parse(%{[a: 2]}) { [Min::Hash.new(Min::Symbol.new(:a) => Number.new(2))] }
+  it_should_parse(%{["a" : 2]}) { [Min::Hash.new(Min::String.new("a") => Number.new(2))] }
 end

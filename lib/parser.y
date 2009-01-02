@@ -33,16 +33,29 @@ rule
   | Closure
   ;
   
-  StatementList:
-    Statement { result = [val[0]] }
-  | Statement ',' StatementList { result = [val[0], val[2]].flatten }
+  Literal:
+    NUMBER              { result = Min::Number.new(val[0]) }
+  | STRING              { result = Min::String.new(val[0]) }
+  | SYMBOL              { result = Min::Symbol.new(val[0]) }
+  | '[' ArrayItems ']'  { result = Min::Array.new(val[1]) }
+  | '[' HashItems ']'   { result = Min::Hash.new(val[1]) }
   ;
   
-  Literal:
-    NUMBER { result = Min::Number.new(val[0]) }
-  | STRING { result = Min::String.new(val[0]) }
-  | SYMBOL { result = Min::Symbol.new(val[0]) }
-  | '[' StatementList ']' { result = Min::Array.new(val[1]) }
+  ArrayItems:
+    /* empty */              { result = [] }
+  | Statement                { result = [val[0]] }
+  | Statement ',' ArrayItems { result = [val[0], val[2]].flatten }
+  ;
+  
+  HashItem:
+    Statement ':' Statement  { result = { val[0] => val[2] } }
+  | ID ':' Statement         { result = { Min::Symbol.new(val[0]) => val[2] } }
+  ;
+
+  HashItems:
+    ':'                    { result = {} }
+  | HashItem
+  | HashItem ',' HashItems { result = val[2].merge(val[0]) }
   ;
   
   Op:
