@@ -20,11 +20,25 @@ module Min
       closure_context.locals[:self] = receiver
       
       # Pass args as local vars
-      arguments.map { |param| param.name }.zip(args).each do |name, value|
+      map_params(args).each do |name, value|
         closure_context.locals[name] = value
       end
       
       block.eval(closure_context)
+    end
+    
+    def map_params(args)
+      mapped = {}
+      arguments.each_with_index do |argument, i|
+        if argument.splat
+          # TODO Splat only allowed as last arg for now
+          mapped[argument.name] = args[i..-1]
+          break
+        else
+          mapped[argument.name] = args[i] || argument.default
+        end
+      end
+      mapped
     end
     
     def bind(object)
