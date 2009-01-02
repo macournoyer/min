@@ -33,10 +33,16 @@ rule
   | Closure
   ;
   
+  StatementList:
+    Statement { result = [val[0]] }
+  | Statement ',' StatementList { result = [val[0], val[2]].flatten }
+  ;
+  
   Literal:
     NUMBER { result = Min::Number.new(val[0]) }
   | STRING { result = Min::String.new(val[0]) }
   | SYMBOL { result = Min::Symbol.new(val[0]) }
+  | '[' StatementList ']' { result = Min::Array.new(val[1]) }
   ;
   
   Op:

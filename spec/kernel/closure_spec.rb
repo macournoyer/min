@@ -17,7 +17,7 @@ describe "Closure" do
     Min.eval("{ x=1 | x }.call").should == Number.new(1)
   end
 
-  xit "should accept arguments with splat" do
+  it "should accept arguments with splat" do
     Min.eval("{ *x | x }.call(1, 2)").should == Min::Array.new([Number.new(1), Number.new(2)])
   end
 

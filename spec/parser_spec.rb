@@ -73,4 +73,8 @@ describe Parser do
   
   # Symbol
   it_should_parse(%{:ohaie}) { [Min::Symbol.new(:ohaie)] }
+  
+  # Array
+  it_should_parse(%{[1]}) { [Min::Array.new([Number.new(1)])] }
+  it_should_parse(%{[1, 2]}) { [Min::Array.new([Number.new(1), Number.new(2)])] }
 end

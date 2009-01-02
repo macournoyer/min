@@ -44,6 +44,7 @@ module Min
       Min::Number.bootstrap(self)
       Min::String.bootstrap(self)
       Min::Symbol.bootstrap(self)
+      Min::Array.bootstrap(self)
       Min::Closure.bootstrap(self)
       
       # Root context init

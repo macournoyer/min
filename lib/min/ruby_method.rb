@@ -38,3 +38,9 @@ class Symbol
     Min::Symbol.new(self)
   end
 end
+
+class Array
+  def to_min
+    Min::Array.new(self)
+  end
+end

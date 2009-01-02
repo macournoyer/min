@@ -32,7 +32,7 @@ module Min
       arguments.each_with_index do |argument, i|
         if argument.splat
           # TODO Splat only allowed as last arg for now
-          mapped[argument.name] = args[i..-1]
+          mapped[argument.name] = args[i..-1].to_min
           break
         else
           mapped[argument.name] = args[i] || argument.default

@@ -41,4 +41,8 @@ module Min
   class Symbol < Literal
     exposed_methods :to_s
   end
+
+  class Array < Literal
+    exposed_methods :[], :[]=, :size, :<<
+  end
 end
