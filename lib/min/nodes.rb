@@ -5,6 +5,7 @@ module Min
   
   class Block < NodeClass(:nodes); end
   class Call < NodeClass(:receiver, :message, :arguments); end
+  class Param < NodeClass(:name, :default, :splat); end
   class Assign < NodeClass(:name, :value); end
   
   class Constant < NodeClass(:name); end

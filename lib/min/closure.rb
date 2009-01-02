@@ -20,7 +20,7 @@ module Min
       closure_context.locals[:self] = receiver
       
       # Pass args as local vars
-      arguments.zip(args).each do |name, value|
+      arguments.map { |param| param.name }.zip(args).each do |name, value|
         closure_context.locals[name] = value
       end
       

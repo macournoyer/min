@@ -37,7 +37,7 @@ describe Parser do
                                                             Block.new([Number.new(1)]), [])
                                                           ])] }
   it_should_parse(%{x: a |\n  1\n}) { [Call.new(nil, :x, [Closure.new(
-                                                            Block.new([Number.new(1)]), [:a])
+                                                            Block.new([Number.new(1)]), [Param.new(:a, nil, false)])
                                                           ])] }
   it_should_parse(%{x(1):\n  1\n  2\n}) { [Call.new(nil, :x, [Number.new(1),
                                                                     Closure.new(
@@ -47,10 +47,15 @@ describe Parser do
                                            Number.new(2)] }
   it_should_parse(%{x {1}\n}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [])])] }
   it_should_parse(%{x(2, {1})\n}) { [Call.new(nil, :x, [Number.new(2), Closure.new(Block.new([Number.new(1)]), [])])] }
-  it_should_parse(%{x { a | 1}\n}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [:a])])] }
+  it_should_parse(%{x { a | 1}\n}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [Param.new(:a, nil, false)])])] }
   it_should_parse(%{x: 1\n}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [])])] }
-  it_should_parse(%{x: a | 1\n}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [:a])])] }
-  it_should_parse(%{x(1): a | 1\n}) { [Call.new(nil, :x, [Number.new(1), Closure.new(Block.new([Number.new(1)]), [:a])])] }
+  it_should_parse(%{x: a | 1\n}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [Param.new(:a, nil, false)])])] }
+  it_should_parse(%{x(1): a | 1\n}) { [Call.new(nil, :x, [Number.new(1), Closure.new(Block.new([Number.new(1)]), [Param.new(:a, nil, false)])])] }
+  
+  # Closure
+  it_should_parse(%{{ a | 1 }}) { [Closure.new(Block.new([Number.new(1)]), [Param.new(:a, nil, false)])] }
+  it_should_parse(%{{ *a | 1 }}) { [Closure.new(Block.new([Number.new(1)]), [Param.new(:a, nil, true)])] }
+  it_should_parse(%{{ a=2 | 1 }}) { [Closure.new(Block.new([Number.new(1)]), [Param.new(:a, Number.new(2), false)])] }
   
   # Object calls
   it_should_parse(%{1.x}) { [Call.new(Number.new(1), :x, [])] }

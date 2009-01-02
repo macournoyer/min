@@ -94,8 +94,10 @@ rule
   ;
   
   ParamList:
-    /* nothing */    { result = [] }
-  | ID               { result = [val[0]] }
-  | ID ',' ParamList { result = [val[0], val[2]].flatten }
+    /* nothing */         { result = [] }
+  | ID                    { result = [Param.new(val[0], nil, false)] }
+  | '*' ID                { result = [Param.new(val[1], nil, true)] }
+  | ID '=' Literal        { result = [Param.new(val[0], val[2], false)] }
+  | ID ',' ParamList      { result = [Param.new(val[0]), val[2]].flatten }
   ;
 end
