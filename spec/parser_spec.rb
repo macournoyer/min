@@ -67,6 +67,9 @@ describe Parser do
   it_should_parse(%{a.x = 1}) { [Call.new(Call.new(nil, :a, []), :x=, [Number.new(1)])] }
   it_should_parse(%{x == 1}) { [Call.new(Call.new(nil, :x, []), :==, [Number.new(1)])] }
   it_should_parse(%{x + 1}) { [Call.new(Call.new(nil, :x, []), :+, [Number.new(1)])] }
+  it_should_parse(%{x && 1}) { [Call.new(Call.new(nil, :x, []), :"&&", [Number.new(1)])] }
+  it_should_parse(%{!1}) { [Call.new(Number.new(1), :"!", [])] }
+  it_should_parse(%{-1}) { [Call.new(Number.new(1), :"-", [])] }
   
   # Comments
   it_should_parse(%{# I IZ COMMENTZIN}) { [] }

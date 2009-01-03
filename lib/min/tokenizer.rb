@@ -17,13 +17,16 @@ module Min
       # Rules declaration
       
       operator :eq,  "=="
-      operator :add, "+"
-      operator :rem, "-"
+      operator :pls, "+"
+      operator :min, "-"
       operator :lt,  "<"
       operator :gt,  ">"
       operator :let, "<="
       operator :get, ">="
       operator :rsh, "<<"
+      operator :and, "&&"
+      operator :or,  "||"
+      operator :not, "!"
       
       token(/\A\#+\s+(.*)/) do |_, value|
         # eat comments

@@ -11,7 +11,7 @@ token CONST
 token SYMBOL
 
 /* Operators */
-token EQ ADD REM RSH
+token EQ PLS MIN RSH LT GT LET GET AND OR NOT
 
 rule
   Root:
@@ -58,11 +58,22 @@ rule
   | HashItem ',' HashItems { result = val[2].merge(val[0]) }
   ;
   
-  Op:
+  BinaryOp:
     EQ
-  | ADD
-  | REM
+  | PLS
+  | MIN
   | RSH
+  | LT
+  | GT
+  | LET
+  | GET
+  | AND
+  | OR
+  ;
+  
+  UnaryOp:
+    NOT
+  | MIN
   ;
   
   Call:
@@ -71,7 +82,8 @@ rule
   | Statement '.' ID ArgList         { result = Call.new(val[0], val[2], val[3]) }
   | Statement '.' ID ArgList Block   { result = Call.new(val[0], val[2], val[3] << val[4]) }
   | Statement '.' ID '=' Statement   { result = Call.new(val[0], :"#{val[2]}=", [val[4]]) }
-  | Statement Op Statement           { result = Call.new(val[0], val[1].to_sym, [val[2]]) }
+  | Statement BinaryOp Statement     { result = Call.new(val[0], val[1].to_sym, [val[2]]) }
+  | UnaryOp Statement                { result = Call.new(val[1], val[0].to_sym, []) }
   | Statement '[' Statement ']'      { result = Call.new(val[0], :[], [val[2]]) }
   | Statement '[' Statement ']'      
     '=' Statement                    { result = Call.new(val[0], :[]=, [val[2], val[5]]) }
