@@ -17,8 +17,8 @@ module Min
     
     # creates an association from a message name to 
     # a method implementation, and the method. 
-    def add_method(message, block)
-      @methods[message] = block
+    def add_method(message, closure)
+      @methods[message] = closure
     end
     
     # queries the associations to ﬁnd an implementation

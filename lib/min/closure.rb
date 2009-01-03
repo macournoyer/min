@@ -18,8 +18,9 @@ module Min
       bind(closure_context.min_self)
       
       # Special local vars
-      closure_context.locals[:it] = args.first
-      closure_context.locals[:self] = @receiver
+      closure_context.locals[:it]       = args.first
+      closure_context.locals[:self]     = @receiver
+      closure_context.locals[:receiver] = receiver
       
       # Pass args as local vars
       bind_params(args).each do |name, value|
@@ -45,10 +46,6 @@ module Min
     
     def bind(object)
       @receiver = object
-      self
-    end
-    
-    def value
       self
     end
     

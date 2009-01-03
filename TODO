@@ -1,4 +1,5 @@
-* Refactor all nodes into Min::Object
-* Implement macros to define class "statement"
+* Need a return statement?
+* Add line # info to parsed nodes for exception
+* Implement macros to define class "statement" ??
 * Define Class in Min lang
 * Implement mixin
