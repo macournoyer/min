@@ -35,7 +35,7 @@ module Min
           Token.new(:INDENT, indent)
         elsif indent < @indent
           @indent = indent
-          Token.new(:DEDENT, @indents.pop)
+          [Token.new(:DEDENT, @indents.pop), Token.new(:SEP, "\n")]
         else
           Token.new(:SEP, "\n")
         end

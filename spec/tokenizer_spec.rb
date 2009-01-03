@@ -16,12 +16,15 @@ else:
 EOS
     tokens.should == [
       [:ID, :if], [:ID, :foo], [":", ":"],
-      [:INDENT, 2], [:ID, :if], [:ID, :bar], [":", ":"],
-      [:INDENT, 4], [:ID, :x], ["=", "="], [:NUMBER, 42], [:SEP, "\n"],
-                    [:ID, :y], ["=", "="], [:ID, :x],
-      [:DEDENT, 2], [:DEDENT, 4], [:SEP, "\n"], [:ID, :else], [":", ":"],
-      [:INDENT, 2], [:ID, :print], [:ID, :foo],
-      [:DEDENT, 2]
+        [:INDENT, 2], [:ID, :if], [:ID, :bar], [":", ":"],
+          [:INDENT, 4],
+            [:ID, :x], ["=", "="], [:NUMBER, 42], [:SEP, "\n"],
+            [:ID, :y], ["=", "="], [:ID, :x], [:DEDENT, 2],
+          [:DEDENT, 4], [:SEP, "\n"],
+        [:ID, :else], [":", ":"],
+          [:INDENT, 2],
+            [:ID, :print], [:ID, :foo],
+          [:DEDENT, 2]
     ]
   end
   
@@ -34,18 +37,19 @@ if foo:
 EOS
     tokens.should == [
       [:ID, :if], [:ID, :foo], [":", ":"],
-      [:INDENT, 2], [:ID, :if], [:ID, :bar], [":", ":"],
-      [:INDENT, 4], [:ID, :x], ["=", "="], [:NUMBER, 42],
-      [:DEDENT, 4], [:ID, :y], ["=", "="], [:ID, :x],
-      [:DEDENT, 2]
+        [:INDENT, 2], [:ID, :if], [:ID, :bar], [":", ":"],
+          [:INDENT, 4],
+            [:ID, :x], ["=", "="], [:NUMBER, 42],
+          [:DEDENT, 4], [:SEP, "\n"],
+          [:ID, :y], ["=", "="], [:ID, :x],
+        [:DEDENT, 2]
     ]
   end
   
   it "should tokenize add remaining detends on end" do
     tokens = @tokenizer.tokenize("a:\n  1").should == [
       [:ID, :a], [":", ":"],
-      [:INDENT, 2], [:NUMBER, 1],
-      [:DEDENT, 2]
+        [:INDENT, 2], [:NUMBER, 1], [:DEDENT, 2]
     ]
   end
   
