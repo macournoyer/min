@@ -1,15 +1,20 @@
 module Min
   class RubyMethod
-    def initialize(message, attribute=nil)
-      @message   = message
-      @attribute = attribute
+    def initialize(message, options={})
+      @message      = message
+      @delegate_to  = options[:delegate_to]
+      @pass_context = options[:pass_context]
     end
     
     def call(context, receiver, *args)
-      if @attribute
-        receiver = receiver.send(@attribute)
-      end
-      receiver.send(@message, *args.map { |arg| arg.eval(context).value }).to_min
+      # Set receiver
+      receiver = receiver.send(@delegate_to) if @delegate_to
+      
+      # Construct args
+      call_args = args.map { |arg| arg.eval(context).value }
+      call_args.unshift(context) if @pass_context
+      
+      receiver.send(@message, *call_args).to_min
     end
   end
 end

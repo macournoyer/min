@@ -9,10 +9,19 @@ module Min
     end
     
     def min_send(context, message, *args)
-      if method = @vtable.lookup(message)
+      if method = min_method(context, message)
         method.call(context, self, *args)
       else
         raise MethodNotFound, "Method not found #{message} on #{inspect}"
+      end
+    end
+    
+    def min_method(context, message)
+      # short-circuit to break recursion in send.
+      if message == :lookup && is_a?(VTable)
+        @vtable.lookup(context, message)
+      else
+        @vtable.min_send(context, :lookup, message.to_min)
       end
     end
     

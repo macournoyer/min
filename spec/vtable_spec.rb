@@ -3,17 +3,18 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe VTable do
   before do
     @vtable = VTable.new
+    @context = mock("context")
     
     @vtable.add_method(:who, proc { |*a| :parent })
     @vtable.add_method(:parent, proc { |*a| true })
   end
   
   it "should lookup method" do
-    @vtable.lookup(:who).should be_a(Proc)
+    @vtable.lookup(@context, :who).should be_a(Proc)
   end
   
   it "should return callabale methods" do
-    @vtable.lookup(:who).call.should == :parent
+    @vtable.lookup(@context, :who).call.should == :parent
   end
   
   describe "allocated" do
@@ -24,11 +25,11 @@ describe VTable do
     end
     
     it "should lookup parent method" do
-      @allocated.lookup(:parent).should be_a(Proc)
+      @allocated.lookup(@context, :parent).should be_a(Proc)
     end
 
     it "should override parent method" do
-      @allocated.lookup(:who).call.should == :allocated
+      @allocated.lookup(@context, :who).call.should == :allocated
     end
   end
 end

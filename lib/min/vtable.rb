@@ -23,8 +23,8 @@ module Min
     
     # queries the associations to ﬁnd an implementation
     # corresponding to a message name
-    def lookup(message)
-      @methods[message] || parent && parent.lookup(message)
+    def lookup(context, message)
+      @methods[message] || parent && parent.min_send(context, :lookup, message.to_min)
     end
     
     # creates a new vtable that will delegate unhandled
@@ -35,7 +35,7 @@ module Min
     
     def self.bootstrap(runtime)
       vtable = runtime[:VTable]
-      vtable.add_method(:lookup, RubyMethod.new(:lookup))
+      vtable.add_method(:lookup, RubyMethod.new(:lookup, :pass_context => true))
       vtable.add_method(:add_method, RubyMethod.new(:add_method))
       vtable.add_method(:allocate, RubyMethod.new(:allocate))
       vtable.add_method(:delegated, RubyMethod.new(:delegated))

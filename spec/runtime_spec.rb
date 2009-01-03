@@ -43,7 +43,6 @@ describe Runtime do
 
   it "should add method" do
     @runtime.eval("Object.vtable.add_method :return_itself, { it }")
-    @runtime[:Object].vtable.lookup(:return_itself).should be_a(Closure)
     @runtime.eval('return_itself "test"').should == Min::String.new("test")
   end
   

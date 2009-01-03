@@ -24,7 +24,7 @@ module Min
       vtable = runtime[:Object].vtable.delegated
       
       @exposed_methods.each do |op|
-        vtable.add_method(op, RubyMethod.new(op, :value))
+        vtable.add_method(op, RubyMethod.new(op, :delegate_to => :value))
       end
       
       runtime[min_constant_name] = vtable.allocate
