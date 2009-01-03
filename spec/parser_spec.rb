@@ -33,24 +33,24 @@ describe Parser do
   it_should_parse(%{1[2] = 3}) { [Call.new(Number.new(1), :[]=, [Number.new(2), Number.new(3)])] }
   
   # Call w/ closure
-  it_should_parse(%{x:\n  1\n}) { [Call.new(nil, :x, [Closure.new(
+  it_should_parse(%{x:\n  1}) { [Call.new(nil, :x, [Closure.new(
                                                             Block.new([Number.new(1)]), [])
                                                           ])] }
-  it_should_parse(%{x: a |\n  1\n}) { [Call.new(nil, :x, [Closure.new(
+  it_should_parse(%{x: a |\n  1}) { [Call.new(nil, :x, [Closure.new(
                                                             Block.new([Number.new(1)]), [Param.new(:a, nil, false)])
                                                           ])] }
-  it_should_parse(%{x(1):\n  1\n  2\n}) { [Call.new(nil, :x, [Number.new(1),
+  it_should_parse(%{x(1):\n  1\n  2}) { [Call.new(nil, :x, [Number.new(1),
                                                                     Closure.new(
                                                                       Block.new([Number.new(1), Number.new(2)]), [])
                                                                    ])] }
-  it_should_parse(%{x:\n  1\n2\n}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [])]),
+  it_should_parse(%{x:\n  1\n2}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [])]),
                                            Number.new(2)] }
-  it_should_parse(%{x {1}\n}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [])])] }
-  it_should_parse(%{x(2, {1})\n}) { [Call.new(nil, :x, [Number.new(2), Closure.new(Block.new([Number.new(1)]), [])])] }
-  it_should_parse(%{x { a | 1}\n}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [Param.new(:a, nil, false)])])] }
-  it_should_parse(%{x: 1\n}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [])])] }
-  it_should_parse(%{x: a | 1\n}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [Param.new(:a, nil, false)])])] }
-  it_should_parse(%{x(1): a | 1\n}) { [Call.new(nil, :x, [Number.new(1), Closure.new(Block.new([Number.new(1)]), [Param.new(:a, nil, false)])])] }
+  it_should_parse(%{x {1}}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [])])] }
+  it_should_parse(%{x(2, {1})}) { [Call.new(nil, :x, [Number.new(2), Closure.new(Block.new([Number.new(1)]), [])])] }
+  it_should_parse(%{x { a | 1}}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [Param.new(:a, nil, false)])])] }
+  it_should_parse(%{x: 1}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [])])] }
+  it_should_parse(%{x: a | 1}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [Param.new(:a, nil, false)])])] }
+  it_should_parse(%{x(1): a | 1}) { [Call.new(nil, :x, [Number.new(1), Closure.new(Block.new([Number.new(1)]), [Param.new(:a, nil, false)])])] }
   
   # Closure
   it_should_parse(%{{ a | 1 }}) { [Closure.new(Block.new([Number.new(1)]), [Param.new(:a, nil, false)])] }

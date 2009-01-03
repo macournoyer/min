@@ -100,6 +100,11 @@ module Min
         end
       end
       
+      # dedent all open indent
+      while indent = @indents.pop
+        @tokens << Token.new(:DEDENT, indent)
+      end
+      
       # cleanup
       @tokens.shift while !@tokens.empty? && @tokens.first.name == :SEP
       @tokens.pop   while !@tokens.empty? && @tokens.last.name == :SEP
