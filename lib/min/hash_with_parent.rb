@@ -4,7 +4,7 @@ module Min
       @parent = parent
       super()
     end
-  
+    
     def [](key)
       super || @parent && @parent[key]
     end

@@ -26,5 +26,5 @@ task :spec => :parser
 
 desc "Show num LOC in lib"
 task :loc do
-  sh 'cat `find lib -name *.rb` | grep -v "^ *#" | grep -v "^ *$" | wc -l'
+  sh 'cat `find lib -name *.rb -or -name *.y | grep -v generated` | grep -v "^ *#" | grep -v "^ *$" | wc -l'
 end

@@ -4,17 +4,16 @@ module Min
   #          "How does the compiler parse the indentation?"
   class Tokenizer
     class Matcher < Struct.new(:pattern, :block); end
-    
-    class Token < Struct.new(:name, :value)
-      def inspect
-        "<#{name}:#{value.inspect}>"
-      end
-    end
+    class Token < Struct.new(:name, :value); end
     
     def initialize
       @matchers = []
       
       # Rules declaration
+      
+      token(/\A\#+\s+(.*)/) do |_, value|
+        # eat comments
+      end
       
       operator :eq,  "=="
       operator :pls, "+"
@@ -27,10 +26,6 @@ module Min
       operator :and, "&&"
       operator :or,  "||"
       operator :not, "!"
-      
-      token(/\A\#+\s+(.*)/) do |_, value|
-        # eat comments
-      end
       
       token(/\A\n([ \t]+)/m) do |v, level|
         indent = level.size
@@ -116,7 +111,7 @@ module Min
       def token(pattern, &block)
         @matchers << Matcher.new(pattern, block || proc { nil })
       end
-
+      
       def operator(name, pattern=name)
         token(/\A#{Regexp.escape(pattern.to_s)}/) do |value|
           Token.new(name.to_s.upcase.to_sym, value)
