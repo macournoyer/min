@@ -32,6 +32,8 @@ module Min
     def self.bootstrap(runtime)
       object = runtime[:Object]
       object.vtable.add_method(:vtable, RubyMethod.new(:vtable))
+      object.vtable.add_method(:send, RubyMethod.new(:min_send, :pass_context => true))
+      object.vtable.add_method(:method, RubyMethod.new(:min_method, :pass_context => true))
       object.vtable.add_method(:puts, proc { |context, obj, str| puts str.eval(context).value })
       object.vtable.add_method(:eval, proc { |context, obj, code| runtime.eval(code.eval(context).value, context) })
       object.vtable.add_method(:load, proc { |context, obj, file| runtime.load(file.eval(context).value) })
