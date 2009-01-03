@@ -11,8 +11,8 @@ module Min
       @constants = HashWithParent.new(parent && parent.constants)
     end
     
-    def create(min_self=@min_self)
-      self.class.new(min_self, self)
+    def create(min_self=nil)
+      self.class.new(min_self || @min_self, self)
     end
   end
 end

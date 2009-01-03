@@ -12,22 +12,24 @@ module Min
     end
     
     def call(context, receiver, *args)
-      receiver = @receiver if @receiver
-      closure_context = context.create(receiver)
+      closure_context = context.create(@receiver)
+      
+      # inherit receiver from parent context
+      bind(closure_context.min_self)
       
       # Special local vars
       closure_context.locals[:it] = args.first
-      closure_context.locals[:self] = receiver
+      closure_context.locals[:self] = @receiver
       
       # Pass args as local vars
-      map_params(args).each do |name, value|
+      bind_params(args).each do |name, value|
         closure_context.locals[name] = value
       end
       
       block.eval(closure_context)
     end
     
-    def map_params(args)
+    def bind_params(args)
       mapped = {}
       arguments.each_with_index do |argument, i|
         if argument.splat
