@@ -9,10 +9,17 @@ module Min
   
   class Call < Struct.new(:receiver, :message, :arguments)
     def eval(context)
+      if arguments.is_a?(::Array)
+        arg_array = arguments
+      else
+        arg_array = arguments.eval(context).value
+      end
+      
       if receiver.nil? && value = context[message]
         return value
       end
-      (receiver || context.min_self).eval(context).min_send(context, message, *arguments)
+      
+      (receiver || context.min_self).eval(context).min_send(context, message, *arg_array)
     end
   end
   

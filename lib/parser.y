@@ -122,6 +122,7 @@ rule
   
   ArgList:
     /* nothing */         { result = [] }
+  | '*' Statement         { result = val[1] }
   | Statement             { result = [val[0]] }
   | Statement ',' ArgList { result = [val[0], val[2]].flatten }
   | '(' ArgList ')'       { result = val[1] }

@@ -1,6 +1,4 @@
 module Min
-  class MethodNotFound < RuntimeError; end
-  
   class MinExceptionRaised < RuntimeError
     attr_reader :min_class
     
@@ -18,11 +16,7 @@ module Min
     end
     
     def min_send(context, message, *args)
-      if method = min_method(context, message)
-        method.call(context, self, *args)
-      else
-        raise MethodNotFound, "Method not found #{message} on #{inspect}"
-      end
+      min_method(context, message).call(context, self, *args)
     end
     
     def min_method(context, message)

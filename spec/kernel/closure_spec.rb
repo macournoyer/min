@@ -18,7 +18,19 @@ describe "Closure" do
   end
 
   it "should accept arguments with splat" do
-    Min.eval("{ *x | x }.call(1, 2)").should == Min::Array.new([Number.new(1), Number.new(2)])
+    Min.eval("{ *x | x }.call(1, 2)").should == [Number.new(1), Number.new(2)].to_min
+  end
+
+  it "should pass arguments with splat" do
+    Min.eval("{ x, y | x }.call(*[1, 2])").should == Number.new(1)
+  end
+
+  it "should pass arguments with splat on var" do
+    Min.eval("a = [1, 2]; { x, y | x }.call(*a)").should == Number.new(1)
+  end
+
+  it "should pass & accept arguments with splat" do
+    Min.eval("{ *x | x }.call(*[1, 2])").should == [Number.new(1), Number.new(2)].to_min
   end
 
   it "should set self" do

@@ -32,6 +32,7 @@ describe Parser do
   it_should_parse(%{x 1, "1"}) { [Call.new(nil, :x, [Number.new(1), Min::String.new("1")])] }
   it_should_parse(%{1[2]}) { [Call.new(Number.new(1), :[], [Number.new(2)])] }
   it_should_parse(%{1[2] = 3}) { [Call.new(Number.new(1), :[]=, [Number.new(2), Number.new(3)])] }
+  it_should_parse(%{x(*[])}) { [Call.new(nil, :x, Min::Array.new([]))] }
   
   # Call w/ closure
   it_should_parse(%{x:\n  1}) { [
