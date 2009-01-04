@@ -33,8 +33,17 @@ module Min
       self.class.new(self)
     end
     
+    def name
+      Min.runtime.context.slots.detect { |k,v| v == self }.first.to_s
+    end
+    
+    def inspect
+      "Min::#{name}"
+    end
+    
     def self.bootstrap(runtime)
       klass = runtime[:Class]
+      klass.add_method(:name, RubyMethod.new(:name))
       klass.add_method(:superclass, RubyMethod.new(:min_superclass))
       klass.add_method(:lookup, RubyMethod.new(:lookup, :pass_context => true))
       klass.add_method(:add_method, RubyMethod.new(:add_method))
