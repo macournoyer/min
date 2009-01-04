@@ -1,0 +1,4 @@
+NilClass = Class.subclass
+
+nil = NilClass.allocate
+Nil = nil

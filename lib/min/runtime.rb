@@ -53,8 +53,7 @@ module Min
       @context.locals[:self] = @context.min_self = object.allocate
       
       # Load kernel
-      load "object"
-      load "class"
+      load "bootstrap"
     end
     
     private

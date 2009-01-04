@@ -1,0 +1,3 @@
+load "object"
+load "class"
+load "boolean"
