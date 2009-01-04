@@ -11,7 +11,7 @@ module Min
       
       # Rules declaration
       
-      token(/\A\#+\s+(.*)/) do |_, value|
+      token(/\A\s*\#+\s+(.*)/) do |_, value|
         # eat comments
       end
       

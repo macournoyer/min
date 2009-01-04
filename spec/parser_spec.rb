@@ -90,6 +90,7 @@ describe Parser do
   it_should_parse(%{x: 1}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [])])] }
   it_should_parse(%{x: a | 1}) { [Call.new(nil, :x, [Closure.new(Block.new([Number.new(1)]), [Param.new(:a, nil, false)])])] }
   it_should_parse(%{x(1): a | 1}) { [Call.new(nil, :x, [Number.new(1), Closure.new(Block.new([Number.new(1)]), [Param.new(:a, nil, false)])])] }
+  it_should_parse(%{if true: 1}) { [Call.new(nil, :if, [Call.new(nil, :true, []), Closure.new(Block.new([Number.new(1)]), [])])] }
   
   # Closure
   it_should_parse(%{{ a | 1 }}) { [Closure.new(Block.new([Number.new(1)]), [Param.new(:a, nil, false)])] }
@@ -120,7 +121,7 @@ describe Parser do
   it_should_parse(%{[]}) { [Min::Array.new([])] }
   it_should_parse(%{[1]}) { [Min::Array.new([Number.new(1)])] }
   it_should_parse(%{[1, 2]}) { [Min::Array.new([Number.new(1), Number.new(2)])] }
-
+  
   # Hash
   it_should_parse(%{[:]}) { [Min::Hash.new({})] }
   it_should_parse(%{[1: 2]}) { [Min::Hash.new(Number.new(1) => Number.new(2))] }

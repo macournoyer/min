@@ -13,6 +13,11 @@ token SYMBOL
 /* Operators */
 token EQ PLS MIN RSH LT GT LET GET AND OR NOT
 
+prechigh
+  right    NOT
+  left     OR AND
+preclow
+
 rule
   Root:
     /* nothing */ { result = Block.new([]) }
@@ -20,8 +25,8 @@ rule
   ;
   
   Statements:
-    Statement                { result = Block.new([val[0]]) }
-  | Statements SEP Statement { result = Block.new([val[0].nodes, val[2]].flatten) }
+    StatementWithBlock                { result = Block.new([val[0]]) }
+  | Statements SEP StatementWithBlock { result = Block.new([val[0].nodes, val[2]].flatten) }
   ;
 
   Statement:
@@ -29,6 +34,11 @@ rule
   | Assign
   | Literal
   | Closure
+  ;
+
+  StatementWithBlock:
+    Statement
+  | CallWithBlock
   ;
   
   Literal:
@@ -76,15 +86,18 @@ rule
   
   Call:
     ID ArgList                       { result = Call.new(nil, val[0], val[1]) }
-  | ID ArgList Block                 { result = Call.new(nil, val[0], val[1] << val[2]) }
   | Statement '.' ID ArgList         { result = Call.new(val[0], val[2], val[3]) }
-  | Statement '.' ID ArgList Block   { result = Call.new(val[0], val[2], val[3] << val[4]) }
   | Statement '.' ID '=' Statement   { result = Call.new(val[0], :"#{val[2]}=", [val[4]]) }
   | Statement BinaryOp Statement     { result = Call.new(val[0], val[1].to_sym, [val[2]]) }
   | UnaryOp Statement                { result = Call.new(val[1], val[0].to_sym, []) }
   | Statement '[' Statement ']'      { result = Call.new(val[0], :[], [val[2]]) }
   | Statement '[' Statement ']'      
     '=' Statement                    { result = Call.new(val[0], :[]=, [val[2], val[5]]) }
+  ;
+  
+  CallWithBlock:
+    ID ArgList Block                 { result = Call.new(nil, val[0], val[1] << val[2]) }
+  | Statement '.' ID ArgList Block   { result = Call.new(val[0], val[2], val[3] << val[4]) }
   ;
   
   Block:
@@ -94,8 +107,8 @@ rule
   | ':' ParamList '|'                
       INDENT Statements              
       DEDENT                         { result = Closure.new(val[4], val[1]) }
-  | ':' Statements                   { result = Closure.new(val[1], []) }
-  | ':' ParamList '|' Statements     { result = Closure.new(val[3], val[1]) }
+  | ':' Statement                    { result = Closure.new(Block.new([val[1]]), []) }
+  | ':' ParamList '|' Statement      { result = Closure.new(Block.new([val[3]]), val[1]) }
   ;
   
   Closure:

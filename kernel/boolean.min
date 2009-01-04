@@ -1,8 +1,29 @@
+# False -- nil and false
 NilClass = Class.subclass
+NilClass.add_method :nil?, { true }
+NilClass.add_method :!, { true }
+NilClass.add_method :&&, { false }
+Object.add_method :||, { it }
 nil = NilClass.allocate
+
+FalseClass = Class.subclass
+FalseClass.add_method :!, { true }
+FalseClass.add_method :&&, { false }
+Object.add_method :||, { it }
+false = FalseClass.allocate
+
+# True -- everything else
+Object.add_method :nil?, { false }
+Object.add_method :!, { false }
+Object.add_method :&&, { it }
+Object.add_method :||, { caller }
 
 TrueClass = Class.subclass
 true = TrueClass.allocate
 
-FalseClass = Class.subclass
-false = FalseClass.allocate
+# Conditions w/ blocks
+Object.add_method :if: condition, closure |
+  condition && closure.call
+
+Object.add_method :unless: condition, closure |
+  !condition && closure.call

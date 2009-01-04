@@ -18,13 +18,13 @@ module Min
       bind(closure_context.min_self)
       
       # Special local vars
-      closure_context[:it]       = args.first
-      closure_context[:self]     = @receiver
-      closure_context[:receiver] = receiver
+      closure_context[:it]     = args.first.eval(context) if args.first
+      closure_context[:self]   = @receiver
+      closure_context[:caller] = receiver
       
       # Pass args as local vars
       bind_params(args).each do |name, value|
-        closure_context[name] = value
+        closure_context[name] = value.eval(context) if value
       end
       
       block.eval(closure_context)
