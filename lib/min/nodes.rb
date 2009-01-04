@@ -9,17 +9,27 @@ module Min
   
   class Call < Struct.new(:receiver, :message, :arguments)
     def eval(context)
-      if arguments.is_a?(::Array)
-        arg_array = arguments
-      else
-        arg_array = arguments.eval(context).value
-      end
-      
       if receiver.nil? && value = context[message]
         return value
       end
       
-      (receiver || context.min_self).eval(context).min_send(context, message, *arg_array)
+      (receiver || context.min_self).
+        eval(context).
+        min_send(context, message, *eval_arguments(context))
+    end
+    
+    def eval_arguments(context)
+      arguments.inject([]) { |args, arg| args += arg.eval(context) }
+    end
+  end
+  
+  class Arg < Struct.new(:value, :splat)
+    def eval(context)
+      if splat
+        value.eval(context).value
+      else
+        [value]
+      end
     end
   end
   

@@ -25,6 +25,10 @@ describe "Closure" do
     Min.eval("{ x, y | x }.call(*[1, 2])").should == Number.new(1)
   end
 
+  it "should pass arguments with arg and splat" do
+    Min.eval("{ x, y, z | z }.call(1, *[2, 3])").should == Number.new(3)
+  end
+
   it "should pass arguments with splat on var" do
     Min.eval("a = [1, 2]; { x, y | x }.call(*a)").should == Number.new(1)
   end

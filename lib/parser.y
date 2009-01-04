@@ -87,17 +87,17 @@ rule
   Call:
     ID ArgList                       { result = Call.new(nil, val[0], val[1]) }
   | Statement '.' ID ArgList         { result = Call.new(val[0], val[2], val[3]) }
-  | Statement '.' ID '=' Statement   { result = Call.new(val[0], :"#{val[2]}=", [val[4]]) }
-  | Statement BinaryOp Statement     { result = Call.new(val[0], val[1].to_sym, [val[2]]) }
+  | Statement '.' ID '=' Statement   { result = Call.new(val[0], :"#{val[2]}=", [Arg.new(val[4])]) }
+  | Statement BinaryOp Statement     { result = Call.new(val[0], val[1].to_sym, [Arg.new(val[2])]) }
   | UnaryOp Statement                { result = Call.new(val[1], val[0].to_sym, []) }
-  | Statement '[' Statement ']'      { result = Call.new(val[0], :[], [val[2]]) }
+  | Statement '[' Statement ']'      { result = Call.new(val[0], :[], [Arg.new(val[2])]) }
   | Statement '[' Statement ']'      
-    '=' Statement                    { result = Call.new(val[0], :[]=, [val[2], val[5]]) }
+    '=' Statement                    { result = Call.new(val[0], :[]=, [Arg.new(val[2]), Arg.new(val[5])]) }
   ;
   
   CallWithBlock:
-    ID ArgList Block                 { result = Call.new(nil, val[0], val[1] << val[2]) }
-  | Statement '.' ID ArgList Block   { result = Call.new(val[0], val[2], val[3] << val[4]) }
+    ID ArgList Block                 { result = Call.new(nil, val[0], val[1] << Arg.new(val[2])) }
+  | Statement '.' ID ArgList Block   { result = Call.new(val[0], val[2], val[3] << Arg.new(val[4])) }
   ;
   
   Block:
@@ -122,9 +122,9 @@ rule
   
   ArgList:
     /* nothing */         { result = [] }
-  | '*' Statement         { result = val[1] }
-  | Statement             { result = [val[0]] }
-  | Statement ',' ArgList { result = [val[0], val[2]].flatten }
+  | '*' Statement         { result = [Arg.new(val[1], true)] }
+  | Statement             { result = [Arg.new(val[0])] }
+  | Statement ',' ArgList { result = [Arg.new(val[0]), val[2]].flatten }
   | '(' ArgList ')'       { result = val[1] }
   ;
   
