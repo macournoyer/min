@@ -16,16 +16,16 @@ module Min
       end
       
       operator :eq,  "=="
+      operator :rsh, "<<"
+      operator :let, "<="
+      operator :get, ">="
+      operator :and, "&&"
+      operator :or,  "||"
+      operator :not, "!"
       operator :pls, "+"
       operator :min, "-"
       operator :lt,  "<"
       operator :gt,  ">"
-      operator :let, "<="
-      operator :get, ">="
-      operator :rsh, "<<"
-      operator :and, "&&"
-      operator :or,  "||"
-      operator :not, "!"
       
       token(/\A\n([ \t]+)/m) do |v, level|
         indent = level.size
@@ -62,13 +62,13 @@ module Min
       token(/\A\"(.*?)\"/) do |_, value|
         Token.new(:STRING, value)
       end
-
-      token(/\A\:(\w+)/) do |_, value|
-        Token.new(:SYMBOL, value.to_sym)
-      end
       
-      token(/\A[a-z]\w*/i) do |value|
-        Token.new(:ID, value.to_sym)
+      token(/\A(\:)?([a-z]\w*[?!]?)/i) do |_, symbol, value|
+        if symbol
+          Token.new(:SYMBOL, value.to_sym)
+        else
+          Token.new(:ID, value.to_sym)
+        end
       end
       
       token(/\A\s+/) # Ignore spaces
@@ -116,6 +116,10 @@ module Min
       def operator(name, pattern=name)
         token(/\A#{Regexp.escape(pattern.to_s)}/) do |value|
           Token.new(name.to_s.upcase.to_sym, value)
+        end
+
+        token(/\A\:(#{Regexp.escape(pattern.to_s)})/) do |_, value|
+          Token.new(:SYMBOL, value.to_sym)
         end
       end
       

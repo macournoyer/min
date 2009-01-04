@@ -61,3 +61,21 @@ class Hash
     Min::Hash.new(self)
   end
 end
+
+class NilClass
+  def to_min
+    Min[:nil]
+  end
+end
+
+class TrueClass
+  def to_min
+    Min[:true]
+  end
+end
+
+class FalseClass
+  def to_min
+    Min[:false]
+  end
+end

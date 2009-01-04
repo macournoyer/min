@@ -74,6 +74,19 @@ EOS
     @tokenizer.tokenize(":ohaie").should == [[:SYMBOL, :ohaie]]
   end
 
+  it "should tokenize symbol w/ ?" do
+    @tokenizer.tokenize(":ohaie?").should == [[:SYMBOL, :ohaie?]]
+  end
+
+  it "should tokenize symbol w/ !" do
+    @tokenizer.tokenize(":ohaie!").should == [[:SYMBOL, :ohaie!]]
+  end
+
+  it "should tokenize operator symbol" do
+    @tokenizer.tokenize(":!").should == [[:SYMBOL, :"!"]]
+    @tokenizer.tokenize(":<<").should == [[:SYMBOL, :<<]]
+  end
+
   it "should remove leading sep" do
     tokens = @tokenizer.tokenize("\n\n\nx")
     
