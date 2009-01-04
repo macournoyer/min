@@ -23,10 +23,6 @@ describe Parser do
   # Assign
   it_should_parse(%{x = 1}) { [Assign.new(:x, Number.new(1))] }
   
-  # Consts
-  it_should_parse(%{Const = 1}) { [AssignConstant.new(:Const, Number.new(1))] }
-  it_should_parse(%{Const}) { [Constant.new(:Const)] }
-  
   # Call
   it_should_parse(%{x}) { [Call.new(nil, :x, [])] }
   it_should_parse(%{x()}) { [Call.new(nil, :x, [])] }

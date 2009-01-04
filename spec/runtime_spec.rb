@@ -36,8 +36,4 @@ describe Runtime do
   it "should eval load" do
     @runtime.eval('load("empty")')
   end
-
-  it "should raise when constant not found" do
-    proc { @runtime[:Waaaaa?] }.should raise_error(ConstantNotFound)
-  end
 end

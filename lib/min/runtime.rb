@@ -1,5 +1,4 @@
 module Min
-  class ConstantNotFound < StandardError; end
   class BootstrapError < StandardError; end
   
   class Runtime
@@ -12,12 +11,11 @@ module Min
     end
     
     def [](name)
-      @context.constants[name] ||
-      raise(ConstantNotFound, "#{name} class can't be found in context.")
+      @context[name]
     end
     
     def []=(name, value)
-      @context.constants[name] = value
+      @context[name] = value
     end
     
     def eval(string, context=@context)
@@ -50,7 +48,7 @@ module Min
       ].each { |c| c.bootstrap(self) }
       
       # Root context init
-      @context.locals[:self] = @context.min_self = object.allocate
+      self[:self] = @context.min_self = object.allocate
       
       # Load kernel
       load "bootstrap"

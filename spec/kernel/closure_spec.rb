@@ -33,11 +33,11 @@ describe "Closure" do
     Min.eval("{ self }.bind(1).call").should == Number.new(1)
   end
 
-  it "should see parent context locals" do
+  it "should see parent context slots" do
     Min.eval("x = 1; { x }.call").should == Number.new(1)
   end
 
-  it "should keep locals in context" do
+  it "should keep slots in context" do
     Min.eval("x = 1; { x = 2 }.call; x").should == Number.new(1)
   end
 end

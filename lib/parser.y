@@ -28,8 +28,6 @@ rule
     Call
   | Assign
   | Literal
-  | Constant
-  | AssignConstant
   | Closure
   ;
   
@@ -107,14 +105,6 @@ rule
 
   Assign:
     ID '=' Statement { result = Assign.new(val[0], val[2]) }
-  ;
-
-  AssignConstant:
-    CONST '=' Statement { result = AssignConstant.new(val[0], val[2]) }
-  ;
-  
-  Constant:
-    CONST { result = Constant.new(val[0]) }
   ;
   
   ArgList:

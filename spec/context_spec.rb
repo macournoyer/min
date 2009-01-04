@@ -10,15 +10,9 @@ describe Min::Context do
     @context.create(mock("child root")).parent.should == @context
   end
   
-  it "should inherit locals from parent" do
+  it "should inherit slots from parent" do
     context = @context.create(mock("child root"))
-    @context.locals["im_in_ur_locals"] = :indeed
-    context.locals["im_in_ur_locals"].should == :indeed
-  end
-
-  it "should inherit constants from parent" do
-    context = @context.create(mock("child root"))
-    @context.constants["Class"] = :awesome
-    context.constants["Class"].should == :awesome
+    @context["im_in_ur_locals"] = :indeed
+    context["im_in_ur_locals"].should == :indeed
   end
 end

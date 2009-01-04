@@ -9,8 +9,7 @@ module Min
   
   class Call < Struct.new(:receiver, :message, :arguments)
     def eval(context)
-      if receiver.nil? && value = context.locals[message]
-        # local var
+      if receiver.nil? && value = context[message]
         return value
       end
       (receiver || context.min_self).eval(context).min_send(context, message, *arguments)
@@ -22,19 +21,7 @@ module Min
   
   class Assign < Struct.new(:name, :value)
     def eval(context)
-      context.locals[name] = value.eval(context)
-    end
-  end
-  
-  class Constant < Struct.new(:name)
-    def eval(context)
-      context.constants[name]
-    end
-  end
-  
-  class AssignConstant < Struct.new(:name, :value)
-    def eval(context)
-      context.constants[name] = value.eval(context)
+      context[name] = value.eval(context)
     end
   end
 end

@@ -1,4 +1,8 @@
 NilClass = Class.subclass
-
 nil = NilClass.allocate
-Nil = nil
+
+TrueClass = Class.subclass
+true = TrueClass.allocate
+
+FalseClass = Class.subclass
+false = FalseClass.allocate
