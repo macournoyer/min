@@ -30,32 +30,31 @@ module Min
     end
     
     def bootstrap
-      vtable = @context.constants[:VTable] = VTable.new
-      vtable.vtable = vtable
+      klass = self[:Class] = Min::Class.new
+      klass.min_class = klass
       
-      object_vt = VTable.new
-      object_vt.vtable = vtable
-      vtable.parent = object_vt
-      object = @context.constants[:Object] = object_vt.allocate
+      object = self[:Object] = Min::Class.new
+      object.min_class = klass
+      klass.min_superclass = object
       
       # Base classes bootstrap
-      VTable.bootstrap(self)
-      Min::Object.bootstrap(self)
-      Min::Number.bootstrap(self)
-      Min::String.bootstrap(self)
-      Min::Symbol.bootstrap(self)
-      Min::Array.bootstrap(self)
-      Min::Hash.bootstrap(self)
-      Min::Closure.bootstrap(self)
+      [
+        Min::Class,
+        Min::Object,
+        Min::Number,
+        Min::String,
+        Min::Symbol,
+        Min::Array,
+        Min::Hash,
+        Min::Closure
+      ].each { |c| c.bootstrap(self) }
       
       # Root context init
-      @context.min_self = object.vtable.allocate
-      @context.locals[:self] = @context.min_self
+      @context.locals[:self] = @context.min_self = object.allocate
       
       # Load kernel
       load "object"
       load "class"
-      load "string"
     end
     
     private

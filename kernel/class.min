@@ -1,19 +1,3 @@
-# Class = Object.new
-# 
-# Class.vtable.add_method(:new): name |
-#   c = allocate
-#   constant_set name, c
-#   c
-# 
-# Object.vtable.add_method(:class): name, declaration |
-#   c = Class.new(name)
-#   declaration.self = c
-#   declaration.call
-#   c
-# 
-# # test
-# class :Test:
-#   def :yo:
-#     puts "testing"
-# 
-# Test.new.yo
+Class.add_method(:new): *args |
+  instance = class.allocate
+  instance

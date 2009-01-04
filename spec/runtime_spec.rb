@@ -25,12 +25,8 @@ describe Runtime do
     @runtime.eval("Object").should be_a(Min::Object)
   end
 
-  it "should eval Object.new" do
-    @runtime.eval("Object.new").should be_a(Min::Object)
-  end
-
-  it "should eval VTable" do
-    @runtime.eval("VTable").should be_a(VTable)
+  it "should eval Class" do
+    @runtime.eval("Class").should be_a(Min::Class)
   end
 
   it "should eval eval" do
@@ -41,11 +37,6 @@ describe Runtime do
     @runtime.eval('load("empty")')
   end
 
-  it "should add method" do
-    @runtime.eval("Object.vtable.add_method :return_itself, { it }")
-    @runtime.eval('return_itself "test"').should == Min::String.new("test")
-  end
-  
   it "should raise when constant not found" do
     proc { @runtime[:Waaaaa?] }.should raise_error(ConstantNotFound)
   end

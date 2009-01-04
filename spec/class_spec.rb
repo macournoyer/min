@@ -1,25 +1,25 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-describe VTable do
+describe Min::Class do
   before do
-    @vtable = VTable.new
+    @klass = Min::Class.new
     @context = mock("context")
     
-    @vtable.add_method(:who, proc { |*a| :parent })
-    @vtable.add_method(:parent, proc { |*a| true })
+    @klass.add_method(:who, proc { |*a| :parent })
+    @klass.add_method(:parent, proc { |*a| true })
   end
   
   it "should lookup method" do
-    @vtable.lookup(@context, :who).should be_a(Proc)
+    @klass.lookup(@context, :who).should be_a(Proc)
   end
   
   it "should return callabale methods" do
-    @vtable.lookup(@context, :who).call.should == :parent
+    @klass.lookup(@context, :who).call.should == :parent
   end
   
   describe "allocated" do
     before do
-      @allocated = @vtable.allocate.vtable
+      @allocated = @klass.allocate.min_class
       
       @allocated.add_method(:who, proc { |*a| :allocated })
     end
