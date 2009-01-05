@@ -1,15 +1,15 @@
 module Min
   # Based on VTable documented in "Open, extensible object models" by Ian Piumarta <ian@vpri.org>
-  class Class < Min::Object
-    attr_accessor :min_superclass
+  class VTable < Min::Object
+    attr_accessor :parent
     
-    def initialize(superclass=nil)
-      @methods        = {}
-      @min_superclass = superclass
-      @min_class      = superclass && superclass.min_class
+    def initialize(parent=nil)
+      @methods = {}
+      @parent  = parent
+      @vtable  = parent && parent.vtable
     end
     
-    # creates a new object within the class's family (by copying
+    # creates a new object within the vtable's family (by copying
     # the receiver into the new object's class slot).
     def allocate
       Min::Object.new(self)
@@ -24,35 +24,26 @@ module Min
     # queries the associations to ﬁnd an implementation
     # corresponding to a message name
     def lookup(context, message)
-      @methods[message] || @min_superclass && @min_superclass.min_send(context, :lookup, message.to_min)
+      @methods[message] || @parent && @parent.min_send(context, :lookup, message.to_min)
     end
     
     # creates a new class that will delegate unhandled
     # messages to the receiver
-    def subclass
+    def delegated
       self.class.new(self)
-    end
-    
-    def name
-      Min.runtime.context.slots.detect { |k,v| v == self }.first.to_s
     end
     
     def min_methods
       @methods.keys
     end
     
-    def inspect
-      "Min::#{name}"
-    end
-    
     def self.bootstrap(runtime)
-      klass = runtime[:Class]
-      klass.add_method(:name, RubyMethod.new(:name))
-      klass.add_method(:superclass, RubyMethod.new(:min_superclass))
+      klass = runtime[:VTable]
+      klass.add_method(:parent, RubyMethod.new(:parent))
       klass.add_method(:lookup, RubyMethod.new(:lookup, :pass_context => true))
       klass.add_method(:add_method, RubyMethod.new(:add_method))
       klass.add_method(:allocate, RubyMethod.new(:allocate))
-      klass.add_method(:subclass, RubyMethod.new(:subclass))
+      klass.add_method(:delegated, RubyMethod.new(:delegated))
       klass.add_method(:methods, RubyMethod.new(:min_methods))
     end
   end

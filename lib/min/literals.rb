@@ -4,7 +4,7 @@ module Min
     
     def initialize(value)
       @value = value
-      super Min[self.class.min_constant_name]
+      super Min[self.class.min_constant_name].vtable
     end
     
     def ==(other)
@@ -21,13 +21,12 @@ module Min
     end
     
     def self.bootstrap(runtime)
-      klass = runtime[:Object].min_class.subclass
+      vtable = runtime[:Object].vtable.delegated
+      runtime[min_constant_name] = vtable.allocate
       
       @exposed_methods.each do |op|
-        klass.add_method(op, RubyMethod.new(op, :delegate_to => :value))
+        vtable.add_method(op, RubyMethod.new(op, :delegate_to => :value))
       end
-      
-      runtime[min_constant_name] = klass
     end
     
     def self.exposed_methods(*methods)

@@ -8,7 +8,7 @@ module Min
       @arguments = arguments
       @receiver  = nil
       
-      super Min[:Closure]
+      super Min[:Closure].vtable
     end
     
     def call(context, receiver, *args)
@@ -54,12 +54,11 @@ module Min
     end
     
     def self.bootstrap(runtime)
-      klass = runtime[:Object].min_class.subclass
+      vtable = runtime[:Object].vtable.delegated
+      runtime[:Closure] = vtable.allocate
       
-      klass.add_method(:bind, RubyMethod.new(:bind))
-      klass.add_method(:call, RubyMethod.new { |context, receiver, *args| receiver.call(context, receiver, *args).to_min })
-      
-      runtime[:Closure] = klass
+      vtable.add_method(:bind, RubyMethod.new(:bind))
+      vtable.add_method(:call, RubyMethod.new { |context, receiver, *args| receiver.call(context, receiver, *args).to_min })
     end
   end
 end

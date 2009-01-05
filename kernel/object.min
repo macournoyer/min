@@ -1,0 +1,7 @@
+Object.def :respond_to? : message |
+  !method(message).nil?
+
+# Object.def :clone : *args |
+#   obj = vtable.delegated.allocate
+#   if respond_to?(:init): obj.init(*args)
+#   obj

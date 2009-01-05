@@ -25,8 +25,8 @@ describe Runtime do
     @runtime.eval("Object").should be_a(Min::Object)
   end
 
-  it "should eval Class" do
-    @runtime.eval("Class").should be_a(Min::Class)
+  it "should eval VTable" do
+    @runtime.eval("VTable").should be_a(VTable)
   end
 
   it "should eval eval" do

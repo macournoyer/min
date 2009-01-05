@@ -28,17 +28,18 @@ module Min
     end
     
     def bootstrap
-      klass = self[:Class] = Min::Class.new
-      klass.min_class = klass
+      vtable = self[:VTable] = VTable.new
+      vtable.vtable = vtable
       
-      object = self[:Object] = Min::Class.new
-      object.min_class = klass
-      klass.min_superclass = object
+      object_vt = VTable.new
+      object_vt.vtable = vtable
+      vtable.parent = object_vt
+      object = self[:Object] = object_vt.allocate
       
       # Base classes bootstrap
       [
         Min::RubyMethod,
-        Min::Class,
+        Min::VTable,
         Min::Object,
         Min::Number,
         Min::String,
@@ -49,7 +50,7 @@ module Min
       ].each { |c| c.bootstrap(self) }
       
       # Root context init
-      self[:self] = @context.min_self = object.allocate
+      self[:self] = @context.min_self = object.vtable.allocate
       
       # Load kernel
       load "bootstrap"

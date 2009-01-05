@@ -7,7 +7,7 @@ module Min
       @pass_context = options[:pass_context]
       @eval_args    = !options[:eval_args].is_a?(FalseClass)
       
-      super Min[:RubyMethod]
+      super Min[:RubyMethod].vtable
     end
     
     def call(context, receiver, *args)
@@ -19,11 +19,10 @@ module Min
     end
     
     def self.bootstrap(runtime)
-      klass = runtime[:Object].min_class.subclass
+      vtable = runtime[:Object].vtable.delegated
+      runtime[:RubyMethod] = vtable.allocate
       
-      klass.add_method(:call, RubyMethod.new(:call, :pass_context => true, :eval_args => false))
-      
-      runtime[:RubyMethod] = klass
+      vtable.add_method(:call, RubyMethod.new(:call, :pass_context => true, :eval_args => false))
     end
     
     private
