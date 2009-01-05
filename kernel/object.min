@@ -1,7 +1,15 @@
-Object.def :respond_to? : message |
-  !method(message).nil?
+Object.def :do : closure |
+  closure.bind(self).call
+  self
 
-# Object.def :clone : *args |
-#   obj = vtable.delegated.allocate
-#   if respond_to?(:init): obj.init(*args)
-#   obj
+Object.do:
+  def :respond_to? : message |
+    ! method(message).nil?
+
+  def :init : *args |
+    nil
+
+  def :clone : *args |
+    obj = vtable.delegated.allocate
+    obj.init(*args)
+    obj

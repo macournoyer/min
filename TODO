@@ -1,5 +1,3 @@
 * Need a return statement?
 * Add line # info to parsed nodes for exception
-* Implement macros to define class "statement" ??
-* Define Class in Min lang
-* Implement mixin
+* Implement traits?

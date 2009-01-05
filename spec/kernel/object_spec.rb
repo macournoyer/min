@@ -9,6 +9,10 @@ describe "Object" do
     Min.eval(%{Object.send(:clone)}).should be_a(Min::Object)
   end
   
+  it "should respond_to clone" do
+    Min.eval(%{Object.respond_to?(:clone)}).should == Min[:true]
+  end
+  
   it "should send message w/ args" do
     Min.eval(%{send(:eval, "1")}).should == Number.new(1)
   end

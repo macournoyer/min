@@ -4,7 +4,7 @@ module Min
     
     def initialize(object)
       @object = object
-      super object.to_s
+      super object.respond_to?(:value) ? object.value : object.to_s
     end
   end
   
