@@ -57,7 +57,7 @@ module Min
       klass = runtime[:Object].min_class.subclass
       
       klass.add_method(:bind, RubyMethod.new(:bind))
-      klass.add_method(:call, proc { |context, receiver, *args| receiver.call(context, receiver, *args).to_min })
+      klass.add_method(:call, RubyMethod.new { |context, receiver, *args| receiver.call(context, receiver, *args).to_min })
       
       runtime[:Closure] = klass
     end

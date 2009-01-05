@@ -9,6 +9,10 @@ describe "Object" do
     Min.eval(%{Object.send(:new)}).should be_a(Min::Object)
   end
   
+  it "should send message w/ args" do
+    Min.eval(%{send(:eval, "1")}).should == Number.new(1)
+  end
+  
   it "should have method" do
     Min.eval(%{Object.method(:new)}).should be_a(Min::Closure)
   end

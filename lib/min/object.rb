@@ -52,7 +52,7 @@ module Min
       object.add_method(:class, RubyMethod.new(:min_class))
       
       # Reflection
-      object.add_method(:send, RubyMethod.new(:min_send, :pass_context => true))
+      object.add_method(:send, RubyMethod.new(:min_send, :pass_context => true, :eval_args => false))
       object.add_method(:method, RubyMethod.new(:min_method, :pass_context => true))
       
       # Exception
@@ -60,9 +60,9 @@ module Min
       object.add_method(:try, RubyMethod.new(:min_try, :pass_context => true))
       
       # Kernel
-      object.add_method(:puts, proc { |context, obj, str| puts str.eval(context).value })
-      object.add_method(:eval, proc { |context, obj, code| runtime.eval(code.eval(context).value, context) })
-      object.add_method(:load, proc { |context, obj, file| runtime.load(file.eval(context).value) })
+      object.add_method(:puts, RubyMethod.new { |context, obj, str| puts str.eval(context).value })
+      object.add_method(:eval, RubyMethod.new { |context, obj, code| runtime.eval(code.eval(context).value, context) })
+      object.add_method(:load, RubyMethod.new { |context, obj, file| runtime.load(file.eval(context).value) })
     end
   end
 end

@@ -1,21 +1,46 @@
 module Min
-  class RubyMethod
-    def initialize(message, options={})
+  class RubyMethod < Min::Object
+    def initialize(message=nil, options={}, &proc)
       @message      = message
+      @proc         = proc
       @delegate_to  = options[:delegate_to]
       @pass_context = options[:pass_context]
+      @eval_args    = !options[:eval_args].is_a?(FalseClass)
+      
+      super Min[:RubyMethod]
     end
     
     def call(context, receiver, *args)
-      # Set receiver
-      receiver = receiver.send(@delegate_to) if @delegate_to
-      
-      # Construct args
-      call_args = args.map { |arg| arg.eval(context).value }
-      call_args.unshift(context) if @pass_context
-      
-      receiver.send(@message, *call_args).to_min
+      if @message
+        send_message(context, receiver, *args)
+      else
+        @proc.call(context, receiver, *args)
+      end.to_min
     end
+    
+    def self.bootstrap(runtime)
+      klass = runtime[:Object].min_class.subclass
+      
+      klass.add_method(:call, RubyMethod.new(:call, :pass_context => true, :eval_args => false))
+      
+      runtime[:RubyMethod] = klass
+    end
+    
+    private
+      def send_message(context, receiver, *args)
+        # Set receiver
+        receiver = receiver.send(@delegate_to) if @delegate_to
+        
+        # Construct args
+        if @eval_args
+          call_args = args.map { |arg| arg.eval(context).value }
+        else
+          call_args = args
+        end
+        call_args.unshift context if @pass_context
+        
+        receiver.send(@message, *call_args)
+      end
   end
 end
 

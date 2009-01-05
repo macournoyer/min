@@ -37,6 +37,10 @@ module Min
       Min.runtime.context.slots.detect { |k,v| v == self }.first.to_s
     end
     
+    def min_methods
+      @methods.keys
+    end
+    
     def inspect
       "Min::#{name}"
     end
@@ -49,6 +53,7 @@ module Min
       klass.add_method(:add_method, RubyMethod.new(:add_method))
       klass.add_method(:allocate, RubyMethod.new(:allocate))
       klass.add_method(:subclass, RubyMethod.new(:subclass))
+      klass.add_method(:methods, RubyMethod.new(:min_methods))
     end
   end
 end

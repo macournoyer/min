@@ -37,6 +37,7 @@ module Min
       
       # Base classes bootstrap
       [
+        Min::RubyMethod,
         Min::Class,
         Min::Object,
         Min::Number,
