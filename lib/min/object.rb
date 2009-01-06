@@ -18,7 +18,7 @@ module Min
     def min_send(context, message, *args)
       method = min_method(context, message)
       if method.nil? || method == Min[:nil]
-        min_raise "Method not found #{message} on #{inspect}".to_min
+        min_raise "Method not found #{message} on #{to_s}".to_min
       else
         method.call(context, self, *args)
       end

@@ -7,6 +7,7 @@ module Min
       @block     = block
       @arguments = arguments
       @receiver  = nil
+      @bind_to_caller = false
       
       super Min[:Closure].vtable
     end
@@ -14,13 +15,18 @@ module Min
     def call(context, receiver, *args)
       closure_context = context.create(@receiver)
       
-      # inherit receiver from parent context
-      bind(closure_context.min_self)
+      if @bind_to_caller
+        bind(receiver)
+      else
+        # inherit receiver from parent context
+        bind(closure_context.min_self)
+      end
       
       # Special local vars
-      closure_context[:it]     = args.first.eval(context) if args.first
+      closure_context.min_self =
       closure_context[:self]   = @receiver
       closure_context[:caller] = receiver
+      closure_context[:it]     = args.first.eval(context) if args.first
       
       # Pass args as local vars
       bind_params(args).each do |name, value|
@@ -28,6 +34,10 @@ module Min
       end
       
       block.eval(closure_context)
+    end
+    
+    def bind_to_caller!
+      @bind_to_caller = true
     end
     
     def bind_params(args)
@@ -58,6 +68,7 @@ module Min
       runtime[:Closure] = vtable.allocate
       
       vtable.add_method(:bind, RubyMethod.new(:bind))
+      vtable.add_method(:bind_to_caller!, RubyMethod.new(:bind_to_caller!))
       vtable.add_method(:call, RubyMethod.new { |context, receiver, *args| receiver.call(context, receiver, *args).to_min })
     end
   end

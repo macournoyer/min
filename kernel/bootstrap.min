@@ -1,6 +1,6 @@
 # Just enough stuff to boot up
 Object.vtable.add_method(:def): name, closure |
-  closure.bind(caller)
+  closure.bind_to_caller!
   caller.vtable.add_method(name, closure)
 
 Object.def :clone :
@@ -8,3 +8,4 @@ Object.def :clone :
 
 load "boolean"
 load "object"
+load "array"

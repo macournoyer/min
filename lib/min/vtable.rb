@@ -37,6 +37,10 @@ module Min
       @methods.keys
     end
     
+    def inspect
+      "#<Min::VTable:0x#{object_id} parent=0x#{@parent.object_id} methods=#{min_methods.inspect}>"
+    end
+    
     def self.bootstrap(runtime)
       klass = runtime[:VTable]
       klass.add_method(:parent, RubyMethod.new(:parent))

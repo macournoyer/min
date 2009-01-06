@@ -18,6 +18,11 @@ module Min
       end.to_min
     end
     
+    def bind(receiver)
+      # do nothing, can't bind ruby method
+      self
+    end
+    
     def self.bootstrap(runtime)
       vtable = runtime[:Object].vtable.delegated
       runtime[:RubyMethod] = vtable.allocate

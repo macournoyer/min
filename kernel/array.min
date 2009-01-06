@@ -1,0 +1,7 @@
+# Array.do:
+#   def :head: array, closure |
+#     closure.call(array[0])
+#     head(array[1..-1], closure)
+#   
+#   def :each: closure |
+#     head(self, closure)

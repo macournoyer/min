@@ -28,13 +28,18 @@ module Min
     end
     
     def bootstrap
+      # Vtable init
       vtable = self[:VTable] = VTable.new
       vtable.vtable = vtable
       
+      # Wire Object <=> VTable
       object_vt = VTable.new
       object_vt.vtable = vtable
       vtable.parent = object_vt
       object = self[:Object] = object_vt.allocate
+      
+      # Lobby init. Lobby is the root object
+      self[:Lobby] = self[:self] = @context.min_self = object.vtable.allocate
       
       # Base classes bootstrap
       [
@@ -48,9 +53,6 @@ module Min
         Min::Hash,
         Min::Closure
       ].each { |c| c.bootstrap(self) }
-      
-      # Root context init
-      self[:self] = @context.min_self = object.vtable.allocate
       
       # Load kernel
       load "bootstrap"

@@ -11,6 +11,8 @@ Philosophies
 * No special magic statements (class, def, if),
   everything is a method call.
 * Open object model.
+* Only 4 constructs: Closure, Object, VTable
+  and Literals (Symbol, String, Number, Array, Hash).
 
 License
 -------
