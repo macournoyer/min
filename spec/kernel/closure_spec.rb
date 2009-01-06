@@ -56,4 +56,8 @@ describe "Closure" do
   it "should keep slots in context" do
     Min.eval("x = 1; { x = 2 }.call; x").should == Number.new(1)
   end
+  
+  it "should set data" do
+    Min.eval("c = { caller.data = 1 }; c.call; c.data").should == Number.new(1)
+  end
 end

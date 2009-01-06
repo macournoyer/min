@@ -117,7 +117,7 @@ rule
   ;
 
   Assign:
-    ID '=' Statement { result = Assign.new(val[0], val[2]) }
+    ID '=' StatementWithBlock { result = Assign.new(val[0], val[2]) }
   ;
   
   ArgList:

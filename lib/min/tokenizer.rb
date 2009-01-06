@@ -11,7 +11,7 @@ module Min
       
       # Rules declaration
       
-      token(/\A\s*\#+\s+(.*)/) do |_, value|
+      token(/\A\s*\#+\s*(.*)/) do |_, value|
         # eat comments
       end
       
@@ -27,7 +27,7 @@ module Min
       operator :lt,  "<"
       operator :gt,  ">"
       
-      token(/\A\n([ \t]+)/m) do |v, level|
+      token(/\A\n([ \t]+)\n?/m) do |v, level|
         indent = level.size
         if indent > @indent
           @indents.push(indent)

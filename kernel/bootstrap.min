@@ -8,4 +8,5 @@ Object.def :clone :
 
 load "boolean"
 load "object"
+load "method"
 load "array"

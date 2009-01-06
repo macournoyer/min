@@ -1,12 +1,13 @@
 module Min
   class Closure < Min::Object
     attr_reader   :block, :arguments
-    attr_accessor :receiver
+    attr_accessor :receiver, :data
     
     def initialize(block, arguments=[])
       @block     = block
       @arguments = arguments
       @receiver  = nil
+      @data      = nil
       @bind_to_caller = false
       
       super Min[:Closure].vtable
@@ -69,6 +70,8 @@ module Min
       
       vtable.add_method(:bind, RubyMethod.new(:bind))
       vtable.add_method(:bind_to_caller!, RubyMethod.new(:bind_to_caller!))
+      vtable.add_method(:data, RubyMethod.new(:data))
+      vtable.add_method(:data=, RubyMethod.new(:data=))
       vtable.add_method(:call, RubyMethod.new { |context, receiver, *args| receiver.call(context, receiver, *args).to_min })
     end
   end
