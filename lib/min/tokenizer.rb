@@ -15,17 +15,25 @@ module Min
         # eat comments
       end
       
-      operator :eq,  "=="
-      operator :rsh, "<<"
-      operator :let, "<="
-      operator :get, ">="
-      operator :and, "&&"
-      operator :or,  "||"
-      operator :not, "!"
-      operator :pls, "+"
-      operator :min, "-"
-      operator :lt,  "<"
-      operator :gt,  ">"
+      # Binary & unary ops
+      operator "=="
+      operator "<<"
+      operator "<="
+      operator ">="
+      operator "&&"
+      operator "||"
+      operator "!"
+      operator "+"
+      operator "-"
+      operator "<"
+      operator ">"
+      
+      # Assign operators
+      operator "="
+      operator "+="
+      operator "*="
+      operator "-="
+      operator "/="
       
       token(/\A\n([ \t]+)\n?/m) do |v, level|
         indent = level.size
@@ -113,12 +121,14 @@ module Min
         @matchers << Matcher.new(pattern, block || proc { nil })
       end
       
-      def operator(name, pattern=name)
-        token(/\A#{Regexp.escape(pattern.to_s)}/) do |value|
-          Token.new(name.to_s.upcase.to_sym, value)
+      def operator(name)
+        pattern = Regexp.escape(name)
+        
+        token(/\A#{pattern}/) do |value|
+          Token.new(value, value)
         end
 
-        token(/\A\:(#{Regexp.escape(pattern.to_s)})/) do |_, value|
+        token(/\A\:(#{pattern})/) do |_, value|
           Token.new(:SYMBOL, value.to_sym)
         end
       end

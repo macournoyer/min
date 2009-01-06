@@ -10,12 +10,9 @@ token ID
 token CONST
 token SYMBOL
 
-/* Operators */
-token EQ PLS MIN RSH LT GT LET GET AND OR NOT
-
 prechigh
-  right    NOT
-  left     OR AND
+  right    '!'
+  left     '||' '&&'
 preclow
 
 rule
@@ -67,21 +64,29 @@ rule
   ;
   
   BinaryOp:
-    EQ
-  | PLS
-  | MIN
-  | RSH
-  | LT
-  | GT
-  | LET
-  | GET
-  | AND
-  | OR
+    '=='
+  | '+'
+  | '-'
+  | '<<'
+  | '<'
+  | '>'
+  | '<='
+  | '>='
+  | '&&'
+  | '||'
   ;
   
   UnaryOp:
-    NOT
-  | MIN
+    '!'
+  | '-'
+  ;
+  
+  AssignOp:
+    '='
+  | '+='
+  | '-='
+  | '*='
+  | '/='
   ;
   
   Call:
