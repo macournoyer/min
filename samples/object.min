@@ -1,12 +1,12 @@
-Post = Article.clone.do:
-  def :init : title, content |
+Post = Article clone do:
+  initialize = method: |title, content|
     @title = title
     @content = content
   
-  def :to_html :
+  to_html = method:
     "<h1>#{@title}</h1>" +
     "<p>#{@content}</p>"
 
-post = Post.clone("Min", "It is the awesome!")
+post = Post clone(title: "Min", content: "It is the awesome!")
 
-puts post.to_html
+post to_html print

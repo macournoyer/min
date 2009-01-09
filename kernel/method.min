@@ -1,9 +1,0 @@
-Method = Object.clone.do:
-  # Self-like slots getter and setter.
-  
-  def :getter : closure |
-    closure.data
-
-  def :setter : closure, value |
-    closure.data.data = value
-

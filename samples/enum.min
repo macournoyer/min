@@ -1,12 +1,12 @@
-# TODO
-items.each:
-  print it
+items each: i
+  i print
+items each: |i|
+  i print
 
-items.each: i, y | print i
-items.each { i, y | print i }
+items each: i | i print
+items each: |i| i print
+items each(print)
 
-items.map: i |
-  i * 2
-.join "\n"
+items each: i, y | i print
 
-items.map{ it * 2 }.join("\n")
+items map(* 2) join("\n")

@@ -1,7 +1,0 @@
-* Context as pure Min object.
-* Use getter/setter methods to access slots in objects.
-* Add macro (like methods but w/ unevaled args)
-* Implement traits and refactor behaviour in more objects.
-* Need a return statement?
-* Add line # info to parsed nodes for exception.
-* Reimplement on JVM?
