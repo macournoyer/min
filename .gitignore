@@ -1,5 +1,5 @@
-lib/min/generated_parser.rb
-*.out
-*.output
-tmp
-log
+*.o
+min
+tools/lemon
+vm/parser.c
+vm/tokenizer.c

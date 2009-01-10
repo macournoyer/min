@@ -1,4 +1,4 @@
-SRC = vm/ast.c vm/parser.c vm/tokenizer.c vm/vm.c
+SRC = vm/ast.c vm/tokenizer.c vm/vm.c vm/min.c
 OBJ = ${SRC:.c=.o}
 OBJ_MIN = vm/min.o
 
@@ -25,3 +25,6 @@ vm/parser.c: tools/lemon vm/parser.y
 
 tools/lemon: tools/lemon.c
 	${CC} -o tools/lemon tools/lemon.c
+
+clean:
+	rm -f vm/*.o vm/tokenizer.c vm/parser.c
