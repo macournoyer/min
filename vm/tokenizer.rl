@@ -85,6 +85,7 @@
     # operators
     "=="        => { TOKEN("eq"); };
     "!="        => { TOKEN("neq"); };
+    "!"         => { TOKEN("not"); };
     "||"        => { TOKEN("or"); };
     "&&"        => { TOKEN("and"); };
     "<"         => { TOKEN("lt"); };
@@ -100,7 +101,9 @@
     "+"         => { TOKEN("plus"); };
     "-"         => { TOKEN("minus"); };
     "@"         => { TOKEN("at"); };
-    "@@"         => { TOKEN("atat"); };
+    "@@"        => { TOKEN("atat"); };
+    "?"         => { TOKEN("ques"); };
+    ".."        => { TOKEN("to"); };
   *|;
   
   write data nofinal;
