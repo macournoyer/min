@@ -3,6 +3,6 @@
 *.log
 min
 tools/lemon
-vm/parser.c
-vm/parser.h
-vm/tokenizer.c
+vm/grammar.c
+vm/grammar.h
+vm/scanner.c

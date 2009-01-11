@@ -1,4 +1,4 @@
-/* see http://www.hwaci.com/sw/lemon/lemon.html */
+/* doc: http://www.hwaci.com/sw/lemon/lemon.html */
 
 %include {
 #include <assert.h>
