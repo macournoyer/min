@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include "min.h"
+#include "parser.h"
 
 /* debug */
 #define TOKENV(name, v, len) \
@@ -117,11 +119,12 @@ void min_parse(char *code) {
   int inds[MAX_INDENT]; /* max indent level */
   int pind = 0;
   char sbuf[1024]; /* debug */
+  void *pParser = MinParserAlloc(malloc);
   
   inds[0] = 0;
   p = code;
   pe = p + strlen(code) + 1;
-
+  
   %% write init;
   %% write exec;
   
@@ -130,4 +133,7 @@ void min_parse(char *code) {
     INDENT_POP();
     TOKEN("dedent");
   }
+  
+  MinParser(pParser, 0, 0);
+  MinParserFree(pParser, free);
 }

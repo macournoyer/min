@@ -1,4 +1,4 @@
-SRC = vm/ast.c vm/tokenizer.c vm/vm.c vm/min.c
+SRC = vm/ast.c vm/parser.c vm/tokenizer.c vm/vm.c vm/min.c
 OBJ = ${SRC:.c=.o}
 OBJ_MIN = vm/min.o
 

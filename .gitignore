@@ -1,5 +1,8 @@
 *.o
+*.out
+*.log
 min
 tools/lemon
 vm/parser.c
+vm/parser.h
 vm/tokenizer.c
