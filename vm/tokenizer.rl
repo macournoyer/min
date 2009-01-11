@@ -26,6 +26,7 @@
   id          = [a-z]+;
   int         = [0-9]+;
   string      = '"' (any - '"')* '"' | "'" (any - "'")* "'";
+  comment     = "#"+ (any - newline)* newline;
   
   main := |*
     
@@ -58,6 +59,7 @@
     };
     
     whitespace;
+    comment;
     
     # literals
     id          => { TOKENV("id", ts, te-ts); };
@@ -97,6 +99,8 @@
     "%"         => { TOKEN("mod"); };
     "+"         => { TOKEN("plus"); };
     "-"         => { TOKEN("minus"); };
+    "@"         => { TOKEN("at"); };
+    "@@"         => { TOKEN("atat"); };
   *|;
   
   write data nofinal;
