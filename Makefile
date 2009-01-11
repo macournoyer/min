@@ -1,4 +1,4 @@
-SRC = vm/ast.c vm/parser.c vm/tokenizer.c vm/vm.c vm/min.c
+SRC = vm/ast.c vm/grammar.c vm/scanner.c vm/vm.c vm/min.c
 OBJ = ${SRC:.c=.o}
 OBJ_MIN = vm/min.o
 
@@ -17,14 +17,14 @@ all: min
 min: ${OBJ_MIN} ${OBJ}
 	${CC} ${CFLAGS} ${OBJ_POTION} ${OBJ} ${LIBS} -o min
 
-vm/tokenizer.c: vm/tokenizer.rl
-	${RAGEL} vm/tokenizer.rl -C -o $@
+vm/scanner.c: vm/scanner.rl
+	${RAGEL} vm/scanner.rl -C -o $@
 
-vm/parser.c: tools/lemon vm/parser.y
-	${LEMON} vm/parser.y
+vm/grammar.c: tools/lemon vm/grammar.y
+	${LEMON} vm/grammar.y
 
 tools/lemon: tools/lemon.c
 	${CC} -o tools/lemon tools/lemon.c
 
 clean:
-	rm -f vm/*.o vm/tokenizer.c vm/parser.c
+	rm -f vm/*.o vm/scanner.c vm/grammar.{c,h,out}

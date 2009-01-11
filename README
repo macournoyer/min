@@ -1,20 +1,24 @@
 
                      THE MIN LANGUAGE
 
-Min is a Prototype-based language with syntax inspired by
-Io and Ruby topped with Python's indentation. It's aimed at
-being the most readable and powerful language ever, really.
-Oh and fast too!
+Min is a Prototype-based language with syntax inspired by Io and Ruby topped
+with Python's indentation. It's aimed at being the most readable and powerful
+language ever, really. Oh, and fast too (but fast enough rather then fastest).
 
 == Philosophies
 * Everything is an object.
-* No special magic statements (if, def, while),
-  everything is a method call.
+* No special magic statements (if, def, while, +, &&), everything is a method
+  call.
 * Open, extensible object model.
-* Only 4 constructs: Closure, Object, VTable and Literals.
+* Only 4 core constructs: Block, Object, VTable and Literals.
 * As close to English as possible.
 * As little parenthesis as possible.
 
+== Credits
+The language constructs are derived from Io by Steve Dekorte
+<http://www.iolanguage.com>.
+Parts of the VM design are taken from Potion by _why
+<http://github.com/why/potion>.
+
 == License
-MIT License,
-(c) Marc-Andre Cournoyer <macournoyer@gmail.com>
+MIT License, (c) Marc-Andre Cournoyer <macournoyer@gmail.com>

@@ -3,7 +3,7 @@
 #include <string.h>
 #include <assert.h>
 #include "min.h"
-#include "parser.h"
+#include "grammar.h"
 
 /* debug */
 #define TOKENV(name, v, len) \
