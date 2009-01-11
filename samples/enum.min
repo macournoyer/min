@@ -1,12 +1,7 @@
-items each: i
-  i print
-items each: |i|
+items each(i):
   i print
 
-items each: i | i print
-items each: |i| i print
+items each(i): i print
 items each(print)
-
-items each: i, y | i print
 
 items map(* 2) join("\n")

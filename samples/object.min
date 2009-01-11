@@ -1,5 +1,5 @@
 Post = Article clone do:
-  initialize = method: |title, content|
+  initialize = method(title, content):
     @title = title
     @content = content
   

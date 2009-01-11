@@ -25,7 +25,7 @@
 
   indent      = newline whitespace+ newline?;
   term        = (newline | ".");
-  id          = [a-z]+;
+  id          = [a-zA-Z_]+;
   int         = [0-9]+;
   string      = '"' (any - '"')* '"' | "'" (any - "'")* "'";
   comment     = "#"+ (any - newline)* newline;
@@ -90,6 +90,8 @@
     "!"         => { TOKEN("not"); };
     "||"        => { TOKEN("or"); };
     "&&"        => { TOKEN("and"); };
+    "|"         => { TOKEN("pipe"); };
+    "&"         => { TOKEN("amp"); };
     "<"         => { TOKEN("lt"); };
     "<="        => { TOKEN("lte"); };
     ">"         => { TOKEN("gt"); };
