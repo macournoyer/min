@@ -5,13 +5,9 @@
 #include "min.h"
 #include "grammar.h"
 
-/* debug */
-#define TOKENV(name, v, len) \
-  memset(sbuf, 0, 1024); \
-  strncpy(sbuf, v, len); \
-  printf("<%s:%s> ", name, sbuf)
-#define TOKEN(name) \
-  printf("<%s> ", name)
+#define TOKEN_V(id,v)  MinParser(pParser, MIN_TOK_##id, v); last = MIN_TOK_##id
+#define TOKEN_UNIQ(id) if (last != PN_TOK_##id) { TOKEN(id); }
+#define TOKEN(id)      TOKEN_V(id, 0)
 
 #define MAX_INDENT     30
 #define INDENT_PUSH(i) (assert(pind < MAX_INDENT-1), inds[++pind] = i)
@@ -20,7 +16,7 @@
 %%{
   machine min;
   
-  newline     = "\r"? "\n" %{ printf(" (line %d)\n", curline); curline++; };
+  newline     = "\r"? "\n" %{ curline++; };
   whitespace  = " " | "\f" | "\t" | "\v";
 
   indent      = newline whitespace+ newline?;
@@ -33,81 +29,81 @@
   main := |*
     
     # indentation magic
-    indent      => {
-      if (ts[0] == '\r') ts++;
-      if (ts[0] == '\n') ts++;
-      
-      if (te-ts > ind) {
-        ind = te-ts;
-        INDENT_PUSH(ind);
-        TOKEN("term");
-        TOKEN("indent");
-      } else if (te-ts < ind) {
-        ind = te-ts;
-        INDENT_POP();
-        TOKEN("dedent");
-        TOKEN("term");
-      } else {
-        TOKEN("term");
-      }
-    };
-    newline     => {
-      while(pind > 0) {
-        INDENT_POP();
-        TOKEN("dedent");
-      }
-      ind = 0;
-      TOKEN("term");
-    };
+    # indent      => {
+    #   if (ts[0] == '\r') ts++;
+    #   if (ts[0] == '\n') ts++;
+    #   
+    #   if (te-ts > ind) {
+    #     ind = te-ts;
+    #     INDENT_PUSH(ind);
+    #     TOKEN(TERM);
+    #     TOKEN(INDENT);
+    #   } else if (te-ts < ind) {
+    #     ind = te-ts;
+    #     INDENT_POP();
+    #     TOKEN(DEDENT);
+    #     TOKEN(TERM);
+    #   } else {
+    #     TOKEN(TERM);
+    #   }
+    # };
+    # newline     => {
+    #   while(pind > 0) {
+    #     INDENT_POP();
+    #     TOKEN(DEDENT);
+    #   }
+    #   ind = 0;
+    #   TOKEN(TERM);
+    # };
     
     whitespace;
     comment;
     
     # literals
-    id          => { TOKENV("id", ts, te-ts); };
-    int         => { TOKENV("int", ts, te-ts); };
-    string      => { TOKENV("string", ts+1, te-ts-2); };
-    term        => { TOKEN("term"); };
+    id          => { TOKEN_V(ID, min_str(ts, te-ts)); };
+    int         => { TOKEN_V(INT, min_str(ts, te-ts)); };
+    string      => { TOKEN_V(STRING, min_str(ts+1, te-ts-2)); };
+    term        => { TOKEN(TERM); };
     
     # ponctuation
-    ","         => { TOKEN("comma"); };
-    ":"         => { TOKEN("colon"); };
-    "("         => { TOKEN("o_par"); };
-    ")"         => { TOKEN("c_par"); };
-    "{"         => { TOKEN("o_bra"); };
-    "}"         => { TOKEN("c_bra"); };
-    "["         => { TOKEN("o_sqbra"); };
-    "]"         => { TOKEN("c_sqbra"); };
+    ","         => { TOKEN(COMMA); };
+    # ":"         => { TOKEN(COLON); };
+    "("         => { TOKEN(O_PAR); };
+    ")"         => { TOKEN(C_PAR); };
+    # "{"         => { TOKEN(O_BRA); };
+    # "}"         => { TOKEN(C_BRA); };
+    # "["         => { TOKEN(O_SQ_BRA); };
+    # "]"         => { TOKEN(C_SQ_BRA); };
     
     # assign
-    "="         => { TOKEN("assign"); };
-    "+="        => { TOKEN("assign_plus"); };
-    "-="        => { TOKEN("assign_minus"); };
+    # "="         => { TOKEN(ASSIGN); };
+    # "+="        => { TOKEN(ASSIGN_PLUS); };
+    # "-="        => { TOKEN(ASSIGN_MINUS); };
     
     # operators
-    "=="        => { TOKEN("eq"); };
-    "!="        => { TOKEN("neq"); };
-    "!"         => { TOKEN("not"); };
-    "||"        => { TOKEN("or"); };
-    "&&"        => { TOKEN("and"); };
-    "|"         => { TOKEN("pipe"); };
-    "&"         => { TOKEN("amp"); };
-    "<"         => { TOKEN("lt"); };
-    "<="        => { TOKEN("lte"); };
-    ">"         => { TOKEN("gt"); };
-    ">="        => { TOKEN("gte"); };
-    "<<"        => { TOKEN("lsh"); };
-    ">>"        => { TOKEN("rsh"); };
-    "*"         => { TOKEN("mult"); };
-    "**"        => { TOKEN("pow"); };
-    "/"         => { TOKEN("div"); };
-    "%"         => { TOKEN("mod"); };
-    "+"         => { TOKEN("plus"); };
-    "-"         => { TOKEN("minus"); };
-    "@"         => { TOKEN("at"); };
-    "@@"        => { TOKEN("atat"); };
-    "?"         => { TOKEN("ques"); };
-    ".."        => { TOKEN("to"); };
+    # "=="        => { TOKEN(EQ); };
+    # "!="        => { TOKEN(NEQ); };
+    # "!"         => { TOKEN(NOT); };
+    # "||"        => { TOKEN(OR); };
+    # "&&"        => { TOKEN(AND); };
+    # "|"         => { TOKEN(PIPE); };
+    # "&"         => { TOKEN(AMP); };
+    # "<"         => { TOKEN(LT); };
+    # "<="        => { TOKEN(LTE); };
+    # ">"         => { TOKEN(GT); };
+    # ">="        => { TOKEN(GTE); };
+    # "<<"        => { TOKEN(LSH); };
+    # ">>"        => { TOKEN(RSH); };
+    # "*"         => { TOKEN(MULT); };
+    # "**"        => { TOKEN(POW); };
+    # "/"         => { TOKEN(DIV); };
+    # "%"         => { TOKEN(MOD); };
+    # "+"         => { TOKEN(PLUS); };
+    # "-"         => { TOKEN(MINUS); };
+    # "@"         => { TOKEN(AT); };
+    # "@@"        => { TOKEN(ATAT); };
+    # "?"         => { TOKEN(QUES); };
+    # ".."        => { TOKEN(TO); };
   *|;
   
   write data nofinal;
@@ -116,12 +112,10 @@
 void min_parse(char *code) {
   int cs, act;
   char *p, *pe, *ts, *te, *eof = 0;
+  int inds[MAX_INDENT], pind = 0, ind = 0;
   int curline = 1;
-  int ind = 0;
-  int inds[MAX_INDENT]; /* max indent level */
-  int pind = 0;
-  char sbuf[1024]; /* debug */
   void *pParser = MinParserAlloc(malloc);
+  int last = 0;
   
   inds[0] = 0;
   p = code;
@@ -131,10 +125,10 @@ void min_parse(char *code) {
   %% write exec;
   
   /* close all open indent on stack */
-  while(pind > 0) {
+  /* while(pind > 0) {
     INDENT_POP();
-    TOKEN("dedent");
-  }
+    TOKEN(DEDENT);
+  } */
   
   MinParser(pParser, 0, 0);
   MinParserFree(pParser, free);
