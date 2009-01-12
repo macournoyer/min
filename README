@@ -19,6 +19,7 @@ The language constructs are derived from Io by Steve Dekorte
 <http://www.iolanguage.com>.
 Parts of the VM design are taken from Potion by _why
 <http://github.com/why/potion>.
+khash.h and kvec.h are (c) Attractive Chaos <attractivechaos@aol.co.uk>
 
 == License
 MIT License, (c) Marc-Andre Cournoyer <macournoyer@gmail.com>

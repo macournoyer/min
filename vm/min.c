@@ -5,6 +5,6 @@ void test_indent() {
 }
 
 int main (int argc, char const *argv[]) {
-  min_parse("print(1)");
+  min_parse("print(1)\nohaie");
   return 0;
 }
