@@ -22,6 +22,7 @@
 #define MIN_IS_TYPE(x,T)      (MIN_OBJ(x)->type == MIN_T_##T)
 
 #define MIN_NIL               ((OBJ)0)
+#define MIN_SHIFT             8
 
 #define MIN                   struct MinVM *vm, OBJ closure, OBJ self
 #define MIN_                  struct MinVM *vm
