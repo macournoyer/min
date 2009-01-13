@@ -4,7 +4,7 @@ OBJ = ${SRC:.c=.o}
 OBJ_MIN = vm/min.o
 
 CC = gcc
-CFLAGS = -Wall -fno-strict-aliasing
+CFLAGS = -Wall -fno-strict-aliasing -DDEBUG -g -O2
 INCS = -Ivm
 LEMON = tools/lemon
 LIBS = -lm
@@ -29,3 +29,5 @@ tools/lemon: tools/lemon.c
 
 clean:
 	rm -f vm/*.o vm/scanner.c vm/grammar.{c,h,out}
+
+rebuild: clean min

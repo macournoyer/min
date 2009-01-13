@@ -19,12 +19,13 @@
 #define MIN_OBJ(x)            ((struct MinObject *)(x))
 #define MIN_VT(x)             (MIN_VTABLE(x)->vtable)
 #define MIN_VT_FOR(T)         (vm->vtables[MIN_T_##T])
+#define MIN_IS_TYPE(x,T)      (MIN_OBJ(x)->type == MIN_T_##T)
 
 #define MIN_NIL               ((OBJ)0)
 
 #define MIN                   struct MinVM *vm, OBJ closure, OBJ self
 #define MIN_                  struct MinVM *vm
-#define MIN_OBJ_HEADER        OBJ vtable
+#define MIN_OBJ_HEADER        OBJ vtable; int type
 
 typedef unsigned long OBJ;
 
@@ -47,7 +48,10 @@ struct MinTable {
 struct MinVM {
   OBJ lobby;
   OBJ vtables[MIN_T_MAX];
+  OBJ strings;
 };
+
+extern OBJ MIN_lookup;
 
 /* vm */
 struct MinVM *min_create();
@@ -56,7 +60,8 @@ void min_destroy(struct MinVM *vm);
 /* string */
 OBJ min_str(MIN_, const char *str, size_t len);
 OBJ min_str2(MIN_, const char *str);
-OBJ min_str_print(MIN, OBJ str);
+void min_str_table_init(MIN_);
+void min_str_init(MIN_);
 
 /* table */
 OBJ min_table();
