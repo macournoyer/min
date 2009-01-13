@@ -10,7 +10,7 @@ language ever, really. Oh, and fast too (but fast enough rather then fastest).
 * No special magic statements (if, def, while, +, &&), everything is a method
   call.
 * Open, extensible object model.
-* Only 4 core constructs: Block, Object, VTable and Literals.
+* Only 4 core constructs: Closure, Object, VTable and Literals.
 * As close to English as possible.
 * As little parenthesis as possible.
 

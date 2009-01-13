@@ -1,7 +1,8 @@
 items each(i):
   i print
-
+# or
 items each(i): i print
+# or
 items each(print)
 
-items map(* 2) join("\n")
+items select(> 5) map(* 2) join("\n")

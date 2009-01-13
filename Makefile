@@ -1,4 +1,5 @@
-SRC = vm/table.c vm/grammar.c vm/scanner.c vm/string.c vm/vm.c vm/min.c
+SRC = vm/table.c vm/object.c vm/string.c vm/vm.c vm/min.c
+# vm/scanner.c vm/grammar.c
 OBJ = ${SRC:.c=.o}
 OBJ_MIN = vm/min.o
 
