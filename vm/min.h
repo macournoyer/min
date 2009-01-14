@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include "kvec.h"
 
+#define MIN_MAX_FRAME         256
+#define MIN_MAX_STACK         256
+
 #define MIN_ALLOC(T)          (T *)malloc(sizeof(T))
 #define MIN_ALLOC_N(T,N)      (T *)malloc(sizeof(T)*(N))
 
@@ -27,13 +30,14 @@
 
 #define MIN                   struct MinVM *vm, OBJ closure, OBJ self
 #define VM                    struct MinVM *vm
+#define VM_FRAME              (&vm->frames[vm->cf])
 #define MIN_OBJ_HEADER        OBJ vtable; int type
 
 typedef unsigned long OBJ;
 
 enum MIN_T {
   MIN_T_VTABLE, MIN_T_OBJECT, MIN_T_CLOSURE, MIN_T_STRING,
-  MIN_T_MAX
+  MIN_T_MAX /* keep last */
 };
 
 struct MinString {
@@ -47,17 +51,36 @@ struct MinTable {
   kvec_t(OBJ) vec;
 };
 
+typedef unsigned char MinOpCode;
+struct MinCode {
+  MinOpCode *opcodes;
+  size_t len;
+  OBJ *literals;
+  char *filename;
+};
+
+struct MinFrame {
+  OBJ stack[MIN_MAX_STACK];
+  size_t sp; /* stack pointer */
+  char *filename;
+  int line; /* cur line num */
+  OBJ self;
+};
+
 struct MinVM {
   OBJ lobby;
   OBJ vtables[MIN_T_MAX];
   OBJ strings;
+  size_t cf; /* current frame */
+  struct MinFrame frames[MIN_MAX_FRAME];
 };
 
 extern OBJ MIN_lookup;
 
 /* vm */
 struct MinVM *min_create();
-void min_destroy(struct MinVM *vm);
+void min_destroy(VM);
+OBJ min_run(VM, struct MinCode *code);
 
 /* string */
 OBJ min_str(VM, const char *str, size_t len);

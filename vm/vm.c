@@ -1,7 +1,46 @@
+#include <stdio.h>
+#include <assert.h>
 #include "min.h"
 #include "object.h"
+#include "opcode.h"
 
 OBJ MIN_lookup;
+
+#define NEXT_OP        (*++ip)
+#define LITERAL        literals[NEXT_OP]
+#define STACK_POP      stack[sp--]
+#define STACK_PUSH(v)  (assert(sp < MIN_MAX_STACK), stack[++sp] = (v))
+
+OBJ min_run(VM, struct MinCode *code) {
+  MinOpCode *ip;
+  MinOpCode *end = code->opcodes + code->len;
+  OBJ *literals = code->literals;
+  struct MinFrame *frame = VM_FRAME;
+  OBJ *stack = frame->stack;
+  size_t sp = frame->sp;
+  
+  for(ip = code->opcodes; ip < end; NEXT_OP) {
+    switch(*ip) {
+      case MIN_OP_SELF:
+        STACK_PUSH(frame->self);
+        break;
+      case MIN_OP_LITERAL:
+        STACK_PUSH(LITERAL);
+        break;
+      case MIN_OP_SEND:
+        /* TODO pass args */
+        STACK_PUSH(min_send(STACK_POP, LITERAL));
+        break;
+      case MIN_OP_SELFSEND:
+        STACK_PUSH(min_send(frame->self, LITERAL));
+        break;
+      default:
+        fprintf(stderr, "Unknown opcode: %d\n", (int)*ip);
+    }
+  }
+  
+  return stack[sp];
+}
 
 struct MinVM *min_create() {
   struct MinVM *vm = MIN_ALLOC(struct MinVM);
@@ -24,6 +63,8 @@ struct MinVM *min_create() {
   min_def(vtable_vt, "delegated", min_vtable_delegated);
   
   vm->lobby = min_vtable_allocate(vm, 0, object_vt);
+  vm->cf = 0;
+  VM_FRAME->self = vm->lobby;
   
   /* some often used symbols */
   MIN_lookup = MIN_STR("lookup");
