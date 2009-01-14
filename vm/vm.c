@@ -26,15 +26,15 @@ struct MinVM *min_create() {
   vm->lobby = min_vtable_allocate(vm, 0, object_vt);
   
   /* some often used symbols */
-  MIN_lookup = min_str2(vm, "lookup");
+  MIN_lookup = MIN_STR("lookup");
   
   /* objects boot, this is where core methods are added */
   min_object_init(vm);
   min_str_init(vm);
   
   /* sending: Lobby inspect println */
-  min_send(min_send(vm->lobby, min_str2(vm, "inspect")),
-           min_str2(vm, "println"));
+  min_send2(vm->lobby, "set_slot", MIN_STR("inspect"), MIN_STR("Lobby"));
+  min_send2(min_send2(vm->lobby, "inspect"), "println");
   
   return vm;
 }

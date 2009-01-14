@@ -12,6 +12,7 @@
 #define MIN_MEMCPY(X,Y,T)     memcpy((X), (Y), sizeof(T))
 #define MIN_MEMCPY_N(X,Y,T,N) memcpy((X), (Y), sizeof(T)*(N))
 
+#define MIN_STR(x)            min_str2(vm, (x))
 #define MIN_STR_PTR(x)        ((struct MinString *)(x))->ptr
 #define MIN_STR_LEN(x)        ((struct MinString *)(x))->len
 #define MIN_TABLE(x)          ((struct MinTable *)(x))
