@@ -6,7 +6,7 @@
 
 /* closure */
 
-static OBJ min_closure_new(MIN_, MinCMethod method) {
+static OBJ min_closure_new(VM, MinCMethod method) {
   struct MinClosure *c = MIN_ALLOC(struct MinClosure);
   c->vtable = MIN_VT_FOR(CLOSURE);
   c->type   = MIN_T_CLOSURE;
@@ -57,7 +57,7 @@ OBJ min_vtable_lookup(MIN, OBJ name) {
 
 /* message sending */
 
-OBJ min_bind(MIN_, OBJ receiver, OBJ msg) {
+OBJ min_bind(VM, OBJ receiver, OBJ msg) {
   OBJ vt = MIN_VT(receiver);
   OBJ clos = (msg == MIN_lookup && MIN_IS_TYPE(receiver, VTABLE))
     ? min_vtable_lookup(vm, 0, vt, msg)
@@ -92,7 +92,7 @@ OBJ min_inspect(MIN) {
   return min_str2(vm, str);
 }
 
-void min_object_init(MIN_) {
+void min_object_init(VM) {
   OBJ vt = MIN_VT_FOR(OBJECT);
   min_def(vt, "inspect", min_inspect);
   min_def(vt, "get_slot", min_get_slot);

@@ -32,7 +32,7 @@ struct MinVM *min_create() {
   min_object_init(vm);
   min_str_init(vm);
   
-  /* sending: Lobby inspect println */
+  /* DEBUG sending: Lobby inspect println */
   min_send2(vm->lobby, "set_slot", MIN_STR("inspect"), MIN_STR("Lobby"));
   min_send2(min_send2(vm->lobby, "inspect"), "println");
   

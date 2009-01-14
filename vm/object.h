@@ -1,7 +1,6 @@
 #ifndef _OBJECT_H_
 #define _OBJECT_H_
 
-#include <assert.h>
 #include "min.h"
 #include "khash.h"
 
@@ -43,9 +42,9 @@ OBJ min_vtable_lookup(MIN, OBJ name);
 OBJ min_vtable_add_closure(MIN, OBJ name, OBJ clos);
 OBJ min_vtable_add_cmethod(MIN, OBJ name, MinCMethod method);
 
-OBJ min_bind(MIN_, OBJ receiver, OBJ msg);
+OBJ min_bind(VM, OBJ receiver, OBJ msg);
 
 OBJ min_inspect(MIN);
-void min_object_init(MIN_);
+void min_object_init(VM);
 
 #endif /* _OBJECT_H_ */

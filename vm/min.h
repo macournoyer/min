@@ -26,7 +26,7 @@
 #define MIN_SHIFT             8
 
 #define MIN                   struct MinVM *vm, OBJ closure, OBJ self
-#define MIN_                  struct MinVM *vm
+#define VM                    struct MinVM *vm
 #define MIN_OBJ_HEADER        OBJ vtable; int type
 
 typedef unsigned long OBJ;
@@ -60,10 +60,10 @@ struct MinVM *min_create();
 void min_destroy(struct MinVM *vm);
 
 /* string */
-OBJ min_str(MIN_, const char *str, size_t len);
-OBJ min_str2(MIN_, const char *str);
-void min_str_table_init(MIN_);
-void min_str_init(MIN_);
+OBJ min_str(VM, const char *str, size_t len);
+OBJ min_str2(VM, const char *str);
+void min_str_table_init(VM);
+void min_str_init(VM);
 
 /* table */
 OBJ min_table();
