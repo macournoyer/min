@@ -14,9 +14,9 @@ int main (int argc, char const *argv[]) {
   /*
   LITERAL 0
   SEND 1
+  RETURN
   */
-  code.opcodes = (MinOpCode *) "\1\0\2\1";
-  code.len = 6;
+  code.opcodes = (MinOpCode *) "\1\0\2\1\5";
   code.literals = MIN_ALLOC_N(OBJ, 2);
   code.literals[0] = MIN_STR("ohaie");
   code.literals[1] = MIN_STR("println");

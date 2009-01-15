@@ -6,46 +6,52 @@
 
 OBJ MIN_lookup;
 
-#define NEXT_OP        (*++ip)
-#define LITERAL        literals[NEXT_OP]
+#define POP_OP         (*++ip)
+#define LITERAL        literals[ind + POP_OP]
 #define STACK_POP      stack[sp--]
 #define STACK_PUSH(v)  (assert(sp < MIN_MAX_STACK), stack[++sp] = (v))
+#define RESET_IND      (ind = 0)
+
+#ifdef MIN_THREADED_DISPATCH
+#define OPCODES        goto *labels[*ip]
+#define END_OPCODES    
+#define OP(name)       op_##name
+#define DISPATCH       RESET_IND; goto *labels[POP_OP]
+#else
+#define OPCODES        for(;;) { switch(*ip) {
+#define END_OPCODES    }}
+#define OP(name)       case MIN_OP_##name
+#define DISPATCH       RESET_IND; POP_OP; break
+#endif
 
 OBJ min_run(VM, struct MinCode *code) {
-  MinOpCode *ip;
-  MinOpCode *end = code->opcodes + code->len;
+  MinOpCode *ip = code->opcodes;
+  MinOpCode ind = 0;
   OBJ *literals = code->literals;
   struct MinFrame *frame = VM_FRAME;
   OBJ *stack = frame->stack;
   size_t sp = frame->sp;
   
-  for(ip = code->opcodes; ip < end; NEXT_OP) {
-    switch(*ip) {
-      case MIN_OP_SELF:
-        STACK_PUSH(frame->self);
-        break;
-      case MIN_OP_LITERAL:
-        STACK_PUSH(LITERAL);
-        break;
-      case MIN_OP_SEND:
-        /* TODO pass args */
-        STACK_PUSH(min_send(STACK_POP, LITERAL));
-        break;
-      case MIN_OP_SELFSEND:
-        STACK_PUSH(min_send(frame->self, LITERAL));
-        break;
-      default:
-        fprintf(stderr, "Unknown opcode: %d\n", (int)*ip);
-    }
-  }
+#ifdef MIN_THREADED_DISPATCH
+  static void *labels[] = { MIN_OP_LABELS };
+#endif
   
-  return stack[sp];
+  OPCODES;
+    OP(SELF):        STACK_PUSH(frame->self); DISPATCH;
+    OP(LITERAL):     STACK_PUSH(LITERAL); DISPATCH;
+    OP(SEND):        STACK_PUSH(min_send(STACK_POP, LITERAL)); /* TODO pass args */ DISPATCH;
+    OP(SELF_SEND):   STACK_PUSH(min_send(frame->self, LITERAL)); DISPATCH;
+    OP(SUPER_SEND):  assert(0 && "unimplemented"); DISPATCH;
+    OP(RETURN):      return stack[sp];
+    OP(INDEX_EXT):   ind += POP_OP; DISPATCH;
+  END_OPCODES;
 }
 
 struct MinVM *min_create() {
   struct MinVM *vm = MIN_ALLOC(struct MinVM);
   OBJ vtable_vt, object_vt;
   
+  /* bootstrap the object model */
   vtable_vt = MIN_VT_FOR(VTABLE) = min_vtable_delegated(vm, 0, 0);
   MIN_VT(vtable_vt) = vtable_vt;
   

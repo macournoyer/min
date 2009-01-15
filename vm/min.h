@@ -2,10 +2,11 @@
 #define _MIN_H_
 
 #include <stdlib.h>
+#include <limits.h>
 #include "kvec.h"
+#include "config.h"
 
-#define MIN_MAX_FRAME         256
-#define MIN_MAX_STACK         256
+#define MIN_MAX_STACK         255
 
 #define MIN_ALLOC(T)          (T *)malloc(sizeof(T))
 #define MIN_ALLOC_N(T,N)      (T *)malloc(sizeof(T)*(N))
@@ -54,13 +55,12 @@ struct MinTable {
 typedef unsigned char MinOpCode;
 struct MinCode {
   MinOpCode *opcodes;
-  size_t len;
   OBJ *literals;
   char *filename;
 };
 
 struct MinFrame {
-  OBJ stack[MIN_MAX_STACK];
+  OBJ stack[MIN_MAX_STACK]; /* maybe make dyn ? */
   size_t sp; /* stack pointer */
   char *filename;
   int line; /* cur line num */
