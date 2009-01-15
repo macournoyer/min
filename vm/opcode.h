@@ -11,7 +11,7 @@
 enum {
   MIN_OP_SELF = 0,
   /* push self onto the execution stack */
-    
+  
   MIN_OP_LITERAL, /* <value index> */
   /* push a literal value onto the execution stack */
     

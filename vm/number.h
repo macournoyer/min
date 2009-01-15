@@ -7,10 +7,7 @@
 
 struct MinNumber {
   MIN_OBJ_HEADER;
-  union {
-    int   i;
-    float f;
-  } val;
-}
+  int   i;
+};
 
 #endif /* _NUMBER_H_ */
