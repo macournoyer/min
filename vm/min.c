@@ -16,10 +16,17 @@ int main (int argc, char const *argv[]) {
   SEND 1
   RETURN
   */
-  code.opcodes = (MinOpCode *) "\1\0\2\1\5";
-  code.literals = MIN_ALLOC_N(OBJ, 2);
-  code.literals[0] = MIN_STR("ohaie");
-  code.literals[1] = MIN_STR("println");
+  kv_init(code.opcodes);
+  kv_push(MinOpCode, code.opcodes, 1);
+  kv_push(MinOpCode, code.opcodes, 0);
+  kv_push(MinOpCode, code.opcodes, 2);
+  kv_push(MinOpCode, code.opcodes, 1);
+  kv_push(MinOpCode, code.opcodes, 5);
+  
+  kv_init(code.literals);
+  kv_push(OBJ, code.literals, MIN_STR("ohaie"));
+  kv_push(OBJ, code.literals, MIN_STR("println"));
+  
   code.filename = "test";
   min_run(vm, &code);
   

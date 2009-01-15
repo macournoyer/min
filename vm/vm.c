@@ -8,8 +8,8 @@ OBJ MIN_lookup;
 
 #define POP_OP         (*++ip)
 #define LITERAL        literals[ind + POP_OP]
-#define STACK_POP      stack[sp--]
-#define STACK_PUSH(v)  (assert(sp < MIN_MAX_STACK), stack[++sp] = (v))
+#define STACK_POP      kv_pop(frame->stack)
+#define STACK_PUSH(v)  kv_push(OBJ, frame->stack, v)
 #define RESET_IND      (ind = 0)
 
 #ifdef MIN_THREADED_DISPATCH
@@ -19,18 +19,16 @@ OBJ MIN_lookup;
 #define DISPATCH       RESET_IND; goto *labels[POP_OP]
 #else
 #define OPCODES        for(;;) { switch(*ip) {
-#define END_OPCODES    }}
+#define END_OPCODES    default: printf("unknown opcode: %d\n", (int)*ip); }}
 #define OP(name)       case MIN_OP_##name
 #define DISPATCH       RESET_IND; POP_OP; break
 #endif
 
 OBJ min_run(VM, struct MinCode *code) {
-  MinOpCode *ip = code->opcodes;
+  MinOpCode *ip = &kv_A(code->opcodes, 0);
   MinOpCode ind = 0;
-  OBJ *literals = code->literals;
+  OBJ *literals = &kv_A(code->literals, 0);
   struct MinFrame *frame = VM_FRAME;
-  OBJ *stack = frame->stack;
-  size_t sp = frame->sp;
   
 #ifdef MIN_THREADED_DISPATCH
   static void *labels[] = { MIN_OP_LABELS };
@@ -42,7 +40,7 @@ OBJ min_run(VM, struct MinCode *code) {
     OP(SEND):        STACK_PUSH(min_send(STACK_POP, LITERAL)); /* TODO pass args */ DISPATCH;
     OP(SELF_SEND):   STACK_PUSH(min_send(frame->self, LITERAL)); DISPATCH;
     OP(SUPER_SEND):  assert(0 && "unimplemented"); DISPATCH;
-    OP(RETURN):      return stack[sp];
+    OP(RETURN):      return STACK_POP;
     OP(INDEX_EXT):   ind += POP_OP; DISPATCH;
   END_OPCODES;
 }
@@ -68,11 +66,13 @@ struct MinVM *min_create() {
   min_def(vtable_vt, "allocate", min_vtable_allocate);
   min_def(vtable_vt, "delegated", min_vtable_delegated);
   
+  /* init VM */
   vm->lobby = min_vtable_allocate(vm, 0, object_vt);
   vm->cf = 0;
   VM_FRAME->self = vm->lobby;
+  kv_init(VM_FRAME->stack);
   
-  /* some often used symbols */
+  /* cache some often used symbols */
   MIN_lookup = MIN_STR("lookup");
   
   /* objects boot, this is where core methods are added */
