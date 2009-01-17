@@ -4,11 +4,13 @@
 #include <assert.h>
 #include <string.h>
 #include "min.h"
+#include "compiler.h"
 }
 
-%name         MinParser
-%token_type   { OBJ }
-%token_prefix MIN_TOK_
+%name           MinParser
+%token_type     { OBJ }
+%token_prefix   MIN_TOK_
+%extra_argument { struct MinCode *code }
 
 %parse_failure {
   printf("Syntax error!\n");
@@ -20,15 +22,17 @@ root ::= expressions.
 expressions ::= expression.
 expressions ::= expressions TERM expression.
 
-expression(A) ::= literal(B). { A = B; }
-expression(A) ::= call(B). { A = B; }
+expression ::= message.
+expression ::= expression message.
+
+message ::= literal(B). { min_compile_lit(code, B); }
+message ::= call(B). { min_compile_call(code, B); }
 
 literal(A) ::= STRING(B). { A = B; }
-literal(A) ::= INT(B). { A = B; }
 
-call ::= ID(B). { printf("call: %s\n", MIN_STR_PTR(B)); }
-call ::= ID(B) O_PAR C_PAR. { printf("call: %s\n", MIN_STR_PTR(B)); }
-call ::= ID(B) O_PAR arguments(C) C_PAR. { printf("call: %s", MIN_STR_PTR(B)); min_table_print(C); }
+call(A) ::= ID(B). { A = B; }
+call(A) ::= ID(B) O_PAR C_PAR. { A = B; }
+call(A) ::= ID(B) O_PAR arguments C_PAR. { A = B; }
 
 arguments(A) ::= expression(B). { A = min_table(); min_table_push(A, B); }
 arguments(A) ::= arguments(B) COMMA expression(C). { A = B; min_table_push(B, C); }

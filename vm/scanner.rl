@@ -4,8 +4,9 @@
 #include <assert.h>
 #include "min.h"
 #include "grammar.h"
+#include "compiler.h"
 
-#define TOKEN_V(id,v)  MinParser(pParser, MIN_TOK_##id, v); last = MIN_TOK_##id
+#define TOKEN_V(id,v)  MinParser(pParser, MIN_TOK_##id, v, code); last = MIN_TOK_##id
 #define TOKEN_UNIQ(id) if (last != PN_TOK_##id) { TOKEN(id); }
 #define TOKEN(id)      TOKEN_V(id, 0)
 
@@ -60,9 +61,9 @@
     comment;
     
     # literals
-    id          => { TOKEN_V(ID, min_str(ts, te-ts)); };
-    int         => { TOKEN_V(INT, min_str(ts, te-ts)); };
-    string      => { TOKEN_V(STRING, min_str(ts+1, te-ts-2)); };
+    id          => { TOKEN_V(ID, min_str(vm, ts, te-ts)); };
+    # int         => { TOKEN_V(INT, min_str(ts, te-ts)); };
+    string      => { TOKEN_V(STRING, min_str(vm, ts+1, te-ts-2)); };
     term        => { TOKEN(TERM); };
     
     # ponctuation
@@ -109,17 +110,18 @@
   write data nofinal;
 }%%
 
-void min_parse(char *code) {
+struct MinCode *min_compile(VM, const char *string, const char *filename) {
   int cs, act;
   char *p, *pe, *ts, *te, *eof = 0;
   int inds[MAX_INDENT], pind = 0, ind = 0;
   int curline = 1;
   void *pParser = MinParserAlloc(malloc);
   int last = 0;
+  struct MinCode *code = min_compiler(filename);
   
   inds[0] = 0;
-  p = code;
-  pe = p + strlen(code) + 1;
+  p = string;
+  pe = p + strlen(string) + 1;
   
   %% write init;
   %% write exec;
@@ -130,6 +132,10 @@ void min_parse(char *code) {
     TOKEN(DEDENT);
   } */
   
-  MinParser(pParser, 0, 0);
+  MinParser(pParser, 0, 0, code);
   MinParserFree(pParser, free);
+  
+  min_compiler_finish(code);
+  
+  return code;
 }

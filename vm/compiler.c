@@ -19,16 +19,16 @@ void min_compiler_finish(CODE) {
   PUSH_OP(MIN_OP_RETURN);
 }
 
-#define OP_CODE_AT(p)  kv_A(code->opcodes, (p))
 void min_compiler_dump(CODE) {
   size_t i;
   OBJ lit;
-  printf("# literals\n");
+  printf("# bytecode for '%s'\n", code->filename);
+  printf("# literals:\n");
   for(i = 0; i < kv_size(code->literals); ++i) {
     lit = kv_A(code->literals, i);
     printf("[%d] %s\n", (int)i, MIN_STR_PTR(lit));
   }
-  printf("# opcodes\n");
+  printf("# opcodes:\n");
   for(i = 0; i < kv_size(code->opcodes); ++i) {
     switch(kv_A(code->opcodes, i)) {
       case MIN_OP_SELF:        printf("SELF\n"); break;
@@ -43,6 +43,7 @@ void min_compiler_dump(CODE) {
 }
 
 static int min_add_lit(CODE, OBJ lit) {
+  /* TODO reuse */
   kv_push(OBJ, code->literals, lit);
   return kv_size(code->literals)-1; /* TODO split if too large */
 }

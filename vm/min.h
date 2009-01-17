@@ -90,12 +90,4 @@ OBJ min_table();
 OBJ min_table_push(OBJ self, OBJ item);
 OBJ min_table_print(OBJ self);
 
-/* parsing */
-void min_parse(char *code);
-
-/* lemon stuff */
-void *MinParserAlloc(void *(*)(size_t));
-void MinParser(void *, int, OBJ);
-void MinParserFree(void *, void (*)(void*));
-
 #endif /* _MIN_H_ */
