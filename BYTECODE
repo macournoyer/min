@@ -1,0 +1,22 @@
+"ohaie" println
+=> Message("ohaie", Message(println))
+
+# bytecode  stack
+LITERAL 0 ; [Message("ohaie")]
+SEND    1 ; [Message(println, args=[], prev=Message("ohaie"))]
+
+# Bytecode spec
+SEND <message name index>, <arg count> ; stack: [receiver, args...] => [message]
+
+# C proto: Message(OBJ name, OBJ receiver, OBJ args)
+OP(SEND): STACK_PUSH(Message(LITERAL, STACK_POP, STACK_POP_N(IND)));
+
+arg_at(0) println
+=> Message(arg_at, args=[Message(0)], prev=nil, next=Message(println))
+# bytecode:
+LITERAL 0 ; [ Message(0) ]
+SEND    1 ; [ Message(arg_at, args=[Message(0)], prev=nil) ]
+SEND    2 ; [ Message(println, args=[], prev=Message(arg_at, ...)) ]
+
+#### Conclusion
+It seems to be impossible to have an efficient bytecode w/ lazy evaluation and introspection like Io.

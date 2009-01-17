@@ -1,0 +1,8 @@
+if(x > 1):
+  do_it
+
+while { x > 1 }:
+  do_it
+
+m = method: x, y |
+  x println
