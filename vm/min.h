@@ -14,7 +14,7 @@
 #define MIN_MEMCPY(X,Y,T)     memcpy((X), (Y), sizeof(T))
 #define MIN_MEMCPY_N(X,Y,T,N) memcpy((X), (Y), sizeof(T)*(N))
 
-#define MIN_STR(x)            min_str2(vm, (x))
+#define MIN_STR(x)            MinString2(vm, (x))
 #define MIN_STR_PTR(x)        ((struct MinString *)(x))->ptr
 #define MIN_STR_LEN(x)        ((struct MinString *)(x))->len
 #define MIN_TABLE(x)          ((struct MinTable *)(x))
@@ -41,10 +41,10 @@
     struct MinClosure *c = (struct MinClosure *) min_bind(vm, r, (MSG));  \
     c->method(vm, (OBJ)c, r, ##ARGS);  \
   })
-#define min_send2(RCV, MSG, ARGS...) min_send((RCV), min_str2(vm, (MSG)), ##ARGS)
+#define min_send2(RCV, MSG, ARGS...) min_send((RCV), MinString2(vm, (MSG)), ##ARGS)
 
 #define min_def(VT, MSG, FUNC) \
-  min_vtable_add_cmethod(vm, 0, (VT), min_str2(vm, (MSG)), (MinCMethod)(FUNC));
+  MinVTable_add_cmethod(vm, 0, (VT), MinString2(vm, (MSG)), (MinCMethod)(FUNC));
 
 typedef unsigned long OBJ;
 
@@ -102,30 +102,30 @@ struct MinArray {
 extern OBJ MIN_lookup;
 
 /* vm */
-struct MinVM *min_create();
-void min_destroy(VM);
+struct MinVM *MinVM();
+void MinVM_destroy(VM);
 
 /* message */
 OBJ MinMessage(OBJ name);
 void MinMessage_init(VM);
 
 /* vtable */
-OBJ min_vtable_delegated(MIN);
-OBJ min_vtable_allocate(MIN);
-OBJ min_vtable_lookup(MIN, OBJ name);
-OBJ min_vtable_add_closure(MIN, OBJ name, OBJ clos);
-OBJ min_vtable_add_cmethod(MIN, OBJ name, MinCMethod method);
+OBJ MinVTable_delegated(MIN);
+OBJ MinVTable_allocate(MIN);
+OBJ MinVTable_lookup(MIN, OBJ name);
+OBJ MinVTable_add_closure(MIN, OBJ name, OBJ clos);
+OBJ MinVTable_add_cmethod(MIN, OBJ name, MinCMethod method);
 
 /* object */
 OBJ min_bind(VM, OBJ receiver, OBJ msg);
 OBJ min_inspect(MIN);
-void min_object_init(VM);
+void MinObject_init(VM);
 
 /* string */
-OBJ min_str(VM, const char *str, size_t len);
-OBJ min_str2(VM, const char *str);
-void min_str_table_init(VM);
-void min_str_init(VM);
+OBJ MinString(VM, const char *str, size_t len);
+OBJ MinString2(VM, const char *str);
+void MinStringTable_init(VM);
+void MinString_init(VM);
 
 /* lemon */
 void min_parse(VM, const char *string, const char *filename);

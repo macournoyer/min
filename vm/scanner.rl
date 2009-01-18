@@ -60,9 +60,9 @@
     comment;
     
     # literals
-    id          => { TOKEN_V(ID, min_str(vm, ts, te-ts)); };
-    # int         => { TOKEN_V(INT, min_str(ts, te-ts)); };
-    string      => { TOKEN_V(STRING, min_str(vm, ts+1, te-ts-2)); };
+    id          => { TOKEN_V(ID, MinString(vm, ts, te-ts)); };
+    # int         => { TOKEN_V(INT, MinString(ts, te-ts)); };
+    string      => { TOKEN_V(STRING, MinString(vm, ts+1, te-ts-2)); };
     term        => { TOKEN(TERM); };
     
     # ponctuation

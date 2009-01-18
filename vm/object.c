@@ -5,7 +5,7 @@
 
 /* closure */
 
-static OBJ min_closure_new(VM, MinCMethod method) {
+static OBJ MinClosure(VM, MinCMethod method) {
   struct MinClosure *c = MIN_ALLOC(struct MinClosure);
   c->vtable = MIN_VT_FOR(CLOSURE);
   c->type   = MIN_T_CLOSURE;
@@ -16,14 +16,14 @@ static OBJ min_closure_new(VM, MinCMethod method) {
 
 /* vtable */
 
-OBJ min_vtable_allocate(MIN) {
+OBJ MinVTable_allocate(MIN) {
   struct MinObject *obj = MIN_ALLOC(struct MinObject);
-  obj->vtable = min_vtable_delegated(vm, 0, self);
+  obj->vtable = MinVTable_delegated(vm, 0, self);
   obj->type   = MIN_T_OBJECT;
   return (OBJ)obj;
 }
 
-OBJ min_vtable_delegated(MIN) {
+OBJ MinVTable_delegated(MIN) {
   struct MinVTable *child = MIN_ALLOC(struct MinVTable);
   child->vtable = (OBJ) self ? MIN_VTABLE(self)->vtable : 0;
   child->type   = MIN_T_VTABLE;
@@ -32,7 +32,7 @@ OBJ min_vtable_delegated(MIN) {
   return (OBJ)child;
 }
 
-OBJ min_vtable_add_closure(MIN, OBJ name, OBJ clos) {
+OBJ MinVTable_add_closure(MIN, OBJ name, OBJ clos) {
   int ret;
   kh_OBJ_t *h = MIN_VTABLE(self)->kh;
   khiter_t k  = kh_put(OBJ, h, name, &ret);
@@ -41,11 +41,11 @@ OBJ min_vtable_add_closure(MIN, OBJ name, OBJ clos) {
   return clos;
 }
 
-OBJ min_vtable_add_cmethod(MIN, OBJ name, MinCMethod method) {
-  return min_vtable_add_closure(vm, closure, self, name, min_closure_new(vm, method));
+OBJ MinVTable_add_cmethod(MIN, OBJ name, MinCMethod method) {
+  return MinVTable_add_closure(vm, closure, self, name, MinClosure(vm, method));
 }
 
-OBJ min_vtable_lookup(MIN, OBJ name) {
+OBJ MinVTable_lookup(MIN, OBJ name) {
   struct MinVTable *vt = MIN_VTABLE(self);
   kh_OBJ_t *h = MIN_VTABLE(self)->kh;
   khiter_t k = kh_get(OBJ, h, name);
@@ -59,7 +59,7 @@ OBJ min_vtable_lookup(MIN, OBJ name) {
 OBJ min_bind(VM, OBJ receiver, OBJ msg) {
   OBJ vt = MIN_VT(receiver);
   OBJ clos = (msg == MIN_lookup && MIN_IS_TYPE(receiver, VTABLE))
-    ? min_vtable_lookup(vm, 0, vt, msg)
+    ? MinVTable_lookup(vm, 0, vt, msg)
     : min_send(vt, MIN_lookup, msg);
   if (!clos) fprintf(stderr, "Slot not found: %s", MIN_STR_PTR(msg));
   return clos;
@@ -77,9 +77,9 @@ OBJ min_get_slot(MIN, OBJ name) {
 
 OBJ min_set_slot(MIN, OBJ name, OBJ value) {
   if (MIN_IS_TYPE(value, CLOSURE)) {
-    min_vtable_add_closure(vm, closure, self, name, value);
+    MinVTable_add_closure(vm, closure, self, name, value);
   } else {
-    OBJ cl = min_vtable_add_cmethod(vm, 0, MIN_VT(self), name, (MinCMethod)min_getter);
+    OBJ cl = MinVTable_add_cmethod(vm, 0, MIN_VT(self), name, (MinCMethod)min_getter);
     MIN_CLOSURE(cl)->data = value;
   }
   return value;
@@ -88,10 +88,10 @@ OBJ min_set_slot(MIN, OBJ name, OBJ value) {
 OBJ min_inspect(MIN) {
   char str[20];
   sprintf(str, "#<Object:%p>", (void*)self);
-  return min_str2(vm, str);
+  return MinString2(vm, str);
 }
 
-void min_object_init(VM) {
+void MinObject_init(VM) {
   OBJ vt = MIN_VT_FOR(OBJECT);
   min_def(vt, "inspect", min_inspect);
   min_def(vt, "get_slot", min_get_slot);

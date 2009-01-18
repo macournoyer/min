@@ -10,14 +10,14 @@ struct MinStrTable {
   kh_str_t *kh;
 };
 
-OBJ min_str_lookup(VM, const char *str) {
+OBJ MinString_lookup(VM, const char *str) {
   struct MinStrTable *t = (struct MinStrTable *) vm->strings;
   khiter_t k = kh_get(str, t->kh, str);
   if (k != kh_end(t->kh)) return kh_value(t->kh, k);
   return MIN_NIL;
 }
 
-void min_str_add(VM, const char *str, OBJ id) {
+void MinString_add(VM, const char *str, OBJ id) {
   int ret;
   struct MinStrTable *t = (struct MinStrTable *) vm->strings;
   khiter_t k = kh_put(str, t->kh, str, &ret);
@@ -25,8 +25,8 @@ void min_str_add(VM, const char *str, OBJ id) {
   kh_value(t->kh, k) = id;
 }
 
-OBJ min_str(VM, const char *str, size_t len) {
-  OBJ id = min_str_lookup(vm, str);
+OBJ MinString(VM, const char *str, size_t len) {
+  OBJ id = MinString_lookup(vm, str);
   if (!id) {
     struct MinString *s = MIN_ALLOC(struct MinString);
     s->vtable   = MIN_VT_FOR(STRING);
@@ -37,33 +37,33 @@ OBJ min_str(VM, const char *str, size_t len) {
     s->len      = len;
     
     id = (OBJ)s;
-    min_str_add(vm, s->ptr, id);
+    MinString_add(vm, s->ptr, id);
   }
   return id;
 }
 
-OBJ min_str2(VM, const char *str) {
-  return min_str(vm, str, strlen(str));
+OBJ MinString2(VM, const char *str) {
+  return MinString(vm, str, strlen(str));
 }
 
-OBJ min_str_print(MIN) {
+OBJ MinString_print(MIN) {
   printf("%s", MIN_STR_PTR(self));
   return MIN_NIL;
 }
 
-OBJ min_str_println(MIN) {
+OBJ MinString_println(MIN) {
   printf("%s\n", MIN_STR_PTR(self));
   return MIN_NIL;
 }
 
-void min_str_table_init(VM) {
+void MinStringTable_init(VM) {
   struct MinStrTable *tbl = MIN_ALLOC(struct MinStrTable);
   tbl->kh = kh_init(str);
   vm->strings = (OBJ) tbl;
 }
 
-void min_str_init(VM) {
+void MinString_init(VM) {
   OBJ vt = MIN_VT_FOR(STRING);
-  min_def(vt, "print", min_str_print);
-  min_def(vt, "println", min_str_println);
+  min_def(vt, "print", MinString_print);
+  min_def(vt, "println", MinString_println);
 }
