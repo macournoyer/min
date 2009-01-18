@@ -33,6 +33,8 @@ struct MinVM *MinVM() {
   /* objects boot, this is where core methods are added */
   MinObject_init(vm);
   MinString_init(vm);
+  MinMessage_init(vm);
+  MinArray_init(vm);
   
   /* Lobby init */
   min_send2(vm->lobby, "set_slot", MIN_STR("inspect"), MIN_STR("Lobby"));

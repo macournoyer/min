@@ -17,9 +17,11 @@
 #define MIN_STR(x)            MinString2(vm, (x))
 #define MIN_STR_PTR(x)        ((struct MinString *)(x))->ptr
 #define MIN_STR_LEN(x)        ((struct MinString *)(x))->len
-#define MIN_TABLE(x)          ((struct MinTable *)(x))
+#define MIN_ARRAY_PUSH(x,i)   kv_push(OBJ, ((struct MinArray *)(x))->kv, (i))
+#define MIN_ARRAY_AT(x,i)     kv_A(((struct MinArray *)(x))->kv, (i))
 #define MIN_VTABLE(x)         ((struct MinVTable *)(x))
 #define MIN_CLOSURE(x)        ((struct MinClosure *)(x))
+#define MIN_MESSAGE(x)        ((struct MinMessage *)(x))
 #define MIN_OBJ(x)            ((struct MinObject *)(x))
 #define MIN_VT(x)             (MIN_VTABLE(x)->vtable)
 #define MIN_VT_FOR(T)         (vm->vtables[MIN_T_##T])
@@ -51,7 +53,7 @@ typedef unsigned long OBJ;
 KHASH_MAP_INIT_INT(OBJ, OBJ)
 
 enum MIN_T {
-  MIN_T_VTABLE, MIN_T_OBJECT, MIN_T_CLOSURE, MIN_T_STRING,
+  MIN_T_OBJECT, MIN_T_VTABLE, MIN_T_MESSAGE, MIN_T_CLOSURE, MIN_T_STRING, MIN_T_ARRAY,
   MIN_T_MAX /* keep last */
 };
 
@@ -106,7 +108,7 @@ struct MinVM *MinVM();
 void MinVM_destroy(VM);
 
 /* message */
-OBJ MinMessage(OBJ name);
+OBJ MinMessage(VM, OBJ name, OBJ arguments, OBJ previous);
 void MinMessage_init(VM);
 
 /* vtable */
@@ -126,6 +128,10 @@ OBJ MinString(VM, const char *str, size_t len);
 OBJ MinString2(VM, const char *str);
 void MinStringTable_init(VM);
 void MinString_init(VM);
+
+/* array */
+OBJ MinArray(VM);
+void MinArray_init(VM);
 
 /* lemon */
 void min_parse(VM, const char *string, const char *filename);
