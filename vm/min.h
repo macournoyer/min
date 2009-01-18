@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <limits.h>
 #include "kvec.h"
-#include "config.h"
 
 #define MIN_ALLOC(T)          (T *)malloc(sizeof(T))
 #define MIN_ALLOC_N(T,N)      (T *)malloc(sizeof(T)*(N))
@@ -29,7 +28,6 @@
 
 #define MIN                   struct MinVM *vm, OBJ closure, OBJ self
 #define VM                    struct MinVM *vm
-#define VM_FRAME              (&vm->frames[vm->cf])
 #define MIN_OBJ_HEADER        OBJ vtable; int type
 
 typedef unsigned long OBJ;
@@ -50,26 +48,11 @@ struct MinTable {
   kvec_t(OBJ) vec;
 };
 
-typedef unsigned char MinOpCode;
-struct MinCode {
-  kvec_t(MinOpCode) opcodes;
-  kvec_t(OBJ) literals;
-  char *filename;
-};
-
-struct MinFrame {
-  kvec_t(OBJ) stack;
-  char *filename;
-  int line; /* cur line num */
-  OBJ self;
-};
-
 struct MinVM {
   OBJ lobby;
   OBJ vtables[MIN_T_MAX];
   OBJ strings;
   size_t cf; /* current frame */
-  struct MinFrame frames[MIN_MAX_FRAME];
 };
 
 extern OBJ MIN_lookup;
@@ -77,7 +60,6 @@ extern OBJ MIN_lookup;
 /* vm */
 struct MinVM *min_create();
 void min_destroy(VM);
-OBJ min_run(VM, struct MinCode *code);
 
 /* string */
 OBJ min_str(VM, const char *str, size_t len);
@@ -85,9 +67,10 @@ OBJ min_str2(VM, const char *str);
 void min_str_table_init(VM);
 void min_str_init(VM);
 
-/* table */
-OBJ min_table();
-OBJ min_table_push(OBJ self, OBJ item);
-OBJ min_table_print(OBJ self);
+/* lemon */
+void min_parse(VM, const char *string, const char *filename);
+void *MinParserAlloc(void *(*)(size_t));
+void MinParser(void *, int, OBJ, VM);
+void MinParserFree(void *, void (*)(void*));
 
 #endif /* _MIN_H_ */

@@ -4,9 +4,8 @@
 #include <assert.h>
 #include "min.h"
 #include "grammar.h"
-#include "compiler.h"
 
-#define TOKEN_V(id,v)  MinParser(pParser, MIN_TOK_##id, v, code); last = MIN_TOK_##id
+#define TOKEN_V(id,v)  MinParser(pParser, MIN_TOK_##id, v, vm); last = MIN_TOK_##id
 #define TOKEN_UNIQ(id) if (last != PN_TOK_##id) { TOKEN(id); }
 #define TOKEN(id)      TOKEN_V(id, 0)
 
@@ -110,14 +109,13 @@
   write data nofinal;
 }%%
 
-struct MinCode *min_compile(VM, const char *string, const char *filename) {
+void min_parse(VM, const char *string, const char *filename) {
   int cs, act;
   char *p, *pe, *ts, *te, *eof = 0;
   int inds[MAX_INDENT], pind = 0, ind = 0;
   int curline = 1;
   void *pParser = MinParserAlloc(malloc);
   int last = 0;
-  struct MinCode *code = min_compiler(filename);
   
   inds[0] = 0;
   p = string;
@@ -132,10 +130,6 @@ struct MinCode *min_compile(VM, const char *string, const char *filename) {
     TOKEN(DEDENT);
   } */
   
-  MinParser(pParser, 0, 0, code);
+  MinParser(pParser, 0, 0, vm);
   MinParserFree(pParser, free);
-  
-  min_compiler_finish(code);
-  
-  return code;
 }
