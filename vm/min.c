@@ -1,5 +1,4 @@
 #include "min.h"
-#include "object.h"
 
 int main (int argc, char const *argv[]) {
   struct MinVM *vm = min_create();

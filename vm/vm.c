@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "min.h"
-#include "object.h"
 
 OBJ MIN_lookup;
 

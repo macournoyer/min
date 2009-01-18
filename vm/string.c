@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "min.h"
-#include "object.h"
 #include "khash.h"
 
 KHASH_MAP_INIT_STR(str, OBJ);

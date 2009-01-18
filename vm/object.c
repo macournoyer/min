@@ -2,7 +2,6 @@
    by Ian Piumarta <ian@vpri.org> */
 #include <stdio.h>
 #include "min.h"
-#include "object.h"
 
 /* closure */
 
