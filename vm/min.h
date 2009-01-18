@@ -43,9 +43,17 @@ struct MinString {
   char  *ptr;
 };
 
-struct MinTable {
+struct MinMessage {
   MIN_OBJ_HEADER;
-  kvec_t(OBJ) vec;
+  OBJ name;
+  OBJ arguments;
+  OBJ next;
+  OBJ previous;
+};
+
+struct MinArray {
+  MIN_OBJ_HEADER;
+  kvec_t(OBJ) kv;
 };
 
 struct MinVM {
@@ -60,6 +68,10 @@ extern OBJ MIN_lookup;
 /* vm */
 struct MinVM *min_create();
 void min_destroy(VM);
+
+/* message */
+OBJ MinMessage(OBJ name);
+void MinMessage_init(VM);
 
 /* string */
 OBJ min_str(VM, const char *str, size_t len);
