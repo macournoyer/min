@@ -1,22 +1,32 @@
+# Notes on bytecode
+# 
+# Goal:
+#   Apply lazy evaluation to method arguments using a bytecode interpreter.
+# 
+# Conclusion:
+#   It seems to be impossible to have an efficient bytecode w/ lazy evaluation
+#   and introspection like Io.
+#
+
 "ohaie" println
-=> Message("ohaie", Message(println))
 
 # bytecode  stack
-LITERAL 0 ; [Message("ohaie")]
-SEND    1 ; [Message(println, args=[], prev=Message("ohaie"))]
+LITERAL 0 ; [ "ohaie" ]
+SEND    1 ; [ nil ]
 
 # Bytecode spec
-SEND <message name index>, <arg count> ; stack: [receiver, args...] => [message]
+SEND <message name index>, <arg count> ; [receiver, args...] => [return]
 
 # C proto: Message(OBJ name, OBJ receiver, OBJ args)
 OP(SEND): STACK_PUSH(Message(LITERAL, STACK_POP, STACK_POP_N(IND)));
 
 arg_at(0) println
-=> Message(arg_at, args=[Message(0)], prev=nil, next=Message(println))
 # bytecode:
-LITERAL 0 ; [ Message(0) ]
-SEND    1 ; [ Message(arg_at, args=[Message(0)], prev=nil) ]
-SEND    2 ; [ Message(println, args=[], prev=Message(arg_at, ...)) ]
+LITERAL 0 ; [ 0 ]
+SEND    1 ; [ <Arg> ]
+SEND    2 ; [ nil ]
 
-#### Conclusion
-It seems to be impossible to have an efficient bytecode w/ lazy evaluation and introspection like Io.
+# Cases to apply lazy eval:
+method(x, y): x println
+while(x > 10): poop
+items map(* 2)
