@@ -1,5 +1,3 @@
-/* doc: http://www.hwaci.com/sw/lemon/lemon.html */
-
 %include {
 #include <assert.h>
 #include <string.h>
@@ -9,29 +7,33 @@
 %name           MinParser
 %token_type     { OBJ }
 %token_prefix   MIN_TOK_
-%extra_argument { struct MinVM *vm }
+%extra_argument { struct MinParseState *state }
 
-%parse_failure {
-  printf("Syntax error!\n");
+%token_destructor {
+  (void) state;
+}
+
+%syntax_error {
+  printf("Syntax error:\n");
+  printf("  %s unexpected at line %d\n", yyTokenName[yymajor], state->curline);
 }
 
 /* rules */
-root ::= expressions.
+root ::= messages(A). { state->message = A; }
 
-expressions ::= expression.
-expressions ::= expressions TERM expression.
+messages(A) ::= message(B). { A = B; }
+messages(A) ::= messages(B) message(C). { A = B; MIN_MESSAGE(B)->next = C; MIN_MESSAGE(C)->previous = B; }
+messages ::= messages error message.
 
-expression ::= message.
-expression ::= expression message.
+message(A) ::= literal(B). { A = B; }
+message(A) ::= call(B). { A = B; }
 
-message ::= literal.
-message ::= call.
+literal(A) ::= STRING(B). { A = MinMessage(state->vm, B, 0, B); }
+literal(A) ::= TERM. { A = MinMessage(state->vm, MinString2(state->vm, "."), 0, 0); }
 
-literal(A) ::= STRING(B). { A = B; }
+call(A) ::= ID(B). { A = MinMessage(state->vm, B, 0, 0); }
+call(A) ::= ID(B) O_PAR arguments(C) C_PAR. { A = MinMessage(state->vm, B, C, 0); }
 
-call(A) ::= ID(B). { A = B; }
-call(A) ::= ID(B) O_PAR C_PAR. { A = B; }
-call(A) ::= ID(B) O_PAR arguments C_PAR. { A = B; }
-
-arguments ::= expression.
-arguments ::= arguments COMMA expression.
+arguments(A) ::= message(B). { A = MinArray(state->vm); MIN_ARRAY_PUSH(A, B); }
+arguments(A) ::= arguments(B) COMMA message(C). { A = B; MIN_ARRAY_PUSH(A, C); }
+arguments(A) ::= . { A = MinArray(state->vm); }

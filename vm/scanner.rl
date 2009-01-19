@@ -5,7 +5,7 @@
 #include "min.h"
 #include "grammar.h"
 
-#define TOKEN_V(id,v)  MinParser(pParser, MIN_TOK_##id, v, vm); last = MIN_TOK_##id
+#define TOKEN_V(id,v)  MinParser(pParser, MIN_TOK_##id, v, &state); last = MIN_TOK_##id
 #define TOKEN_UNIQ(id) if (last != PN_TOK_##id) { TOKEN(id); }
 #define TOKEN(id)      TOKEN_V(id, 0)
 
@@ -16,7 +16,7 @@
 %%{
   machine min;
   
-  newline     = "\r"? "\n" %{ curline++; };
+  newline     = "\r"? "\n" %{ state.curline++; };
   whitespace  = " " | "\f" | "\t" | "\v";
 
   indent      = newline whitespace+ newline?;
@@ -42,7 +42,7 @@
     #     ind = te-ts;
     #     INDENT_POP();
     #     TOKEN(DEDENT);
-    #     TOKEN(TERM);
+    #     TOKEN_UNIQ(TERM);
     #   } else {
     #     TOKEN(TERM);
     #   }
@@ -109,15 +109,19 @@
   write data nofinal;
 }%%
 
-void min_parse(VM, const char *string, const char *filename) {
+OBJ min_parse(VM, char *string, char *filename) {
   int cs, act;
   char *p, *pe, *ts, *te, *eof = 0;
-  int inds[MAX_INDENT], pind = 0, ind = 0;
-  int curline = 1;
   void *pParser = MinParserAlloc(malloc);
   int last = 0;
   
-  inds[0] = 0;
+  /* int inds[MAX_INDENT], pind = 0, ind = 0;
+  inds[0] = 0; */
+
+  struct MinParseState state;
+  state.curline = 0;
+  state.vm = vm;
+  
   p = string;
   pe = p + strlen(string) + 1;
   
@@ -130,6 +134,8 @@ void min_parse(VM, const char *string, const char *filename) {
     TOKEN(DEDENT);
   } */
   
-  MinParser(pParser, 0, 0, vm);
+  MinParser(pParser, 0, 0, &state);
   MinParserFree(pParser, free);
+  
+  return state.message;
 }

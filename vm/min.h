@@ -94,11 +94,18 @@ struct MinMessage {
   OBJ arguments;
   OBJ next;
   OBJ previous;
+  OBJ value;
 };
 
 struct MinArray {
   MIN_OBJ_HEADER;
   kvec_t(OBJ) kv;
+};
+
+struct MinParseState {
+  struct MinVM *vm;
+  OBJ message;
+  int curline;
 };
 
 extern OBJ MIN_lookup;
@@ -108,7 +115,7 @@ struct MinVM *MinVM();
 void MinVM_destroy(VM);
 
 /* message */
-OBJ MinMessage(VM, OBJ name, OBJ arguments, OBJ previous);
+OBJ MinMessage(VM, OBJ name, OBJ arguments, OBJ value);
 void MinMessage_init(VM);
 
 /* vtable */
@@ -134,9 +141,9 @@ OBJ MinArray(VM);
 void MinArray_init(VM);
 
 /* lemon */
-void min_parse(VM, const char *string, const char *filename);
+OBJ min_parse(VM, char *string, char *filename);
 void *MinParserAlloc(void *(*)(size_t));
-void MinParser(void *, int, OBJ, VM);
+void MinParser(void *, int, OBJ, struct MinParseState *);
 void MinParserFree(void *, void (*)(void*));
 
 #endif /* _MIN_H_ */
