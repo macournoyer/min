@@ -30,6 +30,7 @@ struct MinVM *MinVM() {
   /* cache some often used symbols */
   MIN_lookup = MIN_STR("lookup");
   
+  
   /* objects boot, this is where core methods are added */
   MinObject_init(vm);
   MinString_init(vm);
@@ -38,6 +39,7 @@ struct MinVM *MinVM() {
   
   /* Lobby init */
   min_send2(vm->lobby, "set_slot", MIN_STR("inspect"), MIN_STR("Lobby"));
+  min_send2(vm->lobby, "set_slot", MIN_STR("Lobby"), vm->lobby);
   
   return vm;
 }

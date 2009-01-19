@@ -116,6 +116,7 @@ void MinVM_destroy(VM);
 
 /* message */
 OBJ MinMessage(VM, OBJ name, OBJ arguments, OBJ value);
+OBJ MinMessage_eval_on(MIN, OBJ receiver);
 void MinMessage_init(VM);
 
 /* vtable */
@@ -133,6 +134,7 @@ void MinObject_init(VM);
 /* string */
 OBJ MinString(VM, const char *str, size_t len);
 OBJ MinString2(VM, const char *str);
+OBJ MinString_concat(MIN, OBJ other);
 void MinStringTable_init(VM);
 void MinString_init(VM);
 

@@ -31,7 +31,7 @@ OBJ MinString(VM, const char *str, size_t len) {
     struct MinString *s = MIN_ALLOC(struct MinString);
     s->vtable   = MIN_VT_FOR(STRING);
     s->type     = MIN_T_STRING;
-    s->ptr      = MIN_ALLOC_N(char, len);
+    s->ptr      = MIN_ALLOC_N(char, len+1);
     MIN_MEMCPY_N(s->ptr, str, char, len);
     s->ptr[len] = '\0';
     s->len      = len;
@@ -56,6 +56,16 @@ OBJ MinString_println(MIN) {
   return MIN_NIL;
 }
 
+OBJ MinString_concat(MIN, OBJ other) {
+  struct MinString *s = (struct MinString *) self;
+  struct MinString *o = (struct MinString *) other;
+  size_t len = s->len + o->len;
+  char *str = MIN_ALLOC_N(char, len+1);
+  MIN_MEMCPY_N(str, s->ptr, char, s->len);
+  MIN_MEMCPY_N(str + s->len, o->ptr, char, o->len);
+  return MinString(vm, str, len);
+}
+
 void MinStringTable_init(VM) {
   struct MinStrTable *tbl = MIN_ALLOC(struct MinStrTable);
   tbl->kh = kh_init(str);
@@ -66,4 +76,5 @@ void MinString_init(VM) {
   OBJ vt = MIN_VT_FOR(STRING);
   min_def(vt, "print", MinString_print);
   min_def(vt, "println", MinString_println);
+  min_def(vt, "+", MinString_concat);
 }
