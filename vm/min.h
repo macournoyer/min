@@ -48,12 +48,22 @@
 #define min_def(VT, MSG, FUNC) \
   MinVTable_add_cmethod(vm, 0, (VT), MinString2(vm, (MSG)), (MinCMethod)(FUNC));
 
+#define MIN_REGISTER_TYPE(T, vt) ({ \
+  OBJ obj = min_send2(vt, "allocate"); \
+  min_send2(vm->lobby, "set_slot", MIN_STR(#T), obj); \
+  min_send2(obj, "set_slot", MIN_STR("type"), MIN_STR(#T)); \
+  vt; \
+})
+
+#define MIN_CREATE_TYPE(T) \
+  MIN_REGISTER_TYPE(T, MIN_VT_FOR(T) = MinVTable_delegated(vm, 0, MIN_VT_FOR(Object)))
+
 typedef unsigned long OBJ;
 
 KHASH_MAP_INIT_INT(OBJ, OBJ)
 
 enum MIN_T {
-  MIN_T_OBJECT, MIN_T_VTABLE, MIN_T_MESSAGE, MIN_T_CLOSURE, MIN_T_STRING, MIN_T_ARRAY,
+  MIN_T_Object, MIN_T_VTable, MIN_T_Message, MIN_T_Closure, MIN_T_String, MIN_T_Array,
   MIN_T_MAX /* keep last */
 };
 
@@ -125,10 +135,10 @@ OBJ MinVTable_allocate(MIN);
 OBJ MinVTable_lookup(MIN, OBJ name);
 OBJ MinVTable_add_closure(MIN, OBJ name, OBJ clos);
 OBJ MinVTable_add_cmethod(MIN, OBJ name, MinCMethod method);
+void MinVTable_init(VM);
 
 /* object */
 OBJ min_bind(VM, OBJ receiver, OBJ msg);
-OBJ min_inspect(MIN);
 void MinObject_init(VM);
 
 /* string */

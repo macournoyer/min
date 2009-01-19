@@ -29,8 +29,8 @@ OBJ MinString(VM, const char *str, size_t len) {
   OBJ id = MinString_lookup(vm, str);
   if (!id) {
     struct MinString *s = MIN_ALLOC(struct MinString);
-    s->vtable   = MIN_VT_FOR(STRING);
-    s->type     = MIN_T_STRING;
+    s->vtable   = MIN_VT_FOR(String);
+    s->type     = MIN_T_String;
     s->ptr      = MIN_ALLOC_N(char, len+1);
     MIN_MEMCPY_N(s->ptr, str, char, len);
     s->ptr[len] = '\0';
@@ -73,7 +73,7 @@ void MinStringTable_init(VM) {
 }
 
 void MinString_init(VM) {
-  OBJ vt = MIN_VT_FOR(STRING);
+  OBJ vt = MIN_CREATE_TYPE(String);
   min_def(vt, "print", MinString_print);
   min_def(vt, "println", MinString_println);
   min_def(vt, "+", MinString_concat);
