@@ -73,6 +73,7 @@ struct MinVM {
   OBJ vtables[MIN_T_MAX];
   OBJ strings;
   size_t cf; /* current frame */
+  OBJ Message_TERM;
 };
 
 typedef OBJ (*MinCMethod)(MIN, ...);
@@ -127,7 +128,7 @@ void MinVM_destroy(VM);
 
 /* message */
 OBJ MinMessage(VM, OBJ name, OBJ arguments, OBJ value);
-OBJ MinMessage_eval_on(MIN, OBJ receiver);
+OBJ MinMessage_eval_on(MIN, OBJ context, OBJ receiver);
 void MinMessage_init(VM);
 
 /* vtable */
