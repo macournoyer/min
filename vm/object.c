@@ -1,6 +1,7 @@
 /* object model based on "Open, extensible object models"
    by Ian Piumarta <ian@vpri.org> */
 #include <stdio.h>
+#include <assert.h>
 #include "min.h"
 
 /* closure */
@@ -54,6 +55,21 @@ OBJ MinVTable_lookup(MIN, OBJ name) {
   return MIN_NIL;
 }
 
+OBJ MinVTable_dump(MIN) {
+  struct MinVTable *vt = MIN_VTABLE(self);
+  khiter_t k;
+  
+  printf("vtable:   %p\n", vt);
+  for (k = kh_begin(vt->kh); k != kh_end(vt->kh); ++k)
+    if (kh_exist(vt->kh, k))
+      printf("        - %s => %p\n", MIN_STR_PTR(kh_key(vt->kh, k)), (void*)kh_val(vt->kh, k));
+  if (vt->parent) {
+    printf("parent:\n");
+    MinVTable_dump(vm, 0, vt->parent);
+  }
+  return self;
+}
+
 /* message sending */
 
 OBJ min_bind(VM, OBJ receiver, OBJ msg) {
@@ -61,7 +77,10 @@ OBJ min_bind(VM, OBJ receiver, OBJ msg) {
   OBJ clos = (msg == MIN_lookup && MIN_IS_TYPE(receiver, VTable))
     ? MinVTable_lookup(vm, 0, vt, msg)
     : min_send(vt, MIN_lookup, msg);
-  if (!clos) fprintf(stderr, "Slot not found: %s", MIN_STR_PTR(msg));
+  if (!clos) {
+    fprintf(stderr, "Slot not found '%s' (%p) in VTable %p\n", MIN_STR_PTR(msg), (void*)msg, (void*)vt);
+    assert(0);
+  }
   return clos;
 }
 
@@ -77,12 +96,21 @@ OBJ MinObject_get_slot(MIN, OBJ name) {
 
 OBJ MinObject_set_slot(MIN, OBJ name, OBJ value) {
   if (MIN_IS_TYPE(value, Closure)) {
-    MinVTable_add_closure(vm, closure, self, name, value);
+    MinVTable_add_closure(vm, 0, self, name, value);
   } else {
     OBJ cl = MinVTable_add_cmethod(vm, 0, MIN_VT(self), name, (MinCMethod)min_getter);
     MIN_CLOSURE(cl)->data = value;
   }
   return value;
+}
+
+OBJ MinObject_dump(MIN) {
+  struct MinObject *o = MIN_OBJ(self);
+  static const char *type_names[] = { "Object", "VTable", "Message", "Closure", "String", "Array" };
+  printf("address:  %p\n", o);
+  printf("type:     %s\n", type_names[o->type]);
+  MinVTable_dump(vm, 0, MIN_VT(self));
+  return self;
 }
 
 OBJ MinObject_inspect(MIN) {
@@ -91,9 +119,15 @@ OBJ MinObject_inspect(MIN) {
   return MinString2(vm, str);
 }
 
+OBJ MinObject_println(MIN) {
+  min_send2(min_send2(self, "inspect"), "println");
+  return MIN_NIL;
+}
+
 void MinObject_init(VM) {
   OBJ vt = MIN_VT_FOR(Object);
   min_def(vt, "inspect", MinObject_inspect);
+  min_def(vt, "println", MinObject_println);
   min_def(vt, "get_slot", MinObject_get_slot);
   min_def(vt, "set_slot", MinObject_set_slot);
   MIN_REGISTER_TYPE(Object, vt);

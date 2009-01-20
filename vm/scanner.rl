@@ -13,6 +13,14 @@
 #define INDENT_PUSH(i) (assert(pind < MAX_INDENT-1), inds[++pind] = i)
 #define INDENT_POP()   inds[--pind]
 
+#define BUFFER(str,l)  ({ \
+  if (buf) free(buf); \
+  buf = MIN_ALLOC_N(char, (l)); \
+  MIN_MEMCPY_N(buf, (str), char, (l)); \
+  buf[(l)] = '\0'; \
+  buf; \
+})
+
 %%{
   machine min;
   
@@ -60,9 +68,9 @@
     comment;
     
     # literals
-    id          => { TOKEN_V(ID, MinString(vm, ts, te-ts)); };
+    id          => { TOKEN_V(ID, MinString2(vm, BUFFER(ts, te-ts))); };
     # int         => { TOKEN_V(INT, MinString(ts, te-ts)); };
-    string      => { TOKEN_V(STRING, MinString(vm, ts+1, te-ts-2)); };
+    string      => { TOKEN_V(STRING, MinString2(vm, BUFFER(ts+1, te-ts-2))); };
     term        => { TOKEN(TERM); };
     
     # ponctuation
@@ -114,6 +122,7 @@ OBJ min_parse(VM, char *string, char *filename) {
   char *p, *pe, *ts, *te, *eof = 0;
   void *pParser = MinParserAlloc(malloc);
   int last = 0;
+  char *buf = 0;
   
   /* int inds[MAX_INDENT], pind = 0, ind = 0;
   inds[0] = 0; */
@@ -121,9 +130,15 @@ OBJ min_parse(VM, char *string, char *filename) {
   struct MinParseState state;
   state.curline = 0;
   state.vm = vm;
+  state.message = 0;
   
   p = string;
   pe = p + strlen(string) + 1;
+  
+#if DEBUG
+  FILE *file = fopen("trace.log", "w");
+  MinParserTrace(file, "");
+#endif
   
   %% write init;
   %% write exec;
@@ -136,6 +151,11 @@ OBJ min_parse(VM, char *string, char *filename) {
   
   MinParser(pParser, 0, 0, &state);
   MinParserFree(pParser, free);
+  if (buf) free(buf);
+
+#if DEBUG
+  fclose(file);
+#endif
   
   return state.message;
 }

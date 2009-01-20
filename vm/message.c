@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "min.h"
 
 OBJ MinMessage(VM, OBJ name, OBJ arguments, OBJ value) {
@@ -13,13 +14,18 @@ OBJ MinMessage(VM, OBJ name, OBJ arguments, OBJ value) {
 }
 
 OBJ MinMessage_inspect(MIN) {
-  return MinString_concat(vm, 0,
-    MinString_concat(vm, 0,
-      MIN_MESSAGE(self)->name,
-      MIN_STR(" ")
-    ),
-    MIN_MESSAGE(MIN_MESSAGE(self)->next)->name
-  );
+  struct MinMessage *m = MIN_MESSAGE(self);
+  if (m->next) {
+    return MinString_concat(vm, 0,
+      MinString_concat(vm, 0,
+        m->name,
+        MIN_STR(" ")
+      ),
+      MinMessage_inspect(vm, 0, m->next)
+    );
+  } else {
+    return m->name;
+  }
 }
 
 OBJ MinMessage_eval_on(MIN, OBJ receiver) {
@@ -30,7 +36,7 @@ OBJ MinMessage_eval_on(MIN, OBJ receiver) {
   else
     ret = min_send(receiver, m->name);
   if (m->next)
-    return MinMessage_eval_on(vm, closure, m->next, ret);
+    return MinMessage_eval_on(vm, 0, m->next, ret);
   return ret;
 }
 

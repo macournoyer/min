@@ -21,8 +21,15 @@
 /* rules */
 root ::= messages(A). { state->message = A; }
 
-messages(A) ::= message(B). { A = B; }
-messages(A) ::= messages(B) message(C). { A = B; MIN_MESSAGE(B)->next = C; MIN_MESSAGE(C)->previous = B; }
+messages(A) ::= message(B). { state->message = A = B; }
+messages(A) ::= messages(B) message(C). {
+  A = B;
+  if (state->message) {
+    MIN_MESSAGE(state->message)->next = C;
+    MIN_MESSAGE(C)->previous = state->message;
+  }
+  state->message = C;
+}
 messages ::= messages error message.
 
 message(A) ::= literal(B). { A = B; }

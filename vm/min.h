@@ -1,6 +1,7 @@
 #ifndef _MIN_H_
 #define _MIN_H_
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
 #include "kvec.h"
@@ -23,7 +24,7 @@
 #define MIN_CLOSURE(x)        ((struct MinClosure *)(x))
 #define MIN_MESSAGE(x)        ((struct MinMessage *)(x))
 #define MIN_OBJ(x)            ((struct MinObject *)(x))
-#define MIN_VT(x)             (MIN_VTABLE(x)->vtable)
+#define MIN_VT(x)             (MIN_OBJ(x)->vtable)
 #define MIN_VT_FOR(T)         (vm->vtables[MIN_T_##T])
 #define MIN_IS_TYPE(x,T)      (MIN_OBJ(x)->type == MIN_T_##T)
 
@@ -49,9 +50,9 @@
   MinVTable_add_cmethod(vm, 0, (VT), MinString2(vm, (MSG)), (MinCMethod)(FUNC));
 
 #define MIN_REGISTER_TYPE(T, vt) ({ \
-  OBJ obj = min_send2(vt, "allocate"); \
-  min_send2(vm->lobby, "set_slot", MIN_STR(#T), obj); \
-  min_send2(obj, "set_slot", MIN_STR("type"), MIN_STR(#T)); \
+  OBJ obj = MinVTable_allocate(vm, 0, vt); \
+  MinObject_set_slot(vm, 0, vm->lobby, MIN_STR(#T), obj); \
+  MinObject_set_slot(vm, 0, obj, MIN_STR("type"), MIN_STR(#T)); \
   vt; \
 })
 
@@ -139,10 +140,12 @@ void MinVTable_init(VM);
 
 /* object */
 OBJ min_bind(VM, OBJ receiver, OBJ msg);
+OBJ MinObject_set_slot(MIN, OBJ name, OBJ value);
+OBJ MinObject_dump(MIN);
 void MinObject_init(VM);
 
 /* string */
-OBJ MinString(VM, const char *str, size_t len);
+OBJ MinString(VM, char *str, size_t len);
 OBJ MinString2(VM, const char *str);
 OBJ MinString_concat(MIN, OBJ other);
 void MinStringTable_init(VM);
@@ -157,5 +160,6 @@ OBJ min_parse(VM, char *string, char *filename);
 void *MinParserAlloc(void *(*)(size_t));
 void MinParser(void *, int, OBJ, struct MinParseState *);
 void MinParserFree(void *, void (*)(void*));
+void MinParserTrace(FILE *stream, char *zPrefix);
 
 #endif /* _MIN_H_ */

@@ -19,6 +19,7 @@ struct MinVM *MinVM() {
   MIN_VT_FOR(Closure) = MinVTable_delegated(vm, 0, object_vt);
   
   MinStringTable_init(vm);
+  
   /* cache some often used symbols */
   MIN_lookup = MIN_STR("lookup");
   

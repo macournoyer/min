@@ -25,9 +25,19 @@ void MinString_add(VM, const char *str, OBJ id) {
   kh_value(t->kh, k) = id;
 }
 
-OBJ MinString(VM, const char *str, size_t len) {
+OBJ MinString(VM, char *str, size_t len) {
+  char c = str[len];
+  str[len] = '\0';
+  OBJ s = MinString2(vm, str);
+  str[len] = c;
+  return s;
+}
+
+OBJ MinString2(VM, const char *str) {
   OBJ id = MinString_lookup(vm, str);
+  
   if (!id) {
+    size_t len = strlen(str);
     struct MinString *s = MIN_ALLOC(struct MinString);
     s->vtable   = MIN_VT_FOR(String);
     s->type     = MIN_T_String;
@@ -42,10 +52,6 @@ OBJ MinString(VM, const char *str, size_t len) {
   return id;
 }
 
-OBJ MinString2(VM, const char *str) {
-  return MinString(vm, str, strlen(str));
-}
-
 OBJ MinString_print(MIN) {
   printf("%s", MIN_STR_PTR(self));
   return MIN_NIL;
@@ -54,6 +60,10 @@ OBJ MinString_print(MIN) {
 OBJ MinString_println(MIN) {
   printf("%s\n", MIN_STR_PTR(self));
   return MIN_NIL;
+}
+
+OBJ MinString_inspect(MIN) {
+  return self;
 }
 
 OBJ MinString_concat(MIN, OBJ other) {
@@ -73,8 +83,10 @@ void MinStringTable_init(VM) {
 }
 
 void MinString_init(VM) {
-  OBJ vt = MIN_CREATE_TYPE(String);
+  OBJ vt = MIN_VT_FOR(String);
+  MIN_REGISTER_TYPE(String, vt);
   min_def(vt, "print", MinString_print);
   min_def(vt, "println", MinString_println);
+  min_def(vt, "inspect", MinString_inspect);
   min_def(vt, "+", MinString_concat);
 }

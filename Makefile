@@ -29,4 +29,14 @@ tools/lemon: tools/lemon.c
 clean:
 	rm -f vm/*.o vm/scanner.c vm/grammar.{c,h,out}
 
+sloc: clean
+	@cp vm/scanner.rl vm/scanner.rl.c
+	sloccount vm
+	@rm vm/scanner.rl.c
+
+size: clean
+	@ruby -e 'puts "%0.2fK" % (Dir["vm/**.{c,rb,h}"].inject(0) {|s,f| s += File.size(f)} / 1024.0)'
+
 rebuild: clean min
+
+.PHONY: all clean sloc size rebuild
