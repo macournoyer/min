@@ -34,6 +34,12 @@
   string      = '"' (any - '"')* '"' | "'" (any - "'")* "'";
   comment     = "#"+ (any - newline)* newline;
   
+  bin_op      = '=' | '+=' | '-=';
+  un_op       = '!' | '?';
+  op          = '==' | '!=' | '||' | '&&' | '|' | '&' | '<' | '<=' | '>' | '>=' | '<<' | '>>' | '**' | '*' | '/' | '%' | '+' | '-' | '@@' | '@' | '..';
+  
+  symbol      = id | op | term;
+  
   main := |*
     
     # indentation magic
@@ -67,11 +73,8 @@
     whitespace;
     comment;
     
-    # literals
-    id          => { TOKEN_V(ID, MinString2(vm, BUFFER(ts, te-ts))); };
-    # int         => { TOKEN_V(INT, MinString(ts, te-ts)); };
+    symbol      => { TOKEN_V(SYMBOL, MinString2(vm, BUFFER(ts, te-ts))); };
     string      => { TOKEN_V(STRING, MinString2(vm, BUFFER(ts+1, te-ts-2))); };
-    term        => { TOKEN(TERM); };
     
     # ponctuation
     ","         => { TOKEN(COMMA); };
@@ -82,36 +85,6 @@
     # "}"         => { TOKEN(C_BRA); };
     # "["         => { TOKEN(O_SQ_BRA); };
     # "]"         => { TOKEN(C_SQ_BRA); };
-    
-    # assign
-    # "="         => { TOKEN(ASSIGN); };
-    # "+="        => { TOKEN(ASSIGN_PLUS); };
-    # "-="        => { TOKEN(ASSIGN_MINUS); };
-    
-    # operators
-    # "=="        => { TOKEN(EQ); };
-    # "!="        => { TOKEN(NEQ); };
-    # "!"         => { TOKEN(NOT); };
-    # "||"        => { TOKEN(OR); };
-    # "&&"        => { TOKEN(AND); };
-    # "|"         => { TOKEN(PIPE); };
-    # "&"         => { TOKEN(AMP); };
-    # "<"         => { TOKEN(LT); };
-    # "<="        => { TOKEN(LTE); };
-    # ">"         => { TOKEN(GT); };
-    # ">="        => { TOKEN(GTE); };
-    # "<<"        => { TOKEN(LSH); };
-    # ">>"        => { TOKEN(RSH); };
-    # "*"         => { TOKEN(MULT); };
-    # "**"        => { TOKEN(POW); };
-    # "/"         => { TOKEN(DIV); };
-    # "%"         => { TOKEN(MOD); };
-    # "+"         => { TOKEN(PLUS); };
-    # "-"         => { TOKEN(MINUS); };
-    # "@"         => { TOKEN(AT); };
-    # "@@"        => { TOKEN(ATAT); };
-    # "?"         => { TOKEN(QUES); };
-    # ".."        => { TOKEN(TO); };
   *|;
   
   write data nofinal;
