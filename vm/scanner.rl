@@ -18,7 +18,7 @@
   buf = MIN_ALLOC_N(char, (l)); \
   MIN_MEMCPY_N(buf, (str), char, (l)); \
   buf[(l)] = '\0'; \
-  buf; \
+  MIN_STR(buf); \
 })
 
 %%{
@@ -73,14 +73,14 @@
     whitespace;
     comment;
     
-    symbol      => { TOKEN_V(SYMBOL, MinString2(vm, BUFFER(ts, te-ts))); };
-    string      => { TOKEN_V(STRING, MinString2(vm, BUFFER(ts+1, te-ts-2))); };
+    symbol      => { TOKEN_V(SYMBOL, MinMessage(vm, BUFFER(ts, te-ts), 0, 0)); };
+    string      => { TOKEN_V(STRING, MinMessage(vm, BUFFER(ts, te-ts), 0, BUFFER(ts+1, te-ts-2))); };
     
     # ponctuation
-    ","         => { TOKEN(COMMA); };
+    # ","         => { TOKEN(COMMA); };
     # ":"         => { TOKEN(COLON); };
-    "("         => { TOKEN(O_PAR); };
-    ")"         => { TOKEN(C_PAR); };
+    # "("         => { TOKEN(O_PAR); };
+    # ")"         => { TOKEN(C_PAR); };
     # "{"         => { TOKEN(O_BRA); };
     # "}"         => { TOKEN(C_BRA); };
     # "["         => { TOKEN(O_SQ_BRA); };

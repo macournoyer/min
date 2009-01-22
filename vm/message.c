@@ -30,22 +30,19 @@ OBJ MinMessage_inspect(MIN) {
 
 OBJ MinMessage_eval_on(MIN, OBJ context, OBJ receiver) {
   struct MinMessage *m = MIN_MESSAGE(self);
+  
+  /* TERM token, skip & drop receiver */
+  if (m->name == vm->String_newline || m->name == vm->String_dot)
+    return MinMessage_eval_on(vm, 0, m->next, context, context);
+  
   OBJ ret;
   if (m->value)
-    ret = m->value;
+    ret = m->value; /* cached literal */
   else
     ret = min_send(receiver, m->name);
   
-  if (m->next) {
-    OBJ next = m->next;
-    OBJ next_name = MIN_MESSAGE(next)->name;
-    if (next_name == vm->String_newline || next_name == vm->String_dot) {
-      /* TERM token, drop receiver */
-      ret = context;
-      next = MIN_MESSAGE(next)->next;
-    }
+  if (m->next)
     return MinMessage_eval_on(vm, 0, m->next, context, ret);
-  }
   
   return ret;
 }
