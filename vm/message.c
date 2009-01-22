@@ -38,7 +38,8 @@ OBJ MinMessage_eval_on(MIN, OBJ context, OBJ receiver) {
   
   if (m->next) {
     OBJ next = m->next;
-    if (next == vm->Message_TERM) {
+    OBJ next_name = MIN_MESSAGE(next)->name;
+    if (next_name == vm->String_newline || next_name == vm->String_dot) {
       /* TERM token, drop receiver */
       ret = context;
       next = MIN_MESSAGE(next)->next;
@@ -52,5 +53,4 @@ OBJ MinMessage_eval_on(MIN, OBJ context, OBJ receiver) {
 void MinMessage_init(VM) {
   OBJ vt = MIN_CREATE_TYPE(Message);
   min_def(vt, "inspect", MinMessage_inspect);
-  vm->Message_TERM = MinMessage(vm, MIN_STR("\n"), 0, MIN_STR("\n"));
 }

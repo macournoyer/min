@@ -36,7 +36,7 @@ message(A) ::= literal(B). { A = B; }
 message(A) ::= call(B). { A = B; }
 
 literal(A) ::= STRING(B). { A = MinMessage(state->vm, B, 0, B); }
-literal(A) ::= TERM. { A = state->vm->Message_TERM; }
+literal(A) ::= TERM. { A = MinMessage(state->vm, state->vm->String_newline, 0, state->vm->String_newline); }
 
 call(A) ::= ID(B). { A = MinMessage(state->vm, B, 0, 0); }
 call(A) ::= ID(B) O_PAR arguments(C) C_PAR. { A = MinMessage(state->vm, B, C, 0); }

@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include "min.h"
 
-OBJ MIN_lookup;
-
 struct MinVM *MinVM() {
   struct MinVM *vm = MIN_ALLOC(struct MinVM);
   OBJ vtable_vt, object_vt;
@@ -21,7 +19,9 @@ struct MinVM *MinVM() {
   MinStringTable_init(vm);
   
   /* cache some often used symbols */
-  MIN_lookup = MIN_STR("lookup");
+  vm->String_lookup = MIN_STR("lookup");
+  vm->String_newline = MIN_STR("\n");
+  vm->String_dot = MIN_STR("\n");
   
   /* init VM */
   vm->lobby = MinVTable_allocate(vm, 0, MinVTable_delegated(vm, 0, object_vt));

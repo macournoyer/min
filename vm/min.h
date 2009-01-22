@@ -73,7 +73,9 @@ struct MinVM {
   OBJ vtables[MIN_T_MAX];
   OBJ strings;
   size_t cf; /* current frame */
-  OBJ Message_TERM;
+  OBJ String_lookup;
+  OBJ String_newline;
+  OBJ String_dot;
 };
 
 typedef OBJ (*MinCMethod)(MIN, ...);
@@ -119,8 +121,6 @@ struct MinParseState {
   OBJ message;
   int curline;
 };
-
-extern OBJ MIN_lookup;
 
 /* vm */
 struct MinVM *MinVM();

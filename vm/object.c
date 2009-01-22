@@ -51,7 +51,7 @@ OBJ MinVTable_lookup(MIN, OBJ name) {
   kh_OBJ_t *h = MIN_VTABLE(self)->kh;
   khiter_t k = kh_get(OBJ, h, name);
   if (k != kh_end(h)) return kh_value(h, k);
-  if (vt->parent) return min_send(vt->parent, MIN_lookup, name);
+  if (vt->parent) return min_send(vt->parent, vm->String_lookup, name);
   return MIN_NIL;
 }
 
@@ -74,9 +74,9 @@ OBJ MinVTable_dump(MIN) {
 
 OBJ min_bind(VM, OBJ receiver, OBJ msg) {
   OBJ vt = MIN_VT(receiver);
-  OBJ clos = (msg == MIN_lookup && MIN_IS_TYPE(receiver, VTable))
+  OBJ clos = (msg == vm->String_lookup && MIN_IS_TYPE(receiver, VTable))
     ? MinVTable_lookup(vm, 0, vt, msg)
-    : min_send(vt, MIN_lookup, msg);
+    : min_send(vt, vm->String_lookup, msg);
   if (!clos) {
     fprintf(stderr, "Slot not found '%s' (%p) in VTable %p\n", MIN_STR_PTR(msg), (void*)msg, (void*)vt);
     assert(0);
