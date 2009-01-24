@@ -6,7 +6,7 @@
 
 /* closure */
 
-static OBJ MinClosure(VM, MinCMethod method) {
+static OBJ MinClosure(LOBBY, MinCMethod method) {
   struct MinClosure *c = MIN_ALLOC(struct MinClosure);
   c->vtable = MIN_VT_FOR(Closure);
   c->type   = MIN_T_Closure;
@@ -43,7 +43,7 @@ OBJ MinVTable_add_closure(MIN, OBJ name, OBJ clos) {
 }
 
 OBJ MinVTable_add_cmethod(MIN, OBJ name, MinCMethod method) {
-  return MinVTable_add_closure(vm, closure, self, name, MinClosure(vm, method));
+  return MinVTable_add_closure(lobby, closure, self, name, MinClosure(lobby, method));
 }
 
 OBJ MinVTable_lookup(MIN, OBJ name) {
@@ -51,7 +51,7 @@ OBJ MinVTable_lookup(MIN, OBJ name) {
   kh_OBJ_t *h = MIN_VTABLE(self)->kh;
   khiter_t k = kh_get(OBJ, h, name);
   if (k != kh_end(h)) return kh_value(h, k);
-  if (vt->parent) return min_send(vt->parent, vm->String_lookup, name);
+  if (vt->parent) return min_send(vt->parent, lobby->String_lookup, name);
   return MIN_NIL;
 }
 
@@ -65,18 +65,18 @@ OBJ MinVTable_dump(MIN) {
       printf("        - %s => %p\n", MIN_STR_PTR(kh_key(vt->kh, k)), (void*)kh_val(vt->kh, k));
   if (vt->parent) {
     printf("parent:\n");
-    MinVTable_dump(vm, 0, vt->parent);
+    MinVTable_dump(lobby, 0, vt->parent);
   }
   return self;
 }
 
 /* message sending */
 
-OBJ min_bind(VM, OBJ receiver, OBJ msg) {
+OBJ min_bind(LOBBY, OBJ receiver, OBJ msg) {
   OBJ vt = MIN_VT(receiver);
-  OBJ clos = (msg == vm->String_lookup && MIN_IS_TYPE(receiver, VTable))
-    ? MinVTable_lookup(vm, 0, vt, msg)
-    : min_send(vt, vm->String_lookup, msg);
+  OBJ clos = (msg == lobby->String_lookup && MIN_IS_TYPE(receiver, VTable))
+    ? MinVTable_lookup(lobby, 0, vt, msg)
+    : min_send(vt, lobby->String_lookup, msg);
   if (!clos) {
     fprintf(stderr, "Slot not found '%s' (%p) in VTable %p\n", MIN_STR_PTR(msg), (void*)msg, (void*)vt);
     assert(0);
@@ -91,14 +91,14 @@ OBJ min_getter(MIN) {
 }
 
 OBJ MinObject_get_slot(MIN, OBJ name) {
-  return MIN_CLOSURE(min_bind(vm, self, name))->data;
+  return MIN_CLOSURE(min_bind(lobby, self, name))->data;
 }
 
 OBJ MinObject_set_slot(MIN, OBJ name, OBJ value) {
   if (MIN_IS_TYPE(value, Closure)) {
-    MinVTable_add_closure(vm, 0, self, name, value);
+    MinVTable_add_closure(lobby, 0, self, name, value);
   } else {
-    OBJ cl = MinVTable_add_cmethod(vm, 0, MIN_VT(self), name, (MinCMethod)min_getter);
+    OBJ cl = MinVTable_add_cmethod(lobby, 0, MIN_VT(self), name, (MinCMethod)min_getter);
     MIN_CLOSURE(cl)->data = value;
   }
   return value;
@@ -109,14 +109,14 @@ OBJ MinObject_dump(MIN) {
   static const char *type_names[] = { "Object", "VTable", "Message", "Closure", "String", "Array" };
   printf("address:  %p\n", o);
   printf("type:     %s\n", type_names[o->type]);
-  MinVTable_dump(vm, 0, MIN_VT(self));
+  MinVTable_dump(lobby, 0, MIN_VT(self));
   return self;
 }
 
 OBJ MinObject_inspect(MIN) {
   char str[20];
   sprintf(str, "#<Object:%p>", (void*)self);
-  return MinString2(vm, str);
+  return MinString2(lobby, str);
 }
 
 OBJ MinObject_println(MIN) {
@@ -124,7 +124,7 @@ OBJ MinObject_println(MIN) {
   return MIN_NIL;
 }
 
-void MinObject_init(VM) {
+void MinObject_init(LOBBY) {
   OBJ vt = MIN_VT_FOR(Object);
   min_def(vt, "inspect", MinObject_inspect);
   min_def(vt, "println", MinObject_println);

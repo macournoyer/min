@@ -73,8 +73,8 @@
     whitespace;
     comment;
     
-    symbol      => { TOKEN_V(SYMBOL, MinMessage(vm, BUFFER(ts, te-ts), 0)); };
-    string      => { TOKEN_V(STRING, MinMessage(vm, BUFFER(ts, te-ts), BUFFER(ts+1, te-ts-2))); };
+    symbol      => { TOKEN_V(SYMBOL, MinMessage(lobby, BUFFER(ts, te-ts), 0)); };
+    string      => { TOKEN_V(STRING, MinMessage(lobby, BUFFER(ts, te-ts), BUFFER(ts+1, te-ts-2))); };
     
     # ponctuation
     ","         => { TOKEN(COMMA); };
@@ -90,7 +90,7 @@
   write data nofinal;
 }%%
 
-OBJ min_parse(VM, char *string, char *filename) {
+OBJ min_parse(LOBBY, char *string, char *filename) {
   int cs, act;
   char *p, *pe, *ts, *te, *eof = 0;
   void *pParser = MinParserAlloc(malloc);
@@ -102,7 +102,7 @@ OBJ min_parse(VM, char *string, char *filename) {
 
   struct MinParseState state;
   state.curline = 0;
-  state.vm = vm;
+  state.lobby = lobby;
   state.message = 0;
   
   p = string;

@@ -36,6 +36,6 @@ message(A) ::= STRING(B). { A = B; }
 message(A) ::= SYMBOL(B). { A = B; }
 message(A) ::= SYMBOL(B) O_PAR arguments(C) C_PAR. { MIN_MESSAGE(A = B)->arguments = C; }
 
-arguments(A) ::= message(B). { A = MinArray(state->vm); MIN_ARRAY_PUSH(A, B); }
+arguments(A) ::= message(B). { A = MinArray(state->lobby); MIN_ARRAY_PUSH(A, B); }
 arguments(A) ::= arguments(B) COMMA message(C). { MIN_ARRAY_PUSH(A = B, C); }
-arguments(A) ::= . { A = MinArray(state->vm); }
+arguments(A) ::= . { A = MinArray(state->lobby); }

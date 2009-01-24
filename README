@@ -17,7 +17,7 @@ language ever, really. Oh, and fast too (but fast enough rather then fastest).
 == Credits
 The language constructs are derived from Io by Steve Dekorte
 <http://www.iolanguage.com>.
-Parts of the VM design are taken from Potion by _why
+Parts of the LOBBY design are taken from Potion by _why
 <http://github.com/why/potion>.
 khash.h and kvec.h are (c) Attractive Chaos <attractivechaos@aol.co.uk>
 

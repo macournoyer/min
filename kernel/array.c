@@ -1,6 +1,6 @@
 #include "min.h"
 
-OBJ MinArray(VM) {
+OBJ MinArray(LOBBY) {
   struct MinArray *a = MIN_ALLOC(struct MinArray);
   a->vtable = MIN_VT_FOR(Array);
   a->type   = MIN_T_Array;
@@ -8,6 +8,6 @@ OBJ MinArray(VM) {
   return (OBJ)a;
 }
 
-void MinArray_init(VM) {
+void MinArray_init(LOBBY) {
   MIN_CREATE_TYPE(Array);
 }

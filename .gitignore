@@ -3,6 +3,6 @@
 *.log
 min
 tools/lemon
-vm/grammar.c
-vm/grammar.h
-vm/scanner.c
+kernel/grammar.c
+kernel/grammar.h
+kernel/scanner.c

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "min.h"
 
-OBJ MinMessage(VM, OBJ name, OBJ value) {
+OBJ MinMessage(LOBBY, OBJ name, OBJ value) {
   struct MinMessage *m = MIN_ALLOC(struct MinMessage);
   m->vtable    = MIN_VT_FOR(Message);
   m->type      = MIN_T_Message;
@@ -16,9 +16,9 @@ OBJ MinMessage(VM, OBJ name, OBJ value) {
 OBJ MinMessage_inspect(MIN) {
   struct MinMessage *m = MIN_MESSAGE(self);
   if (m->next) {
-    return min_sprintf(vm, "%s %s",
+    return min_sprintf(lobby, "%s %s",
                        MIN_STR_PTR(m->name),
-                       MIN_STR_PTR(MinMessage_inspect(vm, 0, m->next)));
+                       MIN_STR_PTR(MinMessage_inspect(lobby, 0, m->next)));
   } else {
     return m->name;
   }
@@ -28,8 +28,8 @@ OBJ MinMessage_eval_on(MIN, OBJ context, OBJ receiver) {
   struct MinMessage *m = MIN_MESSAGE(self);
   
   /* TERM token, skip & drop receiver */
-  if (m->name == vm->String_newline || m->name == vm->String_dot)
-    return MinMessage_eval_on(vm, 0, m->next, context, context);
+  if (m->name == lobby->String_newline || m->name == lobby->String_dot)
+    return MinMessage_eval_on(lobby, 0, m->next, context, context);
   
   OBJ ret;
   if (m->value) {
@@ -43,12 +43,12 @@ OBJ MinMessage_eval_on(MIN, OBJ context, OBJ receiver) {
   }
   
   if (m->next)
-    return MinMessage_eval_on(vm, 0, m->next, context, ret);
+    return MinMessage_eval_on(lobby, 0, m->next, context, ret);
   
   return ret;
 }
 
-void MinMessage_init(VM) {
+void MinMessage_init(LOBBY) {
   OBJ vt = MIN_CREATE_TYPE(Message);
   min_def(vt, "inspect", MinMessage_inspect);
 }

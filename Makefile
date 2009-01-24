@@ -1,10 +1,10 @@
-SRC = vm/object.c vm/message.c vm/string.c vm/array.c vm/vm.c vm/grammar.c vm/scanner.c vm/min.c
+SRC = kernel/object.c kernel/message.c kernel/string.c kernel/array.c kernel/lobby.c kernel/grammar.c kernel/scanner.c kernel/min.c
 OBJ = ${SRC:.c=.o}
-OBJ_MIN = vm/min.o
+OBJ_MIN = kernel/min.o
 
 CC = gcc
 CFLAGS = -Wall -fno-strict-aliasing -DDEBUG -g -O2
-INCS = -Ivm
+INCS = -Ikernel
 LEMON = tools/lemon
 LIBS = -lm
 RAGEL = ragel
@@ -17,25 +17,25 @@ all: min
 min: ${OBJ_MIN} ${OBJ}
 	${CC} ${CFLAGS} ${OBJ_POTION} ${OBJ} ${LIBS} -o min
 
-vm/scanner.c: vm/scanner.rl
-	${RAGEL} vm/scanner.rl -C -o $@
+kernel/scanner.c: kernel/scanner.rl
+	${RAGEL} kernel/scanner.rl -C -o $@
 
-vm/grammar.c: tools/lemon vm/grammar.y
-	${LEMON} vm/grammar.y
+kernel/grammar.c: tools/lemon kernel/grammar.y
+	${LEMON} kernel/grammar.y
 
 tools/lemon: tools/lemon.c
 	${CC} -o tools/lemon tools/lemon.c
 
 clean:
-	rm -f vm/*.o vm/scanner.c vm/grammar.{c,h,out}
+	rm -f kernel/*.o kernel/scanner.c kernel/grammar.{c,h,out}
 
 sloc: clean
-	@cp vm/scanner.rl vm/scanner.rl.c
-	sloccount vm
-	@rm vm/scanner.rl.c
+	@cp kernel/scanner.rl kernel/scanner.rl.c
+	sloccount kernel
+	@rm kernel/scanner.rl.c
 
 size: clean
-	@ruby -e 'puts "%0.2fK" % (Dir["vm/**.{c,rb,h}"].inject(0) {|s,f| s += File.size(f)} / 1024.0)'
+	@ruby -e 'puts "%0.2fK" % (Dir["kernel/**.{c,rb,h}"].inject(0) {|s,f| s += File.size(f)} / 1024.0)'
 
 rebuild: clean min
 
