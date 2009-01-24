@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include "min.h"
 
-OBJ MinMessage(VM, OBJ name, OBJ arguments, OBJ value) {
+OBJ MinMessage(VM, OBJ name, OBJ value) {
   struct MinMessage *m = MIN_ALLOC(struct MinMessage);
   m->vtable    = MIN_VT_FOR(Message);
   m->type      = MIN_T_Message;
   m->name      = name;
-  m->arguments = arguments ? arguments : MinArray(vm);
+  m->arguments = MIN_NIL;
   m->previous  = MIN_NIL;
   m->next      = MIN_NIL;
   m->value     = value;
@@ -16,13 +16,9 @@ OBJ MinMessage(VM, OBJ name, OBJ arguments, OBJ value) {
 OBJ MinMessage_inspect(MIN) {
   struct MinMessage *m = MIN_MESSAGE(self);
   if (m->next) {
-    return MinString_concat(vm, 0,
-      MinString_concat(vm, 0,
-        m->name,
-        MIN_STR(" ")
-      ),
-      MinMessage_inspect(vm, 0, m->next)
-    );
+    return min_sprintf(vm, "%s %s",
+                       MIN_STR_PTR(m->name),
+                       MIN_STR_PTR(MinMessage_inspect(vm, 0, m->next)));
   } else {
     return m->name;
   }
@@ -36,10 +32,15 @@ OBJ MinMessage_eval_on(MIN, OBJ context, OBJ receiver) {
     return MinMessage_eval_on(vm, 0, m->next, context, context);
   
   OBJ ret;
-  if (m->value)
+  if (m->value) {
     ret = m->value; /* cached literal */
-  else
-    ret = min_send(receiver, m->name);
+  } else {
+    if (m->arguments) {
+      ret = min_send(receiver, m->name, m->arguments);
+    } else {
+      ret = min_send(receiver, m->name);
+    }
+  }
   
   if (m->next)
     return MinMessage_eval_on(vm, 0, m->next, context, ret);

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
 #include "min.h"
 #include "khash.h"
@@ -62,18 +63,28 @@ OBJ MinString_println(MIN) {
   return MIN_NIL;
 }
 
-OBJ MinString_inspect(MIN) {
-  return self;
+OBJ min_sprintf(VM, const char *fmt, ...) {
+  va_list arg;
+  va_start(arg, fmt);
+  int len = vsnprintf(NULL, 0, fmt, arg);
+  char *ptr = MIN_ALLOC_N(char, len);
+  va_end(arg);
+  va_start(arg, fmt);
+  vsprintf(ptr, fmt, arg);
+  va_end(arg);
+  /* TODO do not allocate twice */
+  OBJ str = MinString(vm, ptr, len);
+  free(ptr);
+  return str;
 }
 
-OBJ MinString_concat(MIN, OBJ other) {
-  struct MinString *s = (struct MinString *) self;
-  struct MinString *o = (struct MinString *) other;
-  size_t len = s->len + o->len;
-  char *str = MIN_ALLOC_N(char, len+1);
-  MIN_MEMCPY_N(str, s->ptr, char, s->len);
-  MIN_MEMCPY_N(str + s->len, o->ptr, char, o->len);
-  return MinString(vm, str, len);
+OBJ MinString_sprintf(MIN, OBJ arg) {
+  OBJ str = MinMessage_eval_on(vm, 0, MIN_ARRAY_AT(arg, 0), self, self);
+  return min_sprintf(vm, MIN_STR_PTR(self), MIN_STR_PTR(str));
+}
+
+OBJ MinString_inspect(MIN) {
+  return self;
 }
 
 void MinStringTable_init(VM) {
@@ -88,5 +99,5 @@ void MinString_init(VM) {
   min_def(vt, "print", MinString_print);
   min_def(vt, "println", MinString_println);
   min_def(vt, "inspect", MinString_inspect);
-  min_def(vt, "+", MinString_concat);
+  min_def(vt, "sprintf", MinString_sprintf);
 }

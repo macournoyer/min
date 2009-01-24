@@ -127,7 +127,7 @@ struct MinVM *MinVM();
 void MinVM_destroy(VM);
 
 /* message */
-OBJ MinMessage(VM, OBJ name, OBJ arguments, OBJ value);
+OBJ MinMessage(VM, OBJ name, OBJ value);
 OBJ MinMessage_eval_on(MIN, OBJ context, OBJ receiver);
 void MinMessage_init(VM);
 
@@ -151,6 +151,7 @@ OBJ MinString2(VM, const char *str);
 OBJ MinString_concat(MIN, OBJ other);
 void MinStringTable_init(VM);
 void MinString_init(VM);
+OBJ min_sprintf(VM, const char *fmt, ...);
 
 /* array */
 OBJ MinArray(VM);

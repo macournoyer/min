@@ -73,14 +73,14 @@
     whitespace;
     comment;
     
-    symbol      => { TOKEN_V(SYMBOL, MinMessage(vm, BUFFER(ts, te-ts), 0, 0)); };
-    string      => { TOKEN_V(STRING, MinMessage(vm, BUFFER(ts, te-ts), 0, BUFFER(ts+1, te-ts-2))); };
+    symbol      => { TOKEN_V(SYMBOL, MinMessage(vm, BUFFER(ts, te-ts), 0)); };
+    string      => { TOKEN_V(STRING, MinMessage(vm, BUFFER(ts, te-ts), BUFFER(ts+1, te-ts-2))); };
     
     # ponctuation
-    # ","         => { TOKEN(COMMA); };
+    ","         => { TOKEN(COMMA); };
     # ":"         => { TOKEN(COLON); };
-    # "("         => { TOKEN(O_PAR); };
-    # ")"         => { TOKEN(C_PAR); };
+    "("         => { TOKEN(O_PAR); };
+    ")"         => { TOKEN(C_PAR); };
     # "{"         => { TOKEN(O_BRA); };
     # "}"         => { TOKEN(C_BRA); };
     # "["         => { TOKEN(O_SQ_BRA); };
@@ -108,11 +108,6 @@ OBJ min_parse(VM, char *string, char *filename) {
   p = string;
   pe = p + strlen(string) + 1;
   
-#if DEBUG
-  FILE *file = fopen("trace.log", "w");
-  MinParserTrace(file, "");
-#endif
-  
   %% write init;
   %% write exec;
   
@@ -126,9 +121,5 @@ OBJ min_parse(VM, char *string, char *filename) {
   MinParserFree(pParser, free);
   if (buf) free(buf);
 
-#if DEBUG
-  fclose(file);
-#endif
-  
   return state.message;
 }
