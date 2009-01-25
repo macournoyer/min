@@ -1,4 +1,4 @@
-SRC = kernel/object.c kernel/message.c kernel/string.c kernel/array.c kernel/lobby.c kernel/grammar.c kernel/scanner.c kernel/min.c
+SRC = kernel/vtable.c kernel/object.c kernel/message.c kernel/string.c kernel/array.c kernel/lobby.c kernel/grammar.c kernel/scanner.c kernel/min.c
 OBJ = ${SRC:.c=.o}
 OBJ_MIN = kernel/min.o
 

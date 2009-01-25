@@ -6,13 +6,16 @@ struct MinLobby *MinLobby() {
   OBJ vtable_vt, object_vt;
   
   /* bootstrap the object model */
-  vtable_vt = MIN_VT_FOR(VTable) = MinVTable_delegated(lobby, 0, 0);
+  vtable_vt = MinVTable_delegated(lobby, 0, 0);
   MIN_VT(vtable_vt) = vtable_vt;
   
-  object_vt = MIN_VT_FOR(Object) = MinVTable_delegated(lobby, 0, 0);
+  object_vt = MinVTable_delegated(lobby, 0, 0);
   MIN_VT(object_vt) = vtable_vt;
   MIN_VTABLE(vtable_vt)->parent = object_vt;
   
+  /* register vtables into the lobby */
+  MIN_VT_FOR(Object) = object_vt;
+  MIN_VT_FOR(VTable) = vtable_vt;
   MIN_VT_FOR(String) = MinVTable_delegated(lobby, 0, object_vt);
   MIN_VT_FOR(Closure) = MinVTable_delegated(lobby, 0, object_vt);
   
@@ -28,9 +31,7 @@ struct MinLobby *MinLobby() {
   lobby->lobby = MinVTable_allocate(lobby, 0, MinVTable_delegated(lobby, 0, object_vt));
   
   /* register core object into the lobby */
-  min_add_method(vtable_vt, "lookup", MinVTable_lookup);
-  min_add_method(vtable_vt, "allocate", MinVTable_allocate);
-  min_add_method(vtable_vt, "delegated", MinVTable_delegated);
+  MinVTable_init(lobby);
   MinObject_init(lobby);
   MIN_REGISTER_TYPE(VTable, vtable_vt);
   /* Lobby init */

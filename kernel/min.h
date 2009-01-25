@@ -143,6 +143,7 @@ OBJ MinVTable_allocate(MIN);
 OBJ MinVTable_lookup(MIN, OBJ name);
 OBJ MinVTable_add_closure(MIN, OBJ name, OBJ clos);
 OBJ MinVTable_add_method(MIN, OBJ name, MinMethod method);
+OBJ MinVTable_dump(MIN);
 void MinVTable_init(LOBBY);
 
 /* object */
