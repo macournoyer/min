@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 #include "min.h"
 
 OBJ MinMessage(LOBBY, OBJ name, OBJ value) {
@@ -36,7 +37,14 @@ OBJ MinMessage_eval_on(MIN, OBJ context, OBJ receiver) {
     ret = m->value; /* cached literal */
   } else {
     if (m->arguments) {
-      ret = min_send(receiver, m->name, m->arguments);
+      switch (MIN_ARRAY_SIZE(m->arguments)) {
+        case 0: ret = min_send(receiver, m->name); break;
+        case 1: ret = min_send(receiver, m->name, MIN_ARRAY_AT(m->arguments, 0)); break;
+        case 2: ret = min_send(receiver, m->name, MIN_ARRAY_AT(m->arguments, 0), MIN_ARRAY_AT(m->arguments, 1)); break;
+        case 3: ret = min_send(receiver, m->name, MIN_ARRAY_AT(m->arguments, 0), MIN_ARRAY_AT(m->arguments, 1), MIN_ARRAY_AT(m->arguments, 2)); break;
+        case 4: ret = min_send(receiver, m->name, MIN_ARRAY_AT(m->arguments, 0), MIN_ARRAY_AT(m->arguments, 1), MIN_ARRAY_AT(m->arguments, 2), MIN_ARRAY_AT(m->arguments, 3)); break;
+        default: assert(0 && "too many arguments");
+      }
     } else {
       ret = min_send(receiver, m->name);
     }

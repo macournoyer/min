@@ -20,6 +20,7 @@
 #define MIN_STR_LEN(x)        ((struct MinString *)(x))->len
 #define MIN_ARRAY_PUSH(x,i)   kv_push(OBJ, ((struct MinArray *)(x))->kv, (i))
 #define MIN_ARRAY_AT(x,i)     kv_A(((struct MinArray *)(x))->kv, (i))
+#define MIN_ARRAY_SIZE(x)     kv_size(((struct MinArray *)(x))->kv)
 #define MIN_VTABLE(x)         ((struct MinVTable *)(x))
 #define MIN_CLOSURE(x)        ((struct MinClosure *)(x))
 #define MIN_MESSAGE(x)        ((struct MinMessage *)(x))
@@ -58,6 +59,11 @@
 
 #define MIN_CREATE_TYPE(T) \
   MIN_REGISTER_TYPE(T, MIN_VT_FOR(T) = MinVTable_delegated(lobby, 0, MIN_VT_FOR(Object)))
+
+#define MIN_EVAL_ARG(ARG) \
+  MIN_IS_TYPE((ARG), Message) \
+    ? MinMessage_eval_on(lobby, 0, (ARG), self, self) \
+    : (ARG)
 
 typedef unsigned long OBJ;
 

@@ -46,7 +46,8 @@ OBJ MinVTable_add_method(MIN, OBJ name, MinMethod method) {
   return MinVTable_add_closure(lobby, closure, self, name, MinClosure(lobby, method));
 }
 
-OBJ MinVTable_lookup(MIN, OBJ name) {
+OBJ MinVTable_lookup(MIN, OBJ _name) {
+  OBJ name = MIN_EVAL_ARG(_name);
   struct MinVTable *vt = MIN_VTABLE(self);
   kh_OBJ_t *h = MIN_VTABLE(self)->kh;
   khiter_t k = kh_get(OBJ, h, name);
@@ -90,11 +91,14 @@ OBJ min_getter(MIN) {
   return MIN_CLOSURE(closure)->data;
 }
 
-OBJ MinObject_get_slot(MIN, OBJ name) {
+OBJ MinObject_get_slot(MIN, OBJ _name) {
+  OBJ name = MIN_EVAL_ARG(_name);
   return MIN_CLOSURE(min_bind(lobby, self, name))->data;
 }
 
-OBJ MinObject_set_slot(MIN, OBJ name, OBJ value) {
+OBJ MinObject_set_slot(MIN, OBJ _name, OBJ _value) {
+  OBJ name = MIN_EVAL_ARG(_name);
+  OBJ value = MIN_EVAL_ARG(_value);
   if (MIN_IS_TYPE(value, Closure)) {
     MinVTable_add_closure(lobby, 0, self, name, value);
   } else {

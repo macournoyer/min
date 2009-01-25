@@ -79,7 +79,7 @@ OBJ min_sprintf(LOBBY, const char *fmt, ...) {
 }
 
 OBJ MinString_sprintf(MIN, OBJ arg) {
-  OBJ str = MinMessage_eval_on(lobby, 0, MIN_ARRAY_AT(arg, 0), self, self);
+  OBJ str = MIN_EVAL_ARG(arg);
   return min_sprintf(lobby, MIN_STR_PTR(self), MIN_STR_PTR(str));
 }
 
