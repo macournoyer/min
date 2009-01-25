@@ -24,6 +24,7 @@
 #define MIN_VTABLE(x)         ((struct MinVTable *)(x))
 #define MIN_CLOSURE(x)        ((struct MinClosure *)(x))
 #define MIN_MESSAGE(x)        ((struct MinMessage *)(x))
+#define MIN_NUMBER(x)         ((struct MinNumber *)(x))
 #define MIN_OBJ(x)            ((struct MinObject *)(x))
 #define MIN_VT(x)             (MIN_OBJ(x)->vtable)
 #define MIN_VT_FOR(T)         (lobby->vtables[MIN_T_##T])
@@ -33,18 +34,19 @@
 #define MIN_SHIFT             8
 #define MIN_NUM_FLAG          0x01
 
-#define INT2NUM(i)            (OBJ)((i) << TR_SHIFT | MIN_NUM_FLAG)
-#define NUM2INT(i)            (int)((i) >> TR_SHIFT)
+#define INT2FIX(i)            (OBJ)((i) << MIN_SHIFT | MIN_NUM_FLAG)
+#define FIX2INT(i)            (int)((i) >> MIN_SHIFT)
+#define MIN_BOX(x)            ((((x) & MIN_NUM_FLAG) == MIN_NUM_FLAG) ? MinFixnum(lobby, FIX2INT(x)) : (x))
 
 #define MIN                   struct MinLobby *lobby, OBJ closure, OBJ self
 #define LOBBY                 struct MinLobby *lobby
 #define MIN_OBJ_HEADER        OBJ vtable; int type
 
 #define min_send(RCV, MSG, ARGS...) ({  \
-    OBJ r = (OBJ)(RCV);  \
-    struct MinClosure *c = MIN_CLOSURE(min_bind(lobby, r, (MSG)));  \
-    c->method(lobby, (OBJ)c, r, ##ARGS);  \
-  })
+  OBJ r = MIN_BOX((OBJ)(RCV));  \
+  struct MinClosure *c = MIN_CLOSURE(min_bind(lobby, r, (MSG)));  \
+  c->method(lobby, (OBJ)c, r, ##ARGS);  \
+})
 #define min_send2(RCV, MSG, ARGS...) min_send((RCV), MIN_STR(MSG), ##ARGS)
 
 #define min_add_method(VT, MSG, FUNC) \
@@ -70,7 +72,7 @@ typedef unsigned long OBJ;
 KHASH_MAP_INIT_INT(OBJ, OBJ)
 
 enum MIN_T {
-  MIN_T_Object, MIN_T_VTable, MIN_T_Message, MIN_T_Closure, MIN_T_String, MIN_T_Array,
+  MIN_T_Object, MIN_T_VTable, MIN_T_Message, MIN_T_Closure, MIN_T_String, MIN_T_Fixnum, MIN_T_Float, MIN_T_Array,
   MIN_T_MAX /* keep last */
 };
 
@@ -106,6 +108,14 @@ struct MinString {
   MIN_OBJ_HEADER;
   size_t len;
   char  *ptr;
+};
+
+struct MinNumber {
+  MIN_OBJ_HEADER;
+  union {
+    int fix;
+    double flo;
+  } v;
 };
 
 struct MinMessage {
@@ -159,6 +169,10 @@ OBJ MinString_concat(MIN, OBJ other);
 void MinStringTable_init(LOBBY);
 void MinString_init(LOBBY);
 OBJ min_sprintf(LOBBY, const char *fmt, ...);
+
+/* number */
+OBJ MinFixnum(LOBBY, int v);
+void MinNumber_init(LOBBY);
 
 /* array */
 OBJ MinArray(LOBBY);

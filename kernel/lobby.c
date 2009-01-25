@@ -41,6 +41,7 @@ struct MinLobby *MinLobby() {
   
   /* this is where core objects are initialized */
   MinString_init(lobby);
+  MinNumber_init(lobby);
   MinMessage_init(lobby);
   MinArray_init(lobby);
   

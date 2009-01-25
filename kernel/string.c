@@ -78,6 +78,7 @@ OBJ min_sprintf(LOBBY, const char *fmt, ...) {
   return str;
 }
 
+/* TODO support vararg */
 OBJ MinString_sprintf(MIN, OBJ arg) {
   OBJ str = MIN_EVAL_ARG(arg);
   return min_sprintf(lobby, MIN_STR_PTR(self), MIN_STR_PTR(str));

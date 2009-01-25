@@ -33,6 +33,7 @@ messages(A) ::= messages(B) message(C). {
 messages ::= messages error message.
 
 message(A) ::= STRING(B). { A = B; }
+message(A) ::= INT(B). { A = B; }
 message(A) ::= SYMBOL(B). { A = B; }
 message(A) ::= SYMBOL(B) O_PAR arguments(C) C_PAR. { MIN_MESSAGE(A = B)->arguments = C; }
 
