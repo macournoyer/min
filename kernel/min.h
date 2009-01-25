@@ -41,13 +41,13 @@
 
 #define min_send(RCV, MSG, ARGS...) ({  \
     OBJ r = (OBJ)(RCV);  \
-    struct MinClosure *c = (struct MinClosure *) min_bind(lobby, r, (MSG));  \
+    struct MinClosure *c = MIN_CLOSURE(min_bind(lobby, r, (MSG)));  \
     c->method(lobby, (OBJ)c, r, ##ARGS);  \
   })
-#define min_send2(RCV, MSG, ARGS...) min_send((RCV), MinString2(lobby, (MSG)), ##ARGS)
+#define min_send2(RCV, MSG, ARGS...) min_send((RCV), MIN_STR(MSG), ##ARGS)
 
 #define min_add_method(VT, MSG, FUNC) \
-  MinVTable_add_method(lobby, 0, (VT), MinString2(lobby, (MSG)), (MinMethod)(FUNC));
+  MinVTable_add_method(lobby, 0, (VT), MIN_STR(MSG), (MinMethod)(FUNC));
 
 #define MIN_REGISTER_TYPE(T, vt) ({ \
   OBJ obj = MinVTable_allocate(lobby, 0, vt); \
