@@ -28,9 +28,9 @@ struct MinLobby *MinLobby() {
   lobby->lobby = MinVTable_allocate(lobby, 0, MinVTable_delegated(lobby, 0, object_vt));
   
   /* register core object into the lobby */
-  min_def(vtable_vt, "lookup", MinVTable_lookup);
-  min_def(vtable_vt, "allocate", MinVTable_allocate);
-  min_def(vtable_vt, "delegated", MinVTable_delegated);
+  min_add_method(vtable_vt, "lookup", MinVTable_lookup);
+  min_add_method(vtable_vt, "allocate", MinVTable_allocate);
+  min_add_method(vtable_vt, "delegated", MinVTable_delegated);
   MinObject_init(lobby);
   MIN_REGISTER_TYPE(VTable, vtable_vt);
   /* Lobby init */

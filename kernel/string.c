@@ -96,8 +96,8 @@ void MinStringTable_init(LOBBY) {
 void MinString_init(LOBBY) {
   OBJ vt = MIN_VT_FOR(String);
   MIN_REGISTER_TYPE(String, vt);
-  min_def(vt, "print", MinString_print);
-  min_def(vt, "println", MinString_println);
-  min_def(vt, "inspect", MinString_inspect);
-  min_def(vt, "sprintf", MinString_sprintf);
+  min_add_method(vt, "print", MinString_print);
+  min_add_method(vt, "println", MinString_println);
+  min_add_method(vt, "inspect", MinString_inspect);
+  min_add_method(vt, "sprintf", MinString_sprintf);
 }

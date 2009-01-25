@@ -6,7 +6,7 @@
 
 /* closure */
 
-static OBJ MinClosure(LOBBY, MinCMethod method) {
+static OBJ MinClosure(LOBBY, MinMethod method) {
   struct MinClosure *c = MIN_ALLOC(struct MinClosure);
   c->vtable = MIN_VT_FOR(Closure);
   c->type   = MIN_T_Closure;
@@ -42,7 +42,7 @@ OBJ MinVTable_add_closure(MIN, OBJ name, OBJ clos) {
   return clos;
 }
 
-OBJ MinVTable_add_cmethod(MIN, OBJ name, MinCMethod method) {
+OBJ MinVTable_add_method(MIN, OBJ name, MinMethod method) {
   return MinVTable_add_closure(lobby, closure, self, name, MinClosure(lobby, method));
 }
 
@@ -98,7 +98,7 @@ OBJ MinObject_set_slot(MIN, OBJ name, OBJ value) {
   if (MIN_IS_TYPE(value, Closure)) {
     MinVTable_add_closure(lobby, 0, self, name, value);
   } else {
-    OBJ cl = MinVTable_add_cmethod(lobby, 0, MIN_VT(self), name, (MinCMethod)min_getter);
+    OBJ cl = MinVTable_add_method(lobby, 0, MIN_VT(self), name, (MinMethod)min_getter);
     MIN_CLOSURE(cl)->data = value;
   }
   return value;
@@ -126,9 +126,9 @@ OBJ MinObject_println(MIN) {
 
 void MinObject_init(LOBBY) {
   OBJ vt = MIN_VT_FOR(Object);
-  min_def(vt, "inspect", MinObject_inspect);
-  min_def(vt, "println", MinObject_println);
-  min_def(vt, "get_slot", MinObject_get_slot);
-  min_def(vt, "set_slot", MinObject_set_slot);
+  min_add_method(vt, "inspect", MinObject_inspect);
+  min_add_method(vt, "println", MinObject_println);
+  min_add_method(vt, "get_slot", MinObject_get_slot);
+  min_add_method(vt, "set_slot", MinObject_set_slot);
   MIN_REGISTER_TYPE(Object, vt);
 }

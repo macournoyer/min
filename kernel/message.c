@@ -50,5 +50,5 @@ OBJ MinMessage_eval_on(MIN, OBJ context, OBJ receiver) {
 
 void MinMessage_init(LOBBY) {
   OBJ vt = MIN_CREATE_TYPE(Message);
-  min_def(vt, "inspect", MinMessage_inspect);
+  min_add_method(vt, "inspect", MinMessage_inspect);
 }

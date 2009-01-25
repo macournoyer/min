@@ -46,8 +46,8 @@
   })
 #define min_send2(RCV, MSG, ARGS...) min_send((RCV), MinString2(lobby, (MSG)), ##ARGS)
 
-#define min_def(VT, MSG, FUNC) \
-  MinVTable_add_cmethod(lobby, 0, (VT), MinString2(lobby, (MSG)), (MinCMethod)(FUNC));
+#define min_add_method(VT, MSG, FUNC) \
+  MinVTable_add_method(lobby, 0, (VT), MinString2(lobby, (MSG)), (MinMethod)(FUNC));
 
 #define MIN_REGISTER_TYPE(T, vt) ({ \
   OBJ obj = MinVTable_allocate(lobby, 0, vt); \
@@ -78,7 +78,7 @@ struct MinLobby {
   OBJ String_type;
 };
 
-typedef OBJ (*MinCMethod)(MIN, ...);
+typedef OBJ (*MinMethod)(MIN, ...);
 
 struct MinVTable {
   MIN_OBJ_HEADER;
@@ -92,7 +92,7 @@ struct MinObject {
 
 struct MinClosure {
   MIN_OBJ_HEADER;
-  MinCMethod method;
+  MinMethod method;
   OBJ data;
 };
 
@@ -136,7 +136,7 @@ OBJ MinVTable_delegated(MIN);
 OBJ MinVTable_allocate(MIN);
 OBJ MinVTable_lookup(MIN, OBJ name);
 OBJ MinVTable_add_closure(MIN, OBJ name, OBJ clos);
-OBJ MinVTable_add_cmethod(MIN, OBJ name, MinCMethod method);
+OBJ MinVTable_add_method(MIN, OBJ name, MinMethod method);
 void MinVTable_init(LOBBY);
 
 /* object */
