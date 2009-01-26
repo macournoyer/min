@@ -8,6 +8,8 @@
 #include "kvec.h"
 #include "khash.h"
 
+#define MIN_VERSION           "0.1"
+
 #define MIN_ALLOC(T)          (T *)malloc(sizeof(T))
 #define MIN_ALLOC_N(T,N)      (T *)malloc(sizeof(T)*(N))
 
