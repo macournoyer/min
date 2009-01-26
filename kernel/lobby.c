@@ -26,6 +26,8 @@ struct MinLobby *MinLobby() {
   lobby->String_newline = MIN_STR("\n");
   lobby->String_dot = MIN_STR(".");
   lobby->String_type = MIN_STR("type");
+  lobby->String_sq_bra = MIN_STR("[]");
+  lobby->String_eq = MIN_STR("=");
   
   /* init lobby */
   lobby->lobby = MinVTable_allocate(lobby, 0, MinVTable_delegated(lobby, 0, object_vt));

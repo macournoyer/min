@@ -34,7 +34,7 @@
   string      = '"' (any - '"')* '"' | "'" (any - "'")* "'";
   comment     = "#"+ (any - newline)* newline;
   
-  bin_op      = '=' | '+=' | '-=';
+  assign      = '=' | '+=' | '-=';
   un_op       = '!' | '?';
   op          = '==' | '!=' | '||' | '&&' | '|' | '&' | '<' | '<=' | '>' | '>=' | '<<' | '>>' | '**' | '*' | '/' | '%' | '+' | '-' | '@@' | '@' | '..';
   
@@ -73,9 +73,10 @@
     whitespace;
     comment;
     
-    symbol      => { TOKEN_V(SYMBOL, MinMessage(lobby, MIN_STR(BUFFER(ts, te-ts)), 0)); };
-    string      => { TOKEN_V(STRING, MinMessage(lobby, MIN_STR(BUFFER(ts, te-ts)), MIN_STR(BUFFER(ts+1, te-ts-2)))); };
-    int         => { TOKEN_V(INT, MinMessage(lobby, MIN_STR(BUFFER(ts, te-ts)), INT2FIX(atoi(BUFFER(ts, te-ts))))); };
+    symbol      => { TOKEN_V(SYMBOL, MinMessage(lobby, MIN_STR(BUFFER(ts, te-ts)), 0, 0)); };
+    assign      => { TOKEN_V(ASSIGN, MinMessage(lobby, MIN_STR(BUFFER(ts, te-ts)), 0, 0)); };
+    string      => { TOKEN_V(STRING, MinMessage(lobby, MIN_STR(BUFFER(ts, te-ts)), 0, MIN_STR(BUFFER(ts+1, te-ts-2)))); };
+    int         => { TOKEN_V(INT, MinMessage(lobby, MIN_STR(BUFFER(ts, te-ts)), 0, INT2FIX(atoi(BUFFER(ts, te-ts))))); };
     
     # ponctuation
     ","         => { TOKEN(COMMA); };
@@ -84,8 +85,8 @@
     ")"         => { TOKEN(C_PAR); };
     # "{"         => { TOKEN(O_BRA); };
     # "}"         => { TOKEN(C_BRA); };
-    # "["         => { TOKEN(O_SQ_BRA); };
-    # "]"         => { TOKEN(C_SQ_BRA); };
+    "["         => { TOKEN(O_SQ_BRA); };
+    "]"         => { TOKEN(C_SQ_BRA); };
   *|;
   
   write data nofinal;

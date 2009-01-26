@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include <limits.h>
 #include "kvec.h"
 #include "khash.h"
@@ -18,17 +19,21 @@
 #define MIN_STR(x)            MinString2(lobby, (x))
 #define MIN_STR_PTR(x)        ((struct MinString *)(x))->ptr
 #define MIN_STR_LEN(x)        ((struct MinString *)(x))->len
-#define MIN_ARRAY_PUSH(x,i)   kv_push(OBJ, ((struct MinArray *)(x))->kv, (i))
-#define MIN_ARRAY_AT(x,i)     kv_A(((struct MinArray *)(x))->kv, (i))
+#define MIN_ARRAY_PUSH(x,i)   kv_push(OBJ, (MIN_ARRAY(x))->kv, (i))
+#define MIN_ARRAY_AT(x,i)     kv_A((MIN_ARRAY(x))->kv, (i))
 #define MIN_ARRAY_SIZE(x)     kv_size(((struct MinArray *)(x))->kv)
-#define MIN_VTABLE(x)         ((struct MinVTable *)(x))
-#define MIN_CLOSURE(x)        ((struct MinClosure *)(x))
-#define MIN_MESSAGE(x)        ((struct MinMessage *)(x))
-#define MIN_NUMBER(x)         ((struct MinNumber *)(x))
+#define MIN_CTYPE(x,T)        (assert(MIN_IS_TYPE(x,T)),(struct Min##T *)(x))
+#define MIN_STRING(x)         MIN_CTYPE(x,String)
+#define MIN_ARRAY(x)          MIN_CTYPE(x,Array)
+#define MIN_VTABLE(x)         MIN_CTYPE(x,VTable)
+#define MIN_CLOSURE(x)        MIN_CTYPE(x,Closure)
+#define MIN_MESSAGE(x)        MIN_CTYPE(x,Message)
+#define MIN_NUMBER(x)         (assert(MIN_IS_TYPE(x,Fixnum)),(struct MinNumber *)(x))
 #define MIN_OBJ(x)            ((struct MinObject *)(x))
 #define MIN_VT(x)             (MIN_OBJ(x)->vtable)
 #define MIN_VT_FOR(T)         (lobby->vtables[MIN_T_##T])
-#define MIN_IS_TYPE(x,T)      (MIN_OBJ(x)->type == MIN_T_##T)
+#define MIN_TYPE(x)           (MIN_IS_FIX(x) ? MIN_T_Fixnum : MIN_OBJ(x)->type)
+#define MIN_IS_TYPE(x,T)      (MIN_TYPE(x) == MIN_T_##T)
 
 #define MIN_NIL               ((OBJ)0)
 #define MIN_SHIFT             8
@@ -36,7 +41,8 @@
 
 #define INT2FIX(i)            (OBJ)((i) << MIN_SHIFT | MIN_NUM_FLAG)
 #define FIX2INT(i)            (int)((i) >> MIN_SHIFT)
-#define MIN_BOX(x)            ((((x) & MIN_NUM_FLAG) == MIN_NUM_FLAG) ? MinFixnum(lobby, FIX2INT(x)) : (x))
+#define MIN_IS_FIX(x)         (((x) & MIN_NUM_FLAG) == MIN_NUM_FLAG)
+#define MIN_BOX(x)            (MIN_IS_FIX(x) ? MinFixnum(lobby, FIX2INT(x)) : (x))
 
 #define MIN                   struct MinLobby *lobby, OBJ closure, OBJ self
 #define LOBBY                 struct MinLobby *lobby
@@ -84,6 +90,8 @@ struct MinLobby {
   OBJ String_newline;
   OBJ String_dot;
   OBJ String_type;
+  OBJ String_sq_bra;
+  OBJ String_eq;
 };
 
 typedef OBJ (*MinMethod)(MIN, ...);
@@ -143,7 +151,7 @@ struct MinLobby *MinLobby();
 void MinLobby_destroy(LOBBY);
 
 /* message */
-OBJ MinMessage(LOBBY, OBJ name, OBJ value);
+OBJ MinMessage(LOBBY, OBJ name, OBJ arguments, OBJ value);
 OBJ MinMessage_eval_on(MIN, OBJ context, OBJ receiver);
 void MinMessage_init(LOBBY);
 
@@ -176,6 +184,7 @@ void MinNumber_init(LOBBY);
 
 /* array */
 OBJ MinArray(LOBBY);
+OBJ MinArray2(LOBBY, int argc, ...);
 void MinArray_init(LOBBY);
 
 /* lemon */

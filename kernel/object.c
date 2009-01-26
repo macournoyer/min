@@ -25,6 +25,10 @@ OBJ MinObject_set_slot(MIN, OBJ _name, OBJ _value) {
   return value;
 }
 
+OBJ MinObject_assign(MIN, OBJ name, OBJ value) {
+  return MinObject_set_slot(lobby, closure, self, MIN_MESSAGE(name)->name, value);
+}
+
 OBJ MinObject_dump(MIN) {
   struct MinObject *o = MIN_OBJ(self);
   static const char *type_names[] = { "Object", "VTable", "Message", "Closure", "String", "Array" };
@@ -51,7 +55,8 @@ OBJ min_bind(LOBBY, OBJ receiver, OBJ msg) {
     ? MinVTable_lookup(lobby, 0, vt, msg)
     : min_send(vt, lobby->String_lookup, msg);
   if (!clos) {
-    fprintf(stderr, "Slot not found '%s' (%p) in VTable %p\n", MIN_STR_PTR(msg), (void*)msg, (void*)vt);
+    fprintf(stderr, "Slot not found '%s' in:\n", MIN_STR_PTR(msg));
+    MinObject_dump(lobby, 0, receiver);
     assert(0);
   }
   return clos;
@@ -63,6 +68,7 @@ void MinObject_init(LOBBY) {
   min_add_method(vt, "println", MinObject_println);
   min_add_method(vt, "get_slot", MinObject_get_slot);
   min_add_method(vt, "set_slot", MinObject_set_slot);
+  min_add_method(vt, "=", MinObject_assign);
   min_add_method(vt, "dump", MinObject_dump);
   MIN_REGISTER_TYPE(Object, vt);
 }

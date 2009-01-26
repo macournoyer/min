@@ -2,12 +2,12 @@
 #include <assert.h>
 #include "min.h"
 
-OBJ MinMessage(LOBBY, OBJ name, OBJ value) {
+OBJ MinMessage(LOBBY, OBJ name, OBJ arguments, OBJ value) {
   struct MinMessage *m = MIN_ALLOC(struct MinMessage);
   m->vtable    = MIN_VT_FOR(Message);
   m->type      = MIN_T_Message;
   m->name      = name;
-  m->arguments = MIN_NIL;
+  m->arguments = arguments;
   m->previous  = MIN_NIL;
   m->next      = MIN_NIL;
   m->value     = value;
@@ -17,6 +17,11 @@ OBJ MinMessage(LOBBY, OBJ name, OBJ value) {
 OBJ MinMessage_inspect(MIN) {
   struct MinMessage *m = MIN_MESSAGE(self);
   if (m->next) {
+    if (m->arguments)
+      return min_sprintf(lobby, "%s(...) %s",
+                         MIN_STR_PTR(m->name),
+                         MIN_STR_PTR(MinMessage_inspect(lobby, 0, m->next)));
+      
     return min_sprintf(lobby, "%s %s",
                        MIN_STR_PTR(m->name),
                        MIN_STR_PTR(MinMessage_inspect(lobby, 0, m->next)));

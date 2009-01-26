@@ -36,6 +36,8 @@ message(A) ::= STRING(B). { A = B; }
 message(A) ::= INT(B). { A = B; }
 message(A) ::= SYMBOL(B). { A = B; }
 message(A) ::= SYMBOL(B) O_PAR arguments(C) C_PAR. { MIN_MESSAGE(A = B)->arguments = C; }
+message(A) ::= O_SQ_BRA arguments(C) C_SQ_BRA. { A = MinMessage(state->lobby, state->lobby->String_sq_bra, C, 0); }
+message(A) ::= SYMBOL(B) ASSIGN(C) message(D). { MIN_MESSAGE(A = C)->arguments = MinArray2(state->lobby, 2, B, D); }
 
 arguments(A) ::= message(B). { A = MinArray(state->lobby); MIN_ARRAY_PUSH(A, B); }
 arguments(A) ::= arguments(B) COMMA message(C). { MIN_ARRAY_PUSH(A = B, C); }
