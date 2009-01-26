@@ -51,5 +51,6 @@ struct MinLobby *MinLobby() {
 }
 
 void MinLobby_destroy(struct MinLobby *lobby) {
+  /* TODO */
   free(lobby);
 }
