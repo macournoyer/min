@@ -42,6 +42,7 @@ struct MinLobby *MinLobby() {
   min_send2(lobby->lobby, "set_slot", MIN_STR("Lobby"), lobby->lobby);
   
   /* this is where core objects are initialized */
+  MinClosure_init(lobby);
   MinString_init(lobby);
   MinFixnum_init(lobby);
   MinMessage_init(lobby);

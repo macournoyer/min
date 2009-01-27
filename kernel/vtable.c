@@ -4,19 +4,6 @@
 #include <assert.h>
 #include "min.h"
 
-/* closure */
-
-static OBJ MinClosure(LOBBY, MinMethod method, OBJ data) {
-  struct MinClosure *c = MIN_ALLOC(struct MinClosure);
-  c->vtable = MIN_VT_FOR(Closure);
-  c->type   = MIN_T_Closure;
-  c->method = method;
-  c->data   = data ? data : (OBJ)c;
-  return (OBJ)c;
-}
-
-/* vtable */
-
 OBJ MinVTable_allocate(MIN) {
   struct MinObject *obj = MIN_ALLOC(struct MinObject);
   obj->vtable = self;

@@ -154,6 +154,10 @@ OBJ MinMessage(LOBBY, OBJ name, OBJ arguments, OBJ value);
 OBJ MinMessage_eval_on(MIN, OBJ context, OBJ receiver);
 void MinMessage_init(LOBBY);
 
+/* closure */
+OBJ MinClosure(LOBBY, MinMethod method, OBJ data);
+void MinClosure_init(LOBBY);
+
 /* vtable */
 OBJ MinVTable_delegated(MIN);
 OBJ MinVTable_allocate(MIN);

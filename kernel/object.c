@@ -2,8 +2,6 @@
 #include <assert.h>
 #include "min.h"
 
-/* object */
-/* TODO all can be rewritten in Min at some point */
 OBJ min_getter(MIN) {
   return MIN_CLOSURE(closure)->data;
 }
@@ -17,7 +15,7 @@ OBJ MinObject_set_slot(MIN, OBJ _name, OBJ _value) {
   OBJ name = MIN_EVAL_ARG(_name);
   OBJ value = MIN_EVAL_ARG(_value);
   if (MIN_IS_TYPE(value, Closure)) {
-    MinVTable_add_closure(lobby, 0, self, name, value);
+    MinVTable_add_closure(lobby, 0, MIN_VT(self), name, value);
   } else {
     OBJ cl = MinVTable_add_method(lobby, 0, MIN_VT(self), name, (MinMethod)min_getter);
     MIN_CLOSURE(cl)->data = value;
@@ -47,14 +45,14 @@ OBJ MinObject_println(MIN) {
   return MIN_NIL;
 }
 
-/* OBJ MinObject_eval_closure(MIN) {
-  struct MinClosure *c = ;
+OBJ MinObject_eval_closure(MIN) {
+  /* TODO handle args */
   return MinMessage_eval_on(lobby, 0, MIN_CLOSURE(closure)->data, lobby->lobby, lobby->lobby);
 }
 
 OBJ MinObject_closure(MIN, OBJ msg) {
-  return MinClosure(lobby, MinObject_eval_closure, msg);
-} */
+  return MinClosure(lobby, (MinMethod) MinObject_eval_closure, msg);
+}
 
 /* message sending */
 
@@ -79,6 +77,6 @@ void MinObject_init(LOBBY) {
   min_add_method(vt, "set_slot", MinObject_set_slot);
   min_add_method(vt, "=", MinObject_assign);
   min_add_method(vt, "dump", MinObject_dump);
-  /* min_add_method(vt, "closure", MinObject_closure); */
+  min_add_method(vt, "closure", MinObject_closure);
   MIN_REGISTER_TYPE(Object, vt);
 }

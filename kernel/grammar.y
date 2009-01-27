@@ -40,6 +40,6 @@ message(A) ::= O_SQ_BRA arguments(C) C_SQ_BRA. { A = MinMessage(state->lobby, st
 message(A) ::= SYMBOL(B) ASSIGN(C) message(D). { MIN_MESSAGE(A = C)->arguments = MinArray2(state->lobby, 2, B, D); }
 message(A) ::= OP(B) message(C). { MIN_MESSAGE(A = B)->arguments = MinArray2(state->lobby, 1, C); }
 
-arguments(A) ::= message(B). { A = MinArray2(state->lobby, 1, B); }
-arguments(A) ::= arguments(B) COMMA message(C). { MIN_ARRAY_PUSH(A = B, C); }
+arguments(A) ::= messages(B). { A = MinArray2(state->lobby, 1, B); }
+arguments(A) ::= arguments(B) COMMA messages(C). { MIN_ARRAY_PUSH(A = B, C); }
 arguments(A) ::= . { A = MinArray(state->lobby); }
