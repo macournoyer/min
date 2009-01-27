@@ -156,6 +156,7 @@ void MinMessage_init(LOBBY);
 
 /* closure */
 OBJ MinClosure(LOBBY, MinMethod method, OBJ data);
+OBJ MinClosure_eval(MIN);
 void MinClosure_init(LOBBY);
 
 /* vtable */

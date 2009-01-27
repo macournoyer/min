@@ -45,13 +45,12 @@ OBJ MinObject_println(MIN) {
   return MIN_NIL;
 }
 
-OBJ MinObject_eval_closure(MIN) {
-  /* TODO handle args */
-  return MinMessage_eval_on(lobby, 0, MIN_CLOSURE(closure)->data, lobby->lobby, lobby->lobby);
+OBJ MinObject_closure(MIN, OBJ msg) {
+  return MinClosure(lobby, (MinMethod) MinClosure_eval, msg);
 }
 
-OBJ MinObject_closure(MIN, OBJ msg) {
-  return MinClosure(lobby, (MinMethod) MinObject_eval_closure, msg);
+OBJ MinObject_clone(MIN) {
+  return MinVTable_allocate(lobby, 0, MinVTable_delegated(lobby, 0, MIN_VT(self)));
 }
 
 /* message sending */
@@ -78,5 +77,6 @@ void MinObject_init(LOBBY) {
   min_add_method(vt, "=", MinObject_assign);
   min_add_method(vt, "dump", MinObject_dump);
   min_add_method(vt, "closure", MinObject_closure);
+  min_add_method(vt, "clone", MinObject_clone);
   MIN_REGISTER_TYPE(Object, vt);
 }
