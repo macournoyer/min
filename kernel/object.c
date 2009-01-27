@@ -47,6 +47,15 @@ OBJ MinObject_println(MIN) {
   return MIN_NIL;
 }
 
+/* OBJ MinObject_eval_closure(MIN) {
+  struct MinClosure *c = ;
+  return MinMessage_eval_on(lobby, 0, MIN_CLOSURE(closure)->data, lobby->lobby, lobby->lobby);
+}
+
+OBJ MinObject_closure(MIN, OBJ msg) {
+  return MinClosure(lobby, MinObject_eval_closure, msg);
+} */
+
 /* message sending */
 
 OBJ min_bind(LOBBY, OBJ receiver, OBJ msg) {
@@ -70,5 +79,6 @@ void MinObject_init(LOBBY) {
   min_add_method(vt, "set_slot", MinObject_set_slot);
   min_add_method(vt, "=", MinObject_assign);
   min_add_method(vt, "dump", MinObject_dump);
+  /* min_add_method(vt, "closure", MinObject_closure); */
   MIN_REGISTER_TYPE(Object, vt);
 }

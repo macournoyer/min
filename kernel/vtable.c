@@ -6,12 +6,12 @@
 
 /* closure */
 
-static OBJ MinClosure(LOBBY, MinMethod method) {
+static OBJ MinClosure(LOBBY, MinMethod method, OBJ data) {
   struct MinClosure *c = MIN_ALLOC(struct MinClosure);
   c->vtable = MIN_VT_FOR(Closure);
   c->type   = MIN_T_Closure;
   c->method = method;
-  c->data   = (OBJ)c;
+  c->data   = data ? data : (OBJ)c;
   return (OBJ)c;
 }
 
@@ -43,7 +43,7 @@ OBJ MinVTable_add_closure(MIN, OBJ name, OBJ clos) {
 }
 
 OBJ MinVTable_add_method(MIN, OBJ name, MinMethod method) {
-  return MinVTable_add_closure(lobby, closure, self, name, MinClosure(lobby, method));
+  return MinVTable_add_closure(lobby, closure, self, name, MinClosure(lobby, method, 0));
 }
 
 OBJ MinVTable_lookup(MIN, OBJ _name) {

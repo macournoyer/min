@@ -35,10 +35,9 @@
   comment     = "#"+ (any - newline)* newline;
   
   assign      = '=' | '+=' | '-=';
-  un_op       = '!' | '?';
-  op          = '==' | '!=' | '||' | '&&' | '|' | '&' | '<' | '<=' | '>' | '>=' | '<<' | '>>' | '**' | '*' | '/' | '%' | '+' | '-' | '@@' | '@' | '..';
+  op          = '!' | '?' | '==' | '!=' | '||' | '&&' | '|' | '&' | '<' | '<=' | '>' | '>=' | '<<' | '>>' | '**' | '*' | '/' | '%' | '+' | '-' | '@@' | '@' | '..';
   
-  symbol      = id | op | term;
+  symbol      = id | term;
   
   main := |*
     
@@ -74,6 +73,7 @@
     comment;
     
     symbol      => { TOKEN_V(SYMBOL, MinMessage(lobby, MIN_STR(BUFFER(ts, te-ts)), 0, 0)); };
+    op          => { TOKEN_V(OP, MinMessage(lobby, MIN_STR(BUFFER(ts, te-ts)), 0, 0)); };
     assign      => { TOKEN_V(ASSIGN, MinMessage(lobby, MIN_STR(BUFFER(ts, te-ts)), 0, 0)); };
     string      => { TOKEN_V(STRING, MinMessage(lobby, MIN_STR(BUFFER(ts, te-ts)), 0, MIN_STR(BUFFER(ts+1, te-ts-2)))); };
     int         => { TOKEN_V(INT, MinMessage(lobby, MIN_STR(BUFFER(ts, te-ts)), 0, INT2FIX(atoi(BUFFER(ts, te-ts))))); };

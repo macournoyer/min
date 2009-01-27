@@ -30,7 +30,7 @@
 #define MIN_VTABLE(x)         MIN_CTYPE(x,VTable)
 #define MIN_CLOSURE(x)        MIN_CTYPE(x,Closure)
 #define MIN_MESSAGE(x)        MIN_CTYPE(x,Message)
-#define MIN_FIXNUM(x)         MIN_CTYPE(x,Fixnum)
+#define MIN_FIXNUM(x)         MIN_CTYPE(MIN_BOX(x),Fixnum)
 #define MIN_OBJ(x)            ((struct MinObject *)(x))
 #define MIN_VT(x)             (MIN_OBJ(x)->vtable)
 #define MIN_VT_FOR(T)         (lobby->vtables[MIN_T_##T])
