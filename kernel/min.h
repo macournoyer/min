@@ -112,6 +112,7 @@ struct MinClosure {
   MIN_OBJ_HEADER;
   MinMethod method;
   OBJ data;
+  OBJ self;
 };
 
 struct MinString {

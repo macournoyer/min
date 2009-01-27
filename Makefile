@@ -29,6 +29,9 @@ tools/lemon: tools/lemon.c
 clean:
 	rm -f kernel/*.o kernel/scanner.c kernel/grammar.{c,h,out}
 
+test:
+	@ruby test/run.rb
+
 sloc: clean
 	@cp kernel/scanner.rl kernel/scanner.rl.c
 	sloccount kernel
@@ -39,4 +42,4 @@ size: clean
 
 rebuild: clean min
 
-.PHONY: all clean sloc size rebuild
+.PHONY: all clean test sloc size rebuild
