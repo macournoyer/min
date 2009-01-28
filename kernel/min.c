@@ -20,8 +20,8 @@ static int version() {
 static int eval(char *code, char *filename, int verbose) {
   struct MinLobby *lobby = MinLobby();
   
-  OBJ msg = min_parse(lobby, code, filename);
-  if (verbose) printf("message chain: %s\n", MIN_STR_PTR(min_send2(msg, "inspect")));
+  OBJ msg = min_parse(lobby, code, filename, verbose);
+  if (verbose) printf("message:\n %s\n", MIN_STR_PTR(min_send2(msg, "inspect")));
   MinMessage_eval_on(lobby, 0, msg, lobby->lobby, lobby->lobby);
   
   MinLobby_destroy(lobby);
@@ -33,13 +33,13 @@ static int eval_file(char *filename, int verbose) {
   struct stat stats;
   
   if (stat(filename, &stats) == -1) {
-    perror("File does not exist");
+    perror(filename);
     return 1;
   }
   
   fp = fopen(filename, "rb");
   if (!fp) {
-    perror("Error opening file");
+    perror(filename);
     return 1;
   }
   
@@ -48,7 +48,7 @@ static int eval_file(char *filename, int verbose) {
   if (fread(buf, 1, stats.st_size, fp) == stats.st_size) {
     eval(buf, filename, verbose);
   } else {
-    perror("Could not read entire file");
+    perror(filename);
   }
   
   free(buf);
@@ -78,7 +78,7 @@ int main (int argc, char *argv[]) {
         return usage();
       }
     }
-    return eval_file(argv[1], verbose);
+    return eval_file(argv[argc-1], verbose);
   }
   
   return usage();

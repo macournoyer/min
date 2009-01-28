@@ -1,3 +1,11 @@
 x = "ohaie"
 x println
 # ohaie
+
+String awesome = "indeed"
+"is this" awesome println
+# indeed
+
+1 muffin = "please"
+1 muffin println
+# please

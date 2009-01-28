@@ -1,4 +1,9 @@
 x = closure(1 println)
-x. x
+x
+
+y = closure(a = "inside")
+y
+a println
+
 # 1
-# 1
+# inside

@@ -1,0 +1,6 @@
+get_slot("type") println
+set_slot("x", 1)
+x println
+
+# Lobby
+# 1

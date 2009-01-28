@@ -29,7 +29,7 @@ tools/lemon: tools/lemon.c
 clean:
 	rm -f kernel/*.o kernel/scanner.c kernel/grammar.{c,h,out}
 
-test:
+test: min
 	@ruby test/run.rb
 
 sloc: clean

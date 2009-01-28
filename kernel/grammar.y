@@ -18,19 +18,18 @@
   printf("  %s unexpected at line %d\n", yyTokenName[yymajor], state->curline);
 }
 
-/* rules */
-root ::= messages(A). { state->message = A; }
+/*%right ASSIGN.
+%left OP.*/
 
-messages(A) ::= message(B). { state->message = A = B; }
-messages(A) ::= messages(B) message(C). {
+/* rules */
+root ::= messages(B). { state->message = B; }
+
+messages(A) ::= message(B). { A = B; }
+messages(A) ::= message(B) messages(C). { /* HACK right-recursion. Bad! Find a better way */
   A = B;
-  if (state->message) {
-    MIN_MESSAGE(state->message)->next = C;
-    MIN_MESSAGE(C)->previous = state->message;
-  }
-  state->message = C;
+  MIN_MESSAGE(B)->next = C;
+  MIN_MESSAGE(C)->previous = B;
 }
-messages ::= messages error message.
 
 message(A) ::= STRING(B). { A = B; }
 message(A) ::= INT(B). { A = B; }

@@ -153,6 +153,7 @@ void MinLobby_destroy(LOBBY);
 /* message */
 OBJ MinMessage(LOBBY, OBJ name, OBJ arguments, OBJ value);
 OBJ MinMessage_eval_on(MIN, OBJ context, OBJ receiver);
+OBJ MinMessage_inspect(MIN);
 void MinMessage_init(LOBBY);
 
 /* closure */
@@ -193,7 +194,7 @@ OBJ MinArray2(LOBBY, int argc, ...);
 void MinArray_init(LOBBY);
 
 /* lemon */
-OBJ min_parse(LOBBY, char *string, char *filename);
+OBJ min_parse(LOBBY, char *string, char *filename, int trace);
 void *MinParserAlloc(void *(*)(size_t));
 void MinParser(void *, int, OBJ, struct MinParseState *);
 void MinParserFree(void *, void (*)(void*));

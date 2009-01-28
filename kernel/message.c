@@ -14,12 +14,24 @@ OBJ MinMessage(LOBBY, OBJ name, OBJ arguments, OBJ value) {
   return (OBJ)m;
 }
 
+OBJ MinMessage_inspect_args(MIN) {
+  struct MinMessage *m = MIN_MESSAGE(self);
+  size_t i;
+  OBJ str = MinMessage_inspect(lobby, 0, MIN_ARRAY_AT(m->arguments, 0));
+  for (i = 1; i < MIN_ARRAY_SIZE(m->arguments); ++i)
+    str = min_sprintf(lobby, "%s, %s",
+                      MIN_STR_PTR(str),
+                      MIN_STR_PTR(MinMessage_inspect(lobby, 0, MIN_ARRAY_AT(m->arguments, i))));
+  return str;
+}
+
 OBJ MinMessage_inspect(MIN) {
   struct MinMessage *m = MIN_MESSAGE(self);
   if (m->next) {
     if (m->arguments)
-      return min_sprintf(lobby, "%s(...) %s",
+      return min_sprintf(lobby, "%s(%s) %s",
                          MIN_STR_PTR(m->name),
+                         MIN_STR_PTR(MinMessage_inspect_args(lobby, 0, self)),
                          MIN_STR_PTR(MinMessage_inspect(lobby, 0, m->next)));
       
     return min_sprintf(lobby, "%s %s",

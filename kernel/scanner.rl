@@ -92,12 +92,13 @@
   write data nofinal;
 }%%
 
-OBJ min_parse(LOBBY, char *string, char *filename) {
+OBJ min_parse(LOBBY, char *string, char *filename, int trace) {
   int cs, act;
   char *p, *pe, *ts, *te, *eof = 0;
   void *pParser = MinParserAlloc(malloc);
   int last = 0;
   char *buf = 0;
+  FILE *tracef = 0;
   
   /* int inds[MAX_INDENT], pind = 0, ind = 0;
   inds[0] = 0; */
@@ -109,6 +110,11 @@ OBJ min_parse(LOBBY, char *string, char *filename) {
   
   p = string;
   pe = p + strlen(string) + 1;
+  
+  if (trace) {
+    tracef = fdopen(2, "w+");
+    MinParserTrace(tracef, "[lemon] ");
+  }
   
   %% write init;
   %% write exec;
@@ -122,6 +128,9 @@ OBJ min_parse(LOBBY, char *string, char *filename) {
   MinParser(pParser, 0, 0, &state);
   MinParserFree(pParser, free);
   if (buf) free(buf);
-
+  
+  if (trace)
+    fclose(tracef);
+  
   return state.message;
 }
