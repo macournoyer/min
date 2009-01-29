@@ -80,13 +80,18 @@ typedef unsigned long OBJ;
 KHASH_MAP_INIT_INT(OBJ, OBJ)
 
 enum MIN_T {
-  MIN_T_Object, MIN_T_VTable, MIN_T_Message, MIN_T_Closure, MIN_T_String, MIN_T_Fixnum, MIN_T_Float, MIN_T_Array,
+  MIN_T_Object, MIN_T_VTable, MIN_T_Message, MIN_T_Closure,
+  MIN_T_String, MIN_T_Fixnum, MIN_T_Float, MIN_T_Array,
   MIN_T_MAX /* keep last */
 };
 
+/* TODO rename to MinState */
 struct MinLobby {
+  /* objects */
   OBJ lobby;
   OBJ vtables[MIN_T_MAX];
+  
+  /* strings */
   OBJ strings;
   OBJ String_lookup;
   OBJ String_newline;
@@ -94,6 +99,9 @@ struct MinLobby {
   OBJ String_type;
   OBJ String_sq_bra;
   OBJ String_eq;
+  
+  /* context */
+  OBJ context;
 };
 
 typedef OBJ (*MinMethod)(MIN, ...);
@@ -133,6 +141,8 @@ struct MinMessage {
   OBJ next;
   OBJ previous;
   OBJ value;
+  OBJ context;
+  int line;
 };
 
 struct MinArray {

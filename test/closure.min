@@ -5,5 +5,11 @@ y = closure(a = "inside")
 y
 a println
 
+String x = closure(a = "yay!")
+s = "ohaie"
+s x
+s a println
+
 # 1
 # inside
+# yay!

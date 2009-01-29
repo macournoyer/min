@@ -9,3 +9,7 @@ String awesome = "indeed"
 1 muffin = "please"
 1 muffin println
 # please
+
+x = 1 + 3
+x println
+# 4
