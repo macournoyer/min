@@ -38,7 +38,7 @@ sloc: clean
 	@rm kernel/scanner.rl.c
 
 size: clean
-	@ruby -e 'puts "%0.2fK" % (Dir["kernel/**.{c,rb,h}"].inject(0) {|s,f| s += File.size(f)} / 1024.0)'
+	@ruby -e 'puts "%0.2fK" % (Dir["kernel/**.{c,rl,h}"].inject(0) {|s,f| s += File.size(f)} / 1024.0)'
 
 rebuild: clean min
 
