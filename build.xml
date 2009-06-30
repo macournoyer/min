@@ -1,0 +1,21 @@
+<project name="min" default="compile">
+  <target name="init">
+    <mkdir dir="classes"/>
+  </target>
+
+  <target name="compile" depends="init" description="Compile Java sources.">
+    <javac srcdir="src" destdir="classes" includeJavaRuntime="yes"
+           debug="true" target="1.5"/>
+  </target>
+
+  <target name="ragel" depends="init" description="Compile Ragel state machines.">
+    <exec executable="ragel">
+      <arg value="-J"/>
+      <arg value="src/min/lang/Scanner.rl"/>
+    </exec>
+  </target>
+
+  <target name="clean" description="Remove generated files and directories.">
+    <delete dir="classes"/>
+  </target>
+</project>
