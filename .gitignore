@@ -1,8 +1,2 @@
-*.o
-*.out
-*.log
-min
-tools/lemon
-kernel/grammar.c
-kernel/grammar.h
-kernel/scanner.c
+classes
+*.class

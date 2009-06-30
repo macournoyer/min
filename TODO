@@ -1,2 +1,0 @@
-* Need to rewrite grammar as a manual parser like in Io. Lemon not flexible enough
-* Add context, setting self and handling locals.

@@ -1,9 +1,0 @@
-Other = Object clone
-
-Object x = "from Object"
-Other x = "from Other"
-
-Object x println
-# from Object
-Other x println
-# from Other

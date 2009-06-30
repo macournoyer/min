@@ -1,7 +1,7 @@
 items each(i):
   i print
 # or
-items each(i): i print
+items each(i, i print)
 # or
 items each(print)
 
