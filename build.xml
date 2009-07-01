@@ -5,7 +5,7 @@
 
   <target name="compile" depends="init" description="Compile Java sources.">
     <javac srcdir="src" destdir="classes" includeJavaRuntime="yes"
-           debug="true" target="1.5"/>
+           debug="true" target="1.6"/>
   </target>
 
   <target name="ragel" depends="init" description="Compile Ragel state machines.">

@@ -26,11 +26,11 @@ public class Scanner {
     term        = ( "." | newline ) >mark %message;
     id          = ( [a-z] [a-z0-9]* ) >mark %message;
     literal     = id | string | dstring | number;
-    message     = ( literal term? | term );
+    message     = ( literal term* | term+ );
     
     write data;
     
-    main := message ( whitespace+ message )*;
+    main := message ( ( whitespace | term )+ message )*;
   }%%
   
   public Message scan() throws ParsingException {

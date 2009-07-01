@@ -16,7 +16,8 @@ private static byte[] init__Scanner_actions_0()
 {
 	return new byte [] {
 	    0,    1,    0,    1,    1,    1,    2,    1,    3,    2,    1,    0,
-	    2,    2,    0,    2,    3,    0,    2,    4,    1
+	    2,    2,    0,    2,    3,    0,    2,    4,    1,    3,    4,    1,
+	    0
 	};
 }
 
@@ -26,7 +27,8 @@ private static final byte _Scanner_actions[] = init__Scanner_actions_0();
 private static byte[] init__Scanner_key_offsets_0()
 {
 	return new byte [] {
-	    0,    0,    9,   21,   22,   23,   24,   28,   34,   38,   46
+	    0,    0,    9,   21,   22,   23,   24,   25,   31,   43,   49,   61,
+	   69,   79
 	};
 }
 
@@ -38,9 +40,12 @@ private static char[] init__Scanner_trans_keys_0()
 	return new char [] {
 	   10,   13,   34,   39,   46,   48,   57,   97,  122,   10,   13,   32,
 	   34,   39,   46,    9,   12,   48,   57,   97,  122,   10,   34,   39,
-	    9,   32,   11,   12,   10,   13,   32,   46,    9,   12,    9,   32,
-	   11,   12,   10,   13,   32,   46,    9,   12,   48,   57,   10,   13,
-	   32,   46,    9,   12,   48,   57,   97,  122,    0
+	   10,   10,   13,   32,   46,    9,   12,   10,   13,   32,   34,   39,
+	   46,    9,   12,   48,   57,   97,  122,   10,   13,   32,   46,    9,
+	   12,   10,   13,   32,   34,   39,   46,    9,   12,   48,   57,   97,
+	  122,   10,   13,   32,   46,    9,   12,   48,   57,   10,   13,   32,
+	   46,    9,   12,   48,   57,   97,  122,   10,   13,   32,   46,    9,
+	   12,    0
 	};
 }
 
@@ -50,7 +55,8 @@ private static final char _Scanner_trans_keys[] = init__Scanner_trans_keys_0();
 private static byte[] init__Scanner_single_lengths_0()
 {
 	return new byte [] {
-	    0,    5,    6,    1,    1,    1,    2,    4,    2,    4,    4
+	    0,    5,    6,    1,    1,    1,    1,    4,    6,    4,    6,    4,
+	    4,    4
 	};
 }
 
@@ -60,7 +66,8 @@ private static final byte _Scanner_single_lengths[] = init__Scanner_single_lengt
 private static byte[] init__Scanner_range_lengths_0()
 {
 	return new byte [] {
-	    0,    2,    3,    0,    0,    0,    1,    1,    1,    2,    3
+	    0,    2,    3,    0,    0,    0,    0,    1,    3,    1,    3,    2,
+	    3,    1
 	};
 }
 
@@ -70,7 +77,8 @@ private static final byte _Scanner_range_lengths[] = init__Scanner_range_lengths
 private static byte[] init__Scanner_index_offsets_0()
 {
 	return new byte [] {
-	    0,    0,    8,   18,   20,   22,   24,   28,   34,   38,   45
+	    0,    0,    8,   18,   20,   22,   24,   26,   32,   42,   48,   58,
+	   65,   73
 	};
 }
 
@@ -80,11 +88,13 @@ private static final byte _Scanner_index_offsets[] = init__Scanner_index_offsets
 private static byte[] init__Scanner_trans_targs_0()
 {
 	return new byte [] {
-	    6,    3,    4,    5,    8,    9,   10,    0,    6,    3,    2,    4,
-	    5,    8,    2,    9,   10,    0,    6,    0,    7,    4,    7,    5,
-	    2,    2,    2,    0,    6,    3,    2,    8,    2,    0,    2,    2,
-	    2,    0,    6,    3,    2,    8,    2,    9,    0,    6,    3,    2,
-	    8,    2,   10,   10,    0,    0
+	    7,    6,    4,    5,   13,   11,   12,    0,    8,    3,    2,    4,
+	    5,   10,    2,   11,   12,    0,    8,    0,    9,    4,    9,    5,
+	    7,    0,    8,    3,    2,   10,    2,    0,    8,    3,    2,    4,
+	    5,   10,    2,   11,   12,    0,    8,    3,    2,   10,    2,    0,
+	    8,    3,    2,    4,    5,   10,    2,   11,   12,    0,    8,    3,
+	    2,   10,    2,   11,    0,    8,    3,    2,   10,    2,   12,   12,
+	    0,    8,    3,    2,   10,    2,    0,    0
 	};
 }
 
@@ -96,9 +106,11 @@ private static byte[] init__Scanner_trans_actions_0()
 	return new byte [] {
 	    1,    1,    1,    1,    1,    1,    1,    0,    1,    1,    0,    1,
 	    1,    1,    0,    1,    1,    0,    0,    0,    0,    0,    0,    0,
-	   18,   18,   18,    0,   12,   12,    5,   12,    5,    0,    3,    3,
-	    3,    0,   15,   15,    7,   15,    7,    0,    0,    9,    9,    3,
-	    9,    3,    0,    0,    0,    0
+	    0,    0,   21,   21,   18,   21,   18,    0,   21,   21,   18,   21,
+	   21,   21,   18,   21,   21,    0,   12,   12,    5,   12,    5,    0,
+	    9,    9,    3,    9,    9,    9,    3,    9,    9,    0,   15,   15,
+	    7,   15,    7,    0,    0,    9,    9,    3,    9,    3,    0,    0,
+	    0,    9,    9,    3,    9,    3,    0,    0
 	};
 }
 
@@ -108,7 +120,8 @@ private static final byte _Scanner_trans_actions[] = init__Scanner_trans_actions
 private static byte[] init__Scanner_eof_actions_0()
 {
 	return new byte [] {
-	    0,    0,    0,    0,    0,    0,   18,    5,    3,    7,    3
+	    0,    0,    0,    0,    0,    0,    0,   18,   18,    5,    3,    7,
+	    3,    3
 	};
 }
 
@@ -116,7 +129,7 @@ private static final byte _Scanner_eof_actions[] = init__Scanner_eof_actions_0()
 
 
 static final int Scanner_start = 1;
-static final int Scanner_first_final = 6;
+static final int Scanner_first_final = 7;
 static final int Scanner_error = 0;
 
 static final int Scanner_en_main = 1;
@@ -136,13 +149,13 @@ static final int Scanner_en_main = 1;
     int lineno = 1;
     
     
-// line 140 "src/min/lang/Scanner.java"
+// line 153 "src/min/lang/Scanner.java"
 	{
 	cs = Scanner_start;
 	}
 // line 48 "src/min/lang/Scanner.rl"
     
-// line 146 "src/min/lang/Scanner.java"
+// line 159 "src/min/lang/Scanner.java"
 	{
 	int _klen;
 	int _trans = 0;
@@ -241,7 +254,7 @@ case 1:
 // line 21 "src/min/lang/Scanner.rl"
 	{ lineno++; }
 	break;
-// line 245 "src/min/lang/Scanner.java"
+// line 258 "src/min/lang/Scanner.java"
 			}
 		}
 	}
@@ -278,7 +291,7 @@ case 4:
 // line 21 "src/min/lang/Scanner.rl"
 	{ lineno++; }
 	break;
-// line 282 "src/min/lang/Scanner.java"
+// line 295 "src/min/lang/Scanner.java"
 		}
 	}
 	}
