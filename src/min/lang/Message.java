@@ -7,12 +7,14 @@ public class Message extends MinObject {
   Message prev;
   Message next;
   ArrayList<Message> args;
+  MinObject cachedResponse;
   
-  public Message(String name, Message next) {
+  public Message(String name, MinObject cachedResponse) {
     this.name = name;
-    this.setNext(next);
+    this.next = null;
     this.prev = null;
     this.args = new ArrayList<Message>();
+    this.cachedResponse = cachedResponse;
   }
   
   public Message(String name) {
@@ -58,7 +60,13 @@ public class Message extends MinObject {
       if (this.next == null) return on;
       return this.next.evalOn(base, base);
     }
-    MinObject response = on.getSlot(this.name).activate(on);
+    
+    MinObject response = null;
+    if (this.cachedResponse == null)
+      response = on.getSlot(this.name).activate(on);
+    else
+      response = this.cachedResponse;
+    
     if (this.next == null) return response;
     return this.next.evalOn(response, base);
   }

@@ -9,6 +9,8 @@ public class MinObject {
   static public MinObject string;
   static public MinObject number;
   static public MinObject nil;
+  static public MinObject _true;
+  static public MinObject _false;
   
   ArrayList<MinObject> protos;
   HashMap<String, MinObject> slots;
@@ -41,17 +43,30 @@ public class MinObject {
     this.slots.put(name, value);
     return value;
   }
+  
+  public boolean hasSlot(String name) {
+    if (this.slots.containsKey(name)) return true;
+    for (MinObject proto : this.protos) {
+      if (proto.hasSlot(name)) return true;
+    }
+    return false;
+  }
 
   public MinObject getSlot(String name) throws SlotNotFound {
     if (this.slots.containsKey(name)) return this.slots.get(name);
     for (MinObject proto : this.protos) {
-      if (proto.slots.containsKey(name)) return proto.slots.get(name);
+      if (proto.hasSlot(name)) return proto.getSlot(name);
     }
-    throw new SlotNotFound("Slot " + name + " not found");
+    throw new SlotNotFound("Slot '" + name + "' not found");
   }
   
   public Object getData() {
     return this.data;
+  }
+  
+  public String toString() {
+    return "<data:" + (this.data == null ? "null" : this.data.toString()) +
+           " slots:" + this.slots.toString() + ">";
   }
   
   public MinObject activate(MinObject context) throws MinException {
@@ -66,5 +81,18 @@ public class MinObject {
   public MinObject with(Object data) {
     this.data = data;
     return this;
+  }
+
+  public MinObject asKind(String kind) {
+    setSlot("kind", newString(kind));
+    return this;
+  }
+  
+  public static MinObject newString(String str) {
+    return MinObject.string.clone().with(str);
+  }
+
+  public static MinObject newNumber(Integer i) {
+    return MinObject.number.clone().with(i);
   }
 }
