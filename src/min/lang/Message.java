@@ -76,7 +76,23 @@ public class Message extends MinObject {
   }
   
   public String toString() {
-    return "<" + this.name + "> " + (this.next == null ? "" : this.next.toString());
+    StringBuilder b = new StringBuilder();
+    b.append("<");
+    b.append(this.name);
+    if (this.args.size() > 0) {
+      b.append("(");
+      for (Message arg : this.args) {
+        if (arg != this.args.get(0)) b.append(", ");
+        b.append(arg.toString());
+      }
+      b.append(")");
+    }
+    b.append(">");
+    if (this.next != null) {
+      b.append(" ");
+      b.append(this.next.toString());
+    }
+    return b.toString();
   }
   
   static public Message parse(String code) throws ParsingException {

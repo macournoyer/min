@@ -8,6 +8,7 @@ public class MinObject {
   static public MinObject object;
   static public MinObject string;
   static public MinObject number;
+  static public MinObject array;
   static public MinObject nil;
   static public MinObject _true;
   static public MinObject _false;

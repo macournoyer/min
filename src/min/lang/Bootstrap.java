@@ -1,5 +1,7 @@
 package min.lang;
 
+import java.util.ArrayList;
+
 public class Bootstrap {
   static public void run() {
     // Bootstrap base objects
@@ -17,6 +19,7 @@ public class Bootstrap {
     MinObject.object.asKind("Object");
     MinObject.string.asKind("String");
     MinObject.number = lobby.setSlot("Number", object.clone().with(0).asKind("Number"));
+    MinObject.array = lobby.setSlot("Array", object.clone().with(new ArrayList()).asKind("Array"));
     MinObject.nil = lobby.setSlot("nil", object.clone().with(null).asKind("nil"));
     MinObject._true = lobby.setSlot("true", object.clone().with(true).asKind("true"));
     MinObject._false = lobby.setSlot("false", object.clone().with(false).asKind("false"));

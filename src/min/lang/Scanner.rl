@@ -1,9 +1,12 @@
 package min.lang;
 
+import java.util.Stack;
+
 public class Scanner {
-  private final String input;
-  private Message root = null;
-  private Message message = null;
+  final String input;
+  Message root = null;
+  Message message = null;
+  Stack<Message> argStack = new Stack<Message>();
 
   public Scanner(String input) {
     this.input = input;
@@ -12,36 +15,42 @@ public class Scanner {
   %%{
     machine Scanner;
     
-    action mark { mark = p; }
-    action message { addMessage(new Message(getSlice(mark, p))); }
-    action string { addMessage(new Message(getSlice(mark, p), MinObject.newString(getSlice(mark+1, p-1)))); }
-    action number { addMessage(new Message(getSlice(mark, p), MinObject.newNumber(Integer.parseInt(getSlice(mark, p))))); }
-    
-    comma       = ",";
     newline     = "\r"? "\n" %{ lineno++; };
-    whitespace  = " " | "\f" | "\t" | "\v";
-    string      = ("'" (any - "'")* "'" ) >mark %string;
-    dstring     = ('"' (any - '"')* '"' ) >mark %string;
-    number      = [0-9]+ >mark %number;
-    term        = ( "." | newline ) >mark %message;
-    id          = ( [a-z] [a-z0-9]* ) >mark %message;
-    literal     = id | string | dstring | number;
-    message     = ( literal term* | term+ );
+    whitespace  = " ";
+    string      = ("'" (any - "'")* "'" )
+                | ('"' (any - '"')* '"' );
+    number      = [0-9]+;
+    identifier  = ( alnum | "_" | "$" | "@" )+;
+    operator    = "+" | "-" | "*" | "/" | "**" | "^" | "%"
+                | "||" | "|" | "&&" | "&"
+                | "<=" | "<" | ">=" | ">"
+                | "==" | "!=" | "!";
+    terminator  = newline | ";" | ".";
+    symbol      = identifier | operator | terminator;
     
-    write data;
+    main := |*
+      whitespace;
+      string      => { pushMessage(new Message(getSlice(ts, te), MinObject.newString(getSlice(ts + 1, te - 1)))); };
+      number      => { pushMessage(new Message(getSlice(ts, te), MinObject.newNumber(Integer.parseInt(getSlice(ts, te))))); };
+      symbol      => { pushMessage(new Message(getSlice(ts, te))); };
+      "("         => { this.argStack.push(this.message); this.message = null; };
+      ","         => { this.message = null; };
+      ")"         => {
+        if (this.argStack.empty())
+          throw new ParsingException("Unmatched closing parenthesis at line " + lineno);
+        this.message = this.argStack.pop();
+      };
+    *|;
     
-    main := message ( ( whitespace | term )+ message )*;
+    write data nofinal;
   }%%
   
   public Message scan() throws ParsingException {
     char[] data = input.toCharArray();
-    int cs;
-    int top;
-    int[] stack = new int[32];
+    int cs, top;
     int eof = data.length;
-    int p = 0;
-    int pe = eof;
-    int mark = 0;
+    int p = 0, pe = eof, ts = 0, te = 0, act = 0;
+    int[] stack = new int[32];
     int lineno = 1;
     
     %% write init;
@@ -49,10 +58,12 @@ public class Scanner {
     
     if (cs == Scanner_error || p != pe) {
       // TODO Better error reporting
-      throw new ParsingException(String.format("Syntax error at line %d", lineno));
+      throw new ParsingException(String.format("Syntax error at line %d around '%s...'", lineno, input.substring(p, Math.min(p+5, pe))));
     }
     
-    // System.out.println(this.root.toString());
+    if (!this.argStack.empty())
+      throw new ParsingException(this.argStack.size() + " unclosed parenthesis at line " + lineno);
+    
     return this.root;
   }
   
@@ -60,9 +71,14 @@ public class Scanner {
     return input.substring(start, end);
   }
   
-  private Message addMessage(Message m) {
-    if (this.message != null) message.setNext(m);
+  private Message pushMessage(Message m) {
+    if (this.message != null)
+      message.setNext(m);
+    else if (!this.argStack.empty())
+      this.argStack.peek().args.add(m);
+      
     this.message = m;
+    
     if (this.root == null) this.root = this.message;
     return m;
   }

@@ -13,19 +13,24 @@ import min.lang.Bootstrap;
 
 public class main {
   public static void main(String[] args) throws Exception {
-    if (args.length == 0) {
-      System.out.println("usage: min < -e code | file.min >");
-      System.exit(1);
+    String code = null;
+    boolean debug = false;
+    
+    for (int i = 0; i < args.length; i++) {
+      if (args[i].equals("-e")) code = args[++i];
+      else if (args[i].equals("-d")) debug = true;
+      else code = readFile(args[i]);
     }
     
-    String code = null;
-    if (args[0] == "-e")
-      code = args[1];
-    else
-      code = readFile(args[0]);
+    if (code == null) {
+      System.out.println("usage: min [-d] < -e code | file.min >");
+      System.exit(1);
+    }
 
     Bootstrap.run();
-    Message.parse(code).evalOn(MinObject.lobby);
+    Message message = Message.parse(code);
+    if (debug) System.out.println(message.toString());
+    message.evalOn(MinObject.lobby);
   }
   
   // Taken from http://stackoverflow.com/questions/326390/how-to-create-a-java-string-from-the-contents-of-a-file
