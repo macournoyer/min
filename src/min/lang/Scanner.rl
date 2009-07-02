@@ -17,6 +17,7 @@ public class Scanner {
     
     newline     = "\r"? "\n" %{ lineno++; };
     whitespace  = " ";
+    comment     = "#" (any - newline)* newline;
     string      = ("'" (any - "'")* "'" )
                 | ('"' (any - '"')* '"' );
     number      = [0-9]+;
@@ -30,6 +31,7 @@ public class Scanner {
     
     main := |*
       whitespace;
+      comment;
       string      => { pushMessage(new Message(getSlice(ts, te), MinObject.newString(getSlice(ts + 1, te - 1)))); };
       number      => { pushMessage(new Message(getSlice(ts, te), MinObject.newNumber(Integer.parseInt(getSlice(ts, te))))); };
       symbol      => { pushMessage(new Message(getSlice(ts, te))); };
