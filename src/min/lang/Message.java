@@ -1,6 +1,7 @@
 package min.lang;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Message extends MinObject {
   String name;
@@ -26,6 +27,23 @@ public class Message extends MinObject {
     if (next != null) next.prev = this;
   }
   
+  public boolean isTerminator() {
+    return this.name.equals("\n") || this.name.equals("\r\n") || this.name.equals(".");
+  }
+
+  public boolean isTernaryOperator() {
+    return this.name.equals("=");
+  }
+  
+  public boolean isBinaryOperator() {
+    // Same as in Scanne.rl
+    return this.name.equals("+") || this.name.equals("-") || this.name.equals("*") || this.name.equals("/") ||
+           this.name.equals("**") || this.name.equals("^") || this.name.equals("%") || this.name.equals("||") ||
+           this.name.equals("|") || this.name.equals("&&") || this.name.equals("&") || this.name.equals("<<") ||
+           this.name.equals("<=") || this.name.equals("<") || this.name.equals(">=") || this.name.equals(">") ||
+           this.name.equals("==") || this.name.equals("!=") || this.name.equals("!");
+  }
+  
   public Message replace(Message with) {
     this.name = with.name;
     this.next = with.next;
@@ -38,7 +56,7 @@ public class Message extends MinObject {
     Message tail = this.next;
     Message prev = null;
     if (untilTerm) {
-      while (tail != null && tail.name != ".") tail = tail.next;
+      while (tail != null && !tail.isTerminator()) tail = tail.next;
     }
     if (tail != null) prev = tail.prev;
     this.prev.next = tail;
@@ -48,22 +66,31 @@ public class Message extends MinObject {
   }
   
   public Message shuffle() {
+    if (isTernaryOperator()) {
+      Message var = this.prev.clone();
+      var.next = null;
+      this.args = new ArrayList<Message>();
+      this.args.add(var);
+      this.args.add(this.next.pop(true));
+      this.prev.replace(this);
+    } else if (isBinaryOperator()) {
+      this.args = new ArrayList<Message>();
+      this.args.add(this.next.pop(false));
+    }
+    for (Message arg : this.args) arg.shuffle();
+    if (this.next != null) this.next.shuffle();
     return this;
   }
   
-  public boolean isTerm() {
-    return this.name.equals("\n") || this.name.equals("\r\n") || this.name.equals(".");
-  }
-  
   public MinObject evalOn(MinObject on, MinObject base) throws MinException {
-    if (this.isTerm()) {
+    if (this.isTerminator()) {
       if (this.next == null) return on;
       return this.next.evalOn(base, base);
     }
     
     MinObject response = null;
     if (this.cachedResponse == null)
-      response = on.getSlot(this.name).activate(on);
+      response = on.getSlot(this.name).activate(new Call(this, on, base, args));
     else
       response = this.cachedResponse;
     
@@ -77,8 +104,9 @@ public class Message extends MinObject {
   
   public String toString() {
     StringBuilder b = new StringBuilder();
-    b.append("<");
+    b.append("<`");
     b.append(this.name);
+    b.append("`");
     if (this.args.size() > 0) {
       b.append("(");
       for (Message arg : this.args) {
@@ -95,7 +123,15 @@ public class Message extends MinObject {
     return b.toString();
   }
   
+  public Message clone() {
+    Message m = new Message(this.name, this.cachedResponse);
+    m.next = this.next;
+    m.prev = this.prev;
+    m.args = this.args;
+    return m;
+  }
+  
   static public Message parse(String code) throws ParsingException {
-    return new Scanner(code).scan();
+    return new Scanner(code).scan().shuffle();
   }
 }

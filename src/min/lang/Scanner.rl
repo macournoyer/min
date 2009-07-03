@@ -24,8 +24,10 @@ public class Scanner {
     identifier  = ( alnum | "_" | "$" | "@" )+;
     operator    = "+" | "-" | "*" | "/" | "**" | "^" | "%"
                 | "||" | "|" | "&&" | "&"
+                | "<<"
                 | "<=" | "<" | ">=" | ">"
-                | "==" | "!=" | "!";
+                | "==" | "!=" | "!"
+                | "=";
     terminator  = newline | ";" | ".";
     symbol      = identifier | operator | terminator;
     
@@ -47,6 +49,7 @@ public class Scanner {
     write data nofinal;
   }%%
   
+  @SuppressWarnings("fallthrough")
   public Message scan() throws ParsingException {
     char[] data = input.toCharArray();
     int cs, top;

@@ -3,7 +3,7 @@ package min.lang;
 import java.util.ArrayList;
 
 public class Bootstrap {
-  static public void run() {
+  static public void run() throws MinException {
     // Bootstrap base objects
     MinObject base = new MinObject();
     MinObject object = base.clone();
@@ -19,21 +19,40 @@ public class Bootstrap {
     MinObject.object.asKind("Object");
     MinObject.string.asKind("String");
     MinObject.number = lobby.setSlot("Number", object.clone().with(0).asKind("Number"));
-    MinObject.array = lobby.setSlot("Array", object.clone().with(new ArrayList()).asKind("Array"));
+    MinObject.array = lobby.setSlot("Array", object.clone().with(new ArrayList<MinObject>()).asKind("Array"));
     MinObject.nil = lobby.setSlot("nil", object.clone().with(null).asKind("nil"));
     MinObject._true = lobby.setSlot("true", object.clone().with(true).asKind("true"));
     MinObject._false = lobby.setSlot("false", object.clone().with(false).asKind("false"));
     
     // Add core slots to Object
+    MinObject.object.setSlot("=", new Method() {
+      public MinObject activate(Call call) throws MinException {
+        return call.receiver.setSlot(call.args.get(0).name, call.evalArg(1));
+      }
+    });
     MinObject.object.setSlot("clone", new Method() {
-      public MinObject activate(MinObject object) {
-        return object.clone();
+      public MinObject activate(Call call) {
+        return call.receiver.clone();
       }
     });
     MinObject.object.setSlot("println", new Method() {
-      public MinObject activate(MinObject object) {
-        System.out.println(object.getData());
-        return object;
+      public MinObject activate(Call call) {
+        System.out.println(call.receiver.getData());
+        return call.receiver;
+      }
+    });
+    
+    // Array
+    MinObject.array.setSlot("at", new Method() {
+      public MinObject activate(Call call) throws MinException {
+        return call.receiver.getDataAsArray().get(call.evalArg(0).getDataAsNumber());
+      }
+    });
+    MinObject.array.setSlot("<<", new Method() {
+      public MinObject activate(Call call) throws MinException {
+        MinObject obj = call.evalArg(0);
+        call.receiver.getDataAsArray().add(obj);
+        return obj;
       }
     });
   }

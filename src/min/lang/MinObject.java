@@ -65,12 +65,25 @@ public class MinObject {
     return this.data;
   }
   
+  public Integer getDataAsNumber() {
+    return (this.data instanceof Integer) ? (Integer)this.data : null;
+  }
+  
+  public String getDataAsString() {
+    return (this.data instanceof String) ? (String)this.data : null;
+  }
+  
+  @SuppressWarnings("unchecked")
+  public ArrayList<MinObject> getDataAsArray() {
+    return (this.data instanceof ArrayList) ? (ArrayList<MinObject>)this.data : null;
+  }
+  
   public String toString() {
     return "<data:" + (this.data == null ? "null" : this.data.toString()) +
            " slots:" + this.slots.toString() + ">";
   }
   
-  public MinObject activate(MinObject context) throws MinException {
+  public MinObject activate(Call call) throws MinException {
     return this;
   }
   
