@@ -34,12 +34,12 @@ public class Scanner {
     main := |*
       whitespace;
       comment;
-      string      => { pushMessage(new Message(getSlice(ts, te), MinObject.newString(getSlice(ts + 1, te - 1)))); };
-      number      => { pushMessage(new Message(getSlice(ts, te), MinObject.newNumber(Integer.parseInt(getSlice(ts, te))))); };
-      symbol      => { pushMessage(new Message(getSlice(ts, te))); };
-      "("         => { this.argStack.push(this.message); this.message = null; };
-      ","         => { this.message = null; };
-      ")"         => {
+      string           => { pushMessage(new Message(getSlice(ts, te), MinObject.newString(getSlice(ts + 1, te - 1)))); };
+      number           => { pushMessage(new Message(getSlice(ts, te), MinObject.newNumber(Integer.parseInt(getSlice(ts, te))))); };
+      symbol           => { pushMessage(new Message(getSlice(ts, te))); };
+      "(" terminator*  => { this.argStack.push(this.message); this.message = null; };
+      "," terminator*  => { this.message = null; };
+      ")"              => {
         if (this.argStack.empty())
           throw new ParsingException("Unmatched closing parenthesis at line " + lineno);
         this.message = this.argStack.pop();

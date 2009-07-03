@@ -9,7 +9,10 @@ x
 
 Need = Object clone do(
   $ = "fo sho!"
-  @ = "rawking"
+  really = method(what,
+    what println
+  )
 )
 
 Need $ println
+Need really("a muffin")
