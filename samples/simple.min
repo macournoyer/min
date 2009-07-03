@@ -6,3 +6,10 @@ x = method(
   "yeaaaaah!" println
 )
 x
+
+Need = Object clone do(
+  $ = "fo sho!"
+  @ = "rawking"
+)
+
+Need $ println

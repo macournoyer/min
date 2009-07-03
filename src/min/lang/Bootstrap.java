@@ -40,6 +40,12 @@ public class Bootstrap {
         return new Method(call);
       }
     });
+    MinObject.base.setSlot("do", new Method() {
+      public MinObject activate(Call call) throws MinException {
+        call.args.get(0).evalOn(call.receiver);
+        return call.receiver;
+      }
+    });
     
     // Object
     MinObject.object.setSlot("clone", new Method() {
