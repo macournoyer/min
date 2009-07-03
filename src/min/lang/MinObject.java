@@ -4,8 +4,11 @@ import java.util.HashMap;
 import java.util.ArrayList;
 
 public class MinObject {
+  static public MinObject base;
   static public MinObject lobby;
   static public MinObject object;
+  static public MinObject call;
+  static public MinObject method;
   static public MinObject string;
   static public MinObject number;
   static public MinObject array;
@@ -59,6 +62,11 @@ public class MinObject {
       if (proto.hasSlot(name)) return proto.getSlot(name);
     }
     throw new SlotNotFound("Slot '" + name + "' not found");
+  }
+  
+  public void mimics(MinObject obj) {
+    this.slots = obj.slots;
+    this.protos = obj.protos;
   }
   
   public Object getData() {

@@ -15,6 +15,8 @@ public class Call extends MinObject {
     this.receiver = receiver;
     this.base = base;
     this.args = args;
+    
+    mimics(MinObject.call);
   }
   
   public MinObject evalArg(int at) throws MinException {
