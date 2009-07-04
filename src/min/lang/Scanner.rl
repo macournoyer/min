@@ -10,6 +10,7 @@ public class Scanner {
   Stack<Integer> indentStack = new Stack<Integer>();
   int currentIndent = 0;
   boolean inBlock = false;
+  boolean debug = false;
 
   public Scanner(String input) {
     this.input = input;
@@ -47,13 +48,16 @@ public class Scanner {
         if (this.inBlock) {
           int indent = (te - mark) / 2;
           if (indent < currentIndent) { // dedent
+            debugIndent(lineno, "-", indent);
             this.indentStack.pop();
             this.message = this.argStack.pop();
             if (this.argStack.empty()) this.inBlock = false;
             pushUniqueMessage(new Message("\n"));
           } else if (indent > currentIndent) { // indent
+            debugIndent(lineno, "+", indent);
             this.indentStack.push(indent);
           } else { // same block
+            debugIndent(lineno, "=", indent);
             pushUniqueMessage(new Message("\n"));
           }
           currentIndent = indent;
@@ -62,12 +66,14 @@ public class Scanner {
         }
       };
       newline         => {
-        if (!this.indentStack.empty()) {
+        if (!indentStack.empty()) {
+          debugIndent(lineno, "-", 0);
           while (!this.indentStack.empty()) {
             this.indentStack.pop();
             this.message = this.argStack.pop();
           }
-          this.inBlock = false;
+          currentIndent = 0;
+          inBlock = false;
         }
         pushUniqueMessage(new Message("\n"));
       };
@@ -110,8 +116,8 @@ public class Scanner {
       throw new ParsingException(String.format("Syntax error at line %d around '%s...'", lineno, input.substring(p, Math.min(p+5, pe))));
     }
     
-    // if (!this.argStack.empty())
-    //   throw new ParsingException(this.argStack.size() + " unclosed parenthesis at line " + lineno);
+    if (!this.argStack.empty())
+      throw new ParsingException(this.argStack.size() + " unclosed parenthesis at line " + lineno);
     
     return this.root;
   }
@@ -133,7 +139,12 @@ public class Scanner {
   }
   
   private Message pushUniqueMessage(Message m) {
-    if (message.name.equals(m.name)) return message;
+    if (message != null && message.name.equals(m.name)) return message;
     return pushMessage(m);
+  }
+  
+  private void debugIndent(int lineno, String action, int indent) {
+    if (debug)
+      System.out.println(String.format("[%2d] %s to %d was %d (indentStack: %d)", lineno-1, action, indent, currentIndent, indentStack.size()));
   }
 }

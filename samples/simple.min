@@ -1,28 +1,13 @@
 # comment
-say = method(this, this println)
+say = method(this):
+  this println
 say("hello")
 
-"Nice!" clone do:
-  println
-  "yeah" println
+Need = Object clone do:
+  $ = "need moneyz!"
+  a = method(what):
+    what println
 
-"done!" println
-
-# Need = 1
-# Object clone do:
-#   $ = "fo sho!"
-# # really = method(what,
-# #   what println
-# # )
-# 
-# Need $ println
-# # Need really("a muffin")
-# 
-# # kind(1):
-# #   2
-# #   3
-# #   kind:
-# #     4
-# #     5
-# #   6
-# # 7
+i_need = Need clone
+i_need $ println
+i_need a("muffin")
