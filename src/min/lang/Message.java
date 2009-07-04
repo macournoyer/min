@@ -85,7 +85,7 @@ public class Message extends MinObject {
   public MinObject evalOn(MinObject on, MinObject base) throws MinException {
     if (this.isTerminator()) {
       if (this.next == null) return on;
-      return this.next.evalOn(base, base);
+      return this.next.evalOn(base);
     }
     
     MinObject response = null;

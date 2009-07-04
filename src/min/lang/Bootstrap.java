@@ -35,6 +35,11 @@ public class Bootstrap {
         return call.receiver.setSlot(call.args.get(0).name, call.evalArg(1));
       }
     });
+    MinObject.base.setSlot("inspect", new Method() {
+      public MinObject activate(Call call) throws MinException {
+        return MinObject.newString(call.receiver.toString());
+      }
+    });
     MinObject.base.setSlot("method", new Method() {
       public MinObject activate(Call call) throws MinException {
         return new Method(call);
