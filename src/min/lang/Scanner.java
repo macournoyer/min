@@ -38,8 +38,8 @@ private static byte[] init__Scanner_key_offsets_0()
 {
 	return new byte [] {
 	    0,    0,    1,    2,    4,    5,    6,    7,   10,   12,   13,   14,
-	   43,   45,   47,   49,   49,   50,   58,   59,   61,   62,   64,   72,
-	   74,   76
+	   43,   45,   47,   49,   49,   50,   51,   53,   54,   56,   65,   74,
+	   76,   78
 	};
 }
 
@@ -50,12 +50,12 @@ private static char[] init__Scanner_trans_keys_0()
 {
 	return new char [] {
 	   32,   10,   32,   35,   10,   34,   39,   10,   13,   32,    9,   32,
-	   32,   10,   10,   13,   32,   33,   34,   35,   36,   38,   39,   40,
-	   41,   42,   44,   58,   59,   60,   94,   95,  124,   37,   47,   48,
-	   57,   61,   62,   64,   90,   97,  122,    9,   32,    9,   32,   32,
-	   35,   61,   36,   95,   48,   57,   64,   90,   97,  122,   38,   46,
-	   59,   42,   46,   59,   36,   95,   48,   57,   64,   90,   97,  122,
-	    9,   32,   60,   61,  124,    0
+	   32,   10,   10,   13,   32,   33,   34,   35,   38,   39,   40,   41,
+	   42,   44,   58,   59,   60,   64,   94,   95,  124,   36,   47,   48,
+	   57,   61,   62,   65,   90,   97,  122,    9,   32,    9,   32,   32,
+	   35,   61,   38,   46,   59,   42,   46,   59,   33,   63,   95,   48,
+	   57,   65,   90,   97,  122,   33,   63,   95,   48,   57,   65,   90,
+	   97,  122,    9,   32,   60,   61,  124,    0
 	};
 }
 
@@ -66,7 +66,7 @@ private static byte[] init__Scanner_single_lengths_0()
 {
 	return new byte [] {
 	    0,    1,    1,    2,    1,    1,    1,    3,    2,    1,    1,   19,
-	    2,    2,    2,    0,    1,    2,    1,    2,    1,    2,    2,    2,
+	    2,    2,    2,    0,    1,    1,    2,    1,    2,    3,    3,    2,
 	    0,    1
 	};
 }
@@ -78,7 +78,7 @@ private static byte[] init__Scanner_range_lengths_0()
 {
 	return new byte [] {
 	    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    5,
-	    0,    0,    0,    0,    0,    3,    0,    0,    0,    0,    3,    0,
+	    0,    0,    0,    0,    0,    0,    0,    0,    0,    3,    3,    0,
 	    1,    0
 	};
 }
@@ -90,8 +90,8 @@ private static byte[] init__Scanner_index_offsets_0()
 {
 	return new byte [] {
 	    0,    0,    2,    4,    7,    9,   11,   13,   17,   20,   22,   24,
-	   49,   52,   55,   58,   59,   61,   67,   69,   72,   74,   77,   83,
-	   86,   88
+	   49,   52,   55,   58,   59,   61,   63,   66,   68,   71,   78,   85,
+	   88,   90
 	};
 }
 
@@ -103,12 +103,12 @@ private static byte[] init__Scanner_indicies_0()
 	return new byte [] {
 	    1,    0,    2,    3,    5,    6,    4,    7,    6,    9,    8,    9,
 	   10,   11,   12,   13,    3,   14,   15,    3,   16,    0,   11,    3,
-	    2,   17,   18,   19,    8,    6,   20,   22,   10,   23,   24,   25,
-	   26,   13,   21,   28,   21,   20,   29,   21,   27,   19,   20,   20,
-	    3,   31,   32,   30,    1,   34,   33,    5,    6,   35,   36,   21,
-	   37,   20,   20,   20,   20,   20,   37,   21,   37,   23,   23,   38,
-	   21,   37,   26,   26,   39,   20,   20,   27,   20,   20,   40,   16,
-	   42,   41,   21,   37,   21,   37,    0
+	    2,   17,   18,   19,    8,    6,   21,   10,   22,   23,   24,   25,
+	   13,   20,   27,   20,   20,   28,   29,   20,   26,   19,   28,   28,
+	    3,   31,   32,   30,    1,   34,   33,    5,    6,   35,   36,   20,
+	   37,   20,   37,   22,   22,   38,   20,   37,   25,   25,   39,   20,
+	   20,   28,   26,   28,   28,   40,   20,   20,   28,   28,   28,   28,
+	   37,   16,   42,   41,   20,   37,   20,   37,    0
 	};
 }
 
@@ -119,8 +119,8 @@ private static byte[] init__Scanner_trans_targs_0()
 {
 	return new byte [] {
 	   11,   13,   12,    0,   11,    3,    4,   15,    5,   11,    6,    8,
-	   10,    7,   23,    9,   23,    2,   14,   16,   17,   11,   18,   19,
-	   11,   20,   21,   22,   24,   25,   11,   13,    1,   11,    1,   11,
+	   10,    7,   23,    9,   23,    2,   14,   16,   11,   17,   18,   11,
+	   19,   20,   21,   24,   22,   25,   11,   13,    1,   11,    1,   11,
 	   11,   11,   11,   11,   11,   11,    9
 	};
 }
@@ -132,8 +132,8 @@ private static byte[] init__Scanner_trans_actions_0()
 {
 	return new byte [] {
 	   25,   42,   45,    0,   23,    0,    0,    0,    0,    3,    0,    0,
-	    0,    0,   51,   27,   39,    0,   48,    0,    0,    5,    0,    0,
-	    7,    0,    0,    0,    0,    0,   30,   56,   27,   11,    0,   13,
+	    0,    0,   51,   27,   39,    0,   48,    0,    5,    0,    0,    7,
+	    0,    0,    0,    0,    0,    0,   30,   56,   27,   11,    0,   13,
 	   33,   17,   19,   21,   15,    9,    0
 	};
 }
@@ -169,7 +169,7 @@ private static byte[] init__Scanner_eof_trans_0()
 {
 	return new byte [] {
 	    0,    1,    0,    5,    1,    0,    0,    0,    0,    1,    0,    0,
-	   31,   34,   36,   37,   38,   38,   38,   39,   38,   40,   41,   42,
+	   31,   34,   36,   37,   38,   38,   39,   38,   40,   41,   38,   42,
 	   38,   38
 	};
 }
@@ -182,7 +182,7 @@ static final int Scanner_error = 0;
 
 static final int Scanner_en_main = 11;
 
-// line 96 "src/min/lang/Scanner.rl"
+// line 97 "src/min/lang/Scanner.rl"
 
   
   @SuppressWarnings("fallthrough")
@@ -202,7 +202,7 @@ static final int Scanner_en_main = 11;
 	te = -1;
 	act = 0;
 	}
-// line 108 "src/min/lang/Scanner.rl"
+// line 109 "src/min/lang/Scanner.rl"
     
 // line 208 "src/min/lang/Scanner.java"
 	{
@@ -310,31 +310,31 @@ case 3:
 	{te = p+1;}
 	break;
 	case 6:
-// line 44 "src/min/lang/Scanner.rl"
+// line 45 "src/min/lang/Scanner.rl"
 	{act = 1;}
 	break;
 	case 7:
-// line 55 "src/min/lang/Scanner.rl"
+// line 56 "src/min/lang/Scanner.rl"
 	{act = 2;}
 	break;
 	case 8:
-// line 73 "src/min/lang/Scanner.rl"
+// line 74 "src/min/lang/Scanner.rl"
 	{act = 3;}
 	break;
 	case 9:
-// line 79 "src/min/lang/Scanner.rl"
+// line 80 "src/min/lang/Scanner.rl"
 	{act = 4;}
 	break;
 	case 10:
-// line 83 "src/min/lang/Scanner.rl"
+// line 84 "src/min/lang/Scanner.rl"
 	{te = p+1;{ pushMessage(new Message(getSlice(ts, te), MinObject.newString(getSlice(ts + 1, te - 1)))); }}
 	break;
 	case 11:
-// line 85 "src/min/lang/Scanner.rl"
+// line 86 "src/min/lang/Scanner.rl"
 	{te = p+1;{ pushMessage(new Message(getSlice(ts, te))); }}
 	break;
 	case 12:
-// line 88 "src/min/lang/Scanner.rl"
+// line 89 "src/min/lang/Scanner.rl"
 	{te = p+1;{
         if (this.argStack.empty())
           throw new ParsingException("Unmatched closing parenthesis at line " + lineno);
@@ -342,7 +342,7 @@ case 3:
       }}
 	break;
 	case 13:
-// line 44 "src/min/lang/Scanner.rl"
+// line 45 "src/min/lang/Scanner.rl"
 	{te = p;p--;{
         int indent = (te - mark) / 2;
         // creating new block
@@ -356,7 +356,7 @@ case 3:
       }}
 	break;
 	case 14:
-// line 55 "src/min/lang/Scanner.rl"
+// line 56 "src/min/lang/Scanner.rl"
 	{te = p;p--;{
         int indent = (te - mark) / 2;
         if (indent > currentIndent) { // indent in same block
@@ -377,38 +377,38 @@ case 3:
       }}
 	break;
 	case 15:
-// line 73 "src/min/lang/Scanner.rl"
+// line 74 "src/min/lang/Scanner.rl"
 	{te = p;p--;{
         emptyIndentStack();
         pushTerminator();
       }}
 	break;
 	case 16:
-// line 79 "src/min/lang/Scanner.rl"
-	{te = p;p--;}
-	break;
-	case 17:
 // line 80 "src/min/lang/Scanner.rl"
 	{te = p;p--;}
 	break;
+	case 17:
+// line 81 "src/min/lang/Scanner.rl"
+	{te = p;p--;}
+	break;
 	case 18:
-// line 84 "src/min/lang/Scanner.rl"
+// line 85 "src/min/lang/Scanner.rl"
 	{te = p;p--;{ pushMessage(new Message(getSlice(ts, te), MinObject.newNumber(Integer.parseInt(getSlice(ts, te))))); }}
 	break;
 	case 19:
-// line 85 "src/min/lang/Scanner.rl"
+// line 86 "src/min/lang/Scanner.rl"
 	{te = p;p--;{ pushMessage(new Message(getSlice(ts, te))); }}
 	break;
 	case 20:
-// line 86 "src/min/lang/Scanner.rl"
+// line 87 "src/min/lang/Scanner.rl"
 	{te = p;p--;{ this.argStack.push(this.message); this.message = null; }}
 	break;
 	case 21:
-// line 87 "src/min/lang/Scanner.rl"
+// line 88 "src/min/lang/Scanner.rl"
 	{te = p;p--;{ this.message = null; }}
 	break;
 	case 22:
-// line 79 "src/min/lang/Scanner.rl"
+// line 80 "src/min/lang/Scanner.rl"
 	{{p = ((te))-1;}}
 	break;
 	case 23:
@@ -506,7 +506,7 @@ case 5:
 	}
 	break; }
 	}
-// line 109 "src/min/lang/Scanner.rl"
+// line 110 "src/min/lang/Scanner.rl"
     
     if (cs == Scanner_error || p != pe) {
       // TODO Better error reporting

@@ -8,14 +8,12 @@ say = method(this):
 say("hello")
 
 Need = Object clone do:
-  $ = "need moneyz!"
   a = method(what):
     "I need a " println
     what println
     "now"
 
 i_need = Need clone
-i_need $ println
 
 # indentation w/o the ':', allows you to continue
 # the message chain on different lines

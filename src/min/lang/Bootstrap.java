@@ -13,6 +13,7 @@ public class Bootstrap {
     // Introduce objects into Lobby
     MinObject.base = lobby.setSlot("Base", base);
     MinObject.lobby = lobby.setSlot("Lobby", lobby);
+    lobby.setSlot("$", lobby);
     MinObject.object = lobby.setSlot("Object", object);
     MinObject.string = lobby.setSlot("String", object.clone().with(""));
     MinObject.base.asKind("Base");
@@ -71,8 +72,23 @@ public class Bootstrap {
           System.out.println(call.receiver.getData());
           return call.receiver;
         }
+      }).
+      slot("new", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          MinObject c = call.receiver.clone();
+          if (c.hasSlot("initialize")) c.getSlot("initialize").activate(call);
+          return c;
+        }
       });
     
+    // String
+    MinObject.string.
+      slot("+", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return MinObject.newString(call.receiver.getDataAsString() + call.evalArg(0).getDataAsString());
+        }
+      });
+
     // Array
     MinObject.array.
       slot("at", new Method() {

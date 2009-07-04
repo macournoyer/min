@@ -29,7 +29,8 @@ public class Scanner {
     string      = ("'" (any - "'")* "'" )
                 | ('"' (any - '"')* '"' );
     number      = [0-9]+;
-    identifier  = ( alnum | "_" | "$" | "@" )+;
+    single      = "$" | "@";
+    identifier  = ( alnum | "_" )+ ( "?" | "!" )?;
     operator    = "+" | "-" | "*" | "/" | "**" | "^" | "%"
                 | "||" | "|" | "&&" | "&"
                 | "<<"
@@ -37,7 +38,7 @@ public class Scanner {
                 | "==" | "!=" | "!"
                 | "=";
     terminator  = ";" | ".";
-    symbol      = identifier | operator | terminator;
+    symbol      = single | identifier | operator | terminator;
     
     main := |*
       # Indentation magic

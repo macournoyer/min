@@ -9,4 +9,4 @@ Post = Object clone do:
 
 post = Post new("Min", "It is the awesome!")
 
-post to_html print
+post to_html println
