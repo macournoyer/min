@@ -30,53 +30,62 @@ public class Bootstrap {
     /////////// Add core slots to objects ///////////
     
     // Base
-    MinObject.base.setSlot("=", new Method() {
-      public MinObject activate(Call call) throws MinException {
-        return call.receiver.setSlot(call.args.get(0).name, call.evalArg(1));
-      }
-    });
-    MinObject.base.setSlot("inspect", new Method() {
-      public MinObject activate(Call call) throws MinException {
-        return MinObject.newString(call.receiver.toString());
-      }
-    });
-    MinObject.base.setSlot("method", new Method() {
-      public MinObject activate(Call call) throws MinException {
-        return new Method(call);
-      }
-    });
-    MinObject.base.setSlot("do", new Method() {
-      public MinObject activate(Call call) throws MinException {
-        call.args.get(0).evalOn(call.receiver);
-        return call.receiver;
-      }
-    });
+    MinObject.base.
+      slot("=", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return call.receiver.setSlot(call.args.get(0).name, call.evalArg(1));
+        }
+      }).
+      slot("inspect", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return MinObject.newString(call.receiver.toString());
+        }
+      }).
+      slot("method", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return new Method(call);
+        }
+      }).
+      slot("do", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          call.args.get(0).evalOn(call.receiver);
+          return call.receiver;
+        }
+      });
     
     // Object
-    MinObject.object.setSlot("clone", new Method() {
-      public MinObject activate(Call call) {
-        return call.receiver.clone();
-      }
-    });
-    MinObject.object.setSlot("println", new Method() {
-      public MinObject activate(Call call) {
-        System.out.println(call.receiver.getData());
-        return call.receiver;
-      }
-    });
+    MinObject.object.
+      slot("clone", new Method() {
+        public MinObject activate(Call call) {
+          return call.receiver.clone();
+        }
+      }).
+      slot("print", new Method() {
+        public MinObject activate(Call call) {
+          System.out.print(call.receiver.getData());
+          return call.receiver;
+        }
+      }).
+      slot("println", new Method() {
+        public MinObject activate(Call call) {
+          System.out.println(call.receiver.getData());
+          return call.receiver;
+        }
+      });
     
     // Array
-    MinObject.array.setSlot("at", new Method() {
-      public MinObject activate(Call call) throws MinException {
-        return call.receiver.getDataAsArray().get(call.evalArg(0).getDataAsNumber());
-      }
-    });
-    MinObject.array.setSlot("<<", new Method() {
-      public MinObject activate(Call call) throws MinException {
-        MinObject obj = call.evalArg(0);
-        call.receiver.getDataAsArray().add(obj);
-        return obj;
-      }
-    });
+    MinObject.array.
+      slot("at", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return call.receiver.getDataAsArray().get(call.evalArg(0).getDataAsNumber());
+        }
+      }).
+      slot("<<", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          MinObject obj = call.evalArg(0);
+          call.receiver.getDataAsArray().add(obj);
+          return obj;
+        }
+      });
   }
 }

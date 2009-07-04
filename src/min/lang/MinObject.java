@@ -21,10 +21,10 @@ public class MinObject {
   Object data;
   
   public MinObject(MinObject proto, Object data) {
-    this.protos = new ArrayList<MinObject>();
-    if (proto != null) this.protos.add(proto);
-    this.slots = new HashMap<String, MinObject>();
-    this.data = data;
+    protos = new ArrayList<MinObject>();
+    if (proto != null) protos.add(proto);
+    slots = new HashMap<String, MinObject>();
+    data = data;
   }
   
   public MinObject(MinObject proto) {
@@ -36,59 +36,65 @@ public class MinObject {
   }
   
   public void appendProto(MinObject proto) {
-    this.protos.add(proto);
+    protos.add(proto);
   }
   
   public void prependProto(MinObject proto) {
-    this.protos.add(0, proto);
+    protos.add(0, proto);
   }
   
   public MinObject setSlot(String name, MinObject value) {
-    this.slots.put(name, value);
+    slots.put(name, value);
     return value;
   }
   
+  // Set slot and return self. For nicer DSL.
+  public MinObject slot(String name, MinObject value) {
+    setSlot(name, value);
+    return this;
+  }
+  
   public boolean hasSlot(String name) {
-    if (this.slots.containsKey(name)) return true;
-    for (MinObject proto : this.protos) {
+    if (slots.containsKey(name)) return true;
+    for (MinObject proto : protos) {
       if (proto.hasSlot(name)) return true;
     }
     return false;
   }
 
   public MinObject getSlot(String name) throws SlotNotFound {
-    if (this.slots.containsKey(name)) return this.slots.get(name);
-    for (MinObject proto : this.protos) {
+    if (slots.containsKey(name)) return slots.get(name);
+    for (MinObject proto : protos) {
       if (proto.hasSlot(name)) return proto.getSlot(name);
     }
     throw new SlotNotFound("Slot '" + name + "' not found");
   }
   
   public void mimics(MinObject obj) {
-    this.slots = obj.slots;
-    this.protos = obj.protos;
+    slots = obj.slots;
+    protos = obj.protos;
   }
   
   public Object getData() {
-    return this.data;
+    return data;
   }
   
   public Integer getDataAsNumber() {
-    return (this.data instanceof Integer) ? (Integer)this.data : null;
+    return (data instanceof Integer) ? (Integer)data : null;
   }
   
   public String getDataAsString() {
-    return (this.data instanceof String) ? (String)this.data : null;
+    return (data instanceof String) ? (String)data : null;
   }
   
   @SuppressWarnings("unchecked")
   public ArrayList<MinObject> getDataAsArray() {
-    return (this.data instanceof ArrayList) ? (ArrayList<MinObject>)this.data : null;
+    return (data instanceof ArrayList) ? (ArrayList<MinObject>)data : null;
   }
   
   public String toString() {
-    return "<data:" + (this.data == null ? "null" : this.data.toString()) +
-           " slots:" + this.slots.toString() + ">";
+    return "<data:" + (data == null ? "null" : data.toString()) +
+           " slots:" + slots.toString() + ">";
   }
   
   public MinObject activate(Call call) throws MinException {
