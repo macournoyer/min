@@ -103,23 +103,30 @@ public class Message extends MinObject {
   }
   
   public String toString() {
+    return toString("");
+  }
+  
+  public String toString(String indent) {
     StringBuilder b = new StringBuilder();
-    b.append("<`");
+    
     b.append(this.name);
-    b.append("`");
+    if (isTerminator()) b.append(indent);
+    
     if (this.args.size() > 0) {
       b.append("(");
+      String argIndent = indent + "  ";
       for (Message arg : this.args) {
         if (arg != this.args.get(0)) b.append(", ");
-        b.append(arg.toString());
+        b.append(arg.toString(argIndent));
       }
       b.append(")");
     }
-    b.append(">");
+    
     if (this.next != null) {
-      b.append(" ");
+      if (!isTerminator()) b.append(" ");
       b.append(this.next.toString());
     }
+    
     return b.toString();
   }
   

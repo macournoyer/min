@@ -5,7 +5,7 @@ Post = Object clone do:
   
   to_html = method:
     "<h1>#{@title}</h1>" +
-    "<p>#{@content}</p>"
+      "<p>#{@content}</p>"
 
 post = Post new("Min", "It is the awesome!")
 
