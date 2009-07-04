@@ -1,25 +1,36 @@
 
                                 THE MIN LANGUAGE
 
-Min is a Prototype-based language with syntax inspired by Io and Ruby topped
-with Python's indentation. It's aimed at being the most readable and powerful
-language ever, really. Oh, and fast too (but fast enough rather then fastest).
+Min is a Prototype-based language with syntax inspired by Io and Ruby, topped
+with Python's indentation (but only when you want to). It's aimed at being the
+most readable and powerful language ever, really!
+Oh, and not too slow (running on the JVM).
+
+  Min = Io clone do:
+    you_can indent to("create blocks")
+    you_can indent
+            to("split a message chain in several lines")
+    
+    initialize = method:
+      @it = "rly looks like Ruby"
+      @but = "with lots of Io flavor"
+      
+    if(indentation == confusing?("sometimes"),
+      use () like in(Io)
+    )
 
 == Philosophies
 * Everything is an object.
-* No special magic statements (if, def, while, +, &&), everything is a method
-  call.
-* Open, extensible object model.
-* Only 4 core constructs: Closure, Object, VTable and Literals.
-* As close to English as possible.
+* Everything is a message, no special magic statements (if, def, while, +, &&).
 * As little parenthesis as possible.
+* Most of the core is open.
+* As close to English as possible.
 
-== Credits
-The language constructs are derived from Io by Steve Dekorte
-<http://www.iolanguage.com>.
-Parts of the LOBBY design are taken from Potion by _why
-<http://github.com/why/potion>.
-khash.h and kvec.h are (c) Attractive Chaos <attractivechaos@aol.co.uk>
+== Features
+* Running on the JVM
+* Indentation is an option
+* Ruby-like syntax
+* More to come...
 
 == License
-MIT License, (c) Marc-Andre Cournoyer <macournoyer@gmail.com>
+MIT License, (c) macournoyer

@@ -1,5 +1,6 @@
 say = method(this,
   this println
+  "great!"
 )
 # is the same as
 say = method(this):
@@ -16,10 +17,10 @@ i_need = Need clone
 i_need $ println
 
 # indentation w/o the ':', allows you to continue
-# the message chain and allign stuff like you want
+# the message chain on different lines
 i_need
       a("muffin")
-      println
+        println
 
 method:
   "a"

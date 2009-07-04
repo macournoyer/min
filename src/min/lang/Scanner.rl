@@ -58,7 +58,7 @@ public class Scanner {
           debugIndent(lineno, "/", indent);
         } else if (indent == currentIndent) { // same block
           debugIndent(lineno, "=", indent);
-          if (inBlock) pushTerminator();
+          pushTerminator();
         } else if (inBlock && indent < currentIndent) { // dedent
           debugIndent(lineno, "-", indent);
           indentStack.pop();
