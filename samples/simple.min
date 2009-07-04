@@ -1,6 +1,10 @@
-# comment
+say = method(this,
+  this println
+)
+# is the same as
 say = method(this):
   this println
+
 say("hello")
 
 Need = Object clone do:
@@ -10,4 +14,12 @@ Need = Object clone do:
 
 i_need = Need clone
 i_need $ println
-i_need a("muffin")
+
+# indentation w/o the ':', allows you to continue
+# the message chain and allign stuff like you want
+i_need
+      a("muffin")
+      println
+
+method:
+  "a"

@@ -41,41 +41,38 @@ public class Scanner {
     
     main := |*
       # Indentation magic
-      #":" block => {
-      #  
-      #}
-      block  => {
-        if (this.inBlock) {
-          int indent = (te - mark) / 2;
-          if (indent < currentIndent) { // dedent
-            debugIndent(lineno, "-", indent);
-            this.indentStack.pop();
-            this.message = this.argStack.pop();
-            if (this.argStack.empty()) this.inBlock = false;
-            pushUniqueMessage(new Message("\n"));
-          } else if (indent > currentIndent) { // indent
-            debugIndent(lineno, "+", indent);
-            this.indentStack.push(indent);
-          } else { // same block
-            debugIndent(lineno, "=", indent);
-            pushUniqueMessage(new Message("\n"));
-          }
-          currentIndent = indent;
+      ":" whitespace* block => {
+        int indent = (te - mark) / 2;
+        // creating new block
+        inBlock = true;
+        argStack.push(message);
+        message = null;
+        // add indent level
+        debugIndent(lineno, "+", indent);
+        indentStack.push(indent);
+        currentIndent = indent;;
+      };
+      block => {
+        int indent = (te - mark) / 2;
+        if (indent > currentIndent) { // indent in same block
+          debugIndent(lineno, "/", indent);
+        } else if (indent == currentIndent) { // same block
+          debugIndent(lineno, "=", indent);
+          if (inBlock) pushTerminator();
+        } else if (inBlock && indent < currentIndent) { // dedent
+          debugIndent(lineno, "-", indent);
+          indentStack.pop();
+          message = argStack.pop();
+          if (argStack.empty()) inBlock = false;
+          pushTerminator();
         } else {
-          pushUniqueMessage(new Message("\n"));
+          pushTerminator();
         }
+        currentIndent = indent;
       };
       newline         => {
-        if (!indentStack.empty()) {
-          debugIndent(lineno, "-", 0);
-          while (!this.indentStack.empty()) {
-            this.indentStack.pop();
-            this.message = this.argStack.pop();
-          }
-          currentIndent = 0;
-          inBlock = false;
-        }
-        pushUniqueMessage(new Message("\n"));
+        emptyIndentStack();
+        pushTerminator();
       };
       
       # Ignored tokens
@@ -86,7 +83,6 @@ public class Scanner {
       string           => { pushMessage(new Message(getSlice(ts, te), MinObject.newString(getSlice(ts + 1, te - 1)))); };
       number           => { pushMessage(new Message(getSlice(ts, te), MinObject.newNumber(Integer.parseInt(getSlice(ts, te))))); };
       symbol           => { pushMessage(new Message(getSlice(ts, te))); };
-      ":"              => { this.inBlock = true; this.argStack.push(this.message); this.message = null; };
       "(" terminator*  => { this.argStack.push(this.message); this.message = null; };
       "," terminator*  => { this.message = null; };
       ")"              => {
@@ -116,6 +112,8 @@ public class Scanner {
       throw new ParsingException(String.format("Syntax error at line %d around '%s...'", lineno, input.substring(p, Math.min(p+5, pe))));
     }
     
+    emptyIndentStack();
+    
     if (!this.argStack.empty())
       throw new ParsingException(this.argStack.size() + " unclosed parenthesis at line " + lineno);
     
@@ -124,6 +122,15 @@ public class Scanner {
   
   private String getSlice(int start, int end) {
     return input.substring(start, end);
+  }
+  
+  private void emptyIndentStack() {
+    while (!indentStack.empty()) {
+      indentStack.pop();
+      message = argStack.pop();
+    }
+    currentIndent = 0;
+    inBlock = false;
   }
   
   private Message pushMessage(Message m) {
@@ -141,6 +148,10 @@ public class Scanner {
   private Message pushUniqueMessage(Message m) {
     if (message != null && message.name.equals(m.name)) return message;
     return pushMessage(m);
+  }
+  
+  private Message pushTerminator() {
+    return pushUniqueMessage(new Message("\n"));
   }
   
   private void debugIndent(int lineno, String action, int indent) {
