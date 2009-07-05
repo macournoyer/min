@@ -1,17 +1,30 @@
-Spec = Object clone:
+Spec = Object clone do:
+  all = Array new
+  
   initialize = method(name, object):
     @name = name
     @object = object
   
-  it = method:
+  should = method:
     # TODO
   
   run = method:
     # TODO
 
-describe = method:
-  $spec = Spec new(call args at(0) name, call eval_arg(0))
-  call args at(1) eval_on($spec)
+ShouldProxy = Object clone do:
+  initialize = method(object)
+    @object = object
+  
+  be = method(other):
+    if(@object != other): "should be but was not" println
 
-at_exit:
-  $spec run
+describe = method:
+  spec = Spec new(call args at(0) name, call eval_arg(0))
+  call args at(1) eval_on(spec)
+  Spec all << spec
+
+Object do:
+  should = method: ShouldProxy new(self)
+
+# at_exit:
+#   Spec all each(run)

@@ -19,6 +19,6 @@ public class Call extends MinObject {
   }
   
   public MinObject evalArg(int at) throws MinException {
-    return this.args.get(at).evalOn(this.base, this.base);
+    return args.get(at).evalOn(base);
   }
 }

@@ -1,4 +1,5 @@
 ✓ implement control flow methods in Min
+- fix precedence of operators: 1 + 2 println # => 2
 - () for order of eval
 - implement specs in Min
 - handle exceptions

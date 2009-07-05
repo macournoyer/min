@@ -21,5 +21,4 @@ i_need
       a("muffin")
         println
 
-method:
-  "a"
+single_line_block = method: with(block) on single line

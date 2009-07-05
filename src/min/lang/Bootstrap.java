@@ -55,6 +55,11 @@ public class Bootstrap {
           return call.receiver.setSlot(call.evalArg(0).getDataAsString(), call.evalArg(1));
         }
       }).
+      slot("get_slot", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return call.receiver.getSlot(call.evalArg(0).getDataAsString());
+        }
+      }).
       slot("inspect", new Method() {
         public MinObject activate(Call call) throws MinException {
           return MinObject.newString(call.receiver.toString());
@@ -105,6 +110,7 @@ public class Bootstrap {
       slot("new", new Method() {
         public MinObject activate(Call call) throws MinException {
           MinObject c = call.receiver.clone();
+          call.receiver = c;
           if (c.hasSlot("initialize")) c.getSlot("initialize").activate(call);
           return c;
         }
@@ -143,6 +149,14 @@ public class Bootstrap {
 
     // Array
     MinObject.array.
+      slot("initialize", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          ArrayList<MinObject> items = new ArrayList<MinObject>();
+          call.receiver.data = items;
+          for (Message arg : call.args) items.add(arg.evalOn(call.base));
+          return MinObject.nil;
+        }
+      }).
       slot("at", new Method() {
         public MinObject activate(Call call) throws MinException {
           return call.receiver.getDataAsArray().get(call.evalArg(0).getDataAsNumber());
@@ -158,6 +172,24 @@ public class Bootstrap {
           MinObject obj = call.evalArg(0);
           call.receiver.getDataAsArray().add(obj);
           return obj;
+        }
+      }).
+      slot("each", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          ArrayList<MinObject> array = call.receiver.getDataAsArray();
+          if (call.args.size() == 2) { // each(i): body
+            String iName = call.args.get(0).name;
+            for (MinObject i : array) {
+              call.base.setSlot(iName, i);
+              call.evalArg(1);
+            }
+            call.base.removeSlot(iName);
+          } else if (call.args.size() == 1) { // each(body)
+            for (MinObject i : array) call.args.get(0).evalOn(i);
+          } else {
+            throw new MinException("Wrong number of arguments");
+          }
+          return call.receiver;
         }
       });
     

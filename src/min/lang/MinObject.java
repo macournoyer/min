@@ -71,6 +71,10 @@ public class MinObject {
     throw new SlotNotFound("Slot '" + name + "' not found");
   }
   
+  public MinObject removeSlot(String name) {
+    return slots.remove(name);
+  }
+  
   public Object getData() {
     return data;
   }
@@ -85,7 +89,7 @@ public class MinObject {
   
   @SuppressWarnings("unchecked")
   public ArrayList<MinObject> getDataAsArray() {
-    return (data instanceof ArrayList) ? (ArrayList<MinObject>)data : null;
+    return (ArrayList<MinObject>)data;
   }
   
   public String toString() {

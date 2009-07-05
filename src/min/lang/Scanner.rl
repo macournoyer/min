@@ -45,13 +45,14 @@ public class Scanner {
       ":" whitespace* block => {
         int indent = (te - mark) / 2;
         // creating new block
-        inBlock = true;
-        argStack.push(message);
-        message = null;
+        startBlock();
         // add indent level
         debugIndent(lineno, "+", indent);
-        indentStack.push(indent);
-        currentIndent = indent;;
+        pushIndent(indent);
+      };
+      ":" => {
+        startBlock();
+        pushIndent(0);
       };
       block => {
         int indent = (te - mark) / 2;
@@ -84,12 +85,12 @@ public class Scanner {
       string           => { pushMessage(new Message(getSlice(ts, te), MinObject.newString(getSlice(ts + 1, te - 1)))); };
       number           => { pushMessage(new Message(getSlice(ts, te), MinObject.newNumber(Integer.parseInt(getSlice(ts, te))))); };
       symbol           => { pushMessage(new Message(getSlice(ts, te))); };
-      "(" terminator*  => { this.argStack.push(this.message); this.message = null; };
-      "," terminator*  => { this.message = null; };
+      "(" terminator*  => { argStack.push(message); message = null; };
+      "," terminator*  => { message = null; };
       ")"              => {
-        if (this.argStack.empty())
+        if (argStack.empty())
           throw new ParsingException("Unmatched closing parenthesis at line " + lineno);
-        this.message = this.argStack.pop();
+        message = argStack.pop();
       };
     *|;
     
@@ -108,10 +109,8 @@ public class Scanner {
     %% write init;
     %% write exec;
     
-    if (cs == Scanner_error || p != pe) {
-      // TODO Better error reporting
+    if (cs == Scanner_error || p != pe)
       throw new ParsingException(String.format("Syntax error at line %d around '%s...'", lineno, input.substring(p, Math.min(p+5, pe))));
-    }
     
     if (root == null) return new Message("\n");
     
@@ -137,14 +136,14 @@ public class Scanner {
   }
   
   private Message pushMessage(Message m) {
-    if (this.message != null)
+    if (message != null)
       message.setNext(m);
-    else if (!this.argStack.empty())
-      this.argStack.peek().args.add(m);
+    else if (!argStack.empty())
+      argStack.peek().args.add(m);
       
-    this.message = m;
+    message = m;
     
-    if (this.root == null) this.root = this.message;
+    if (root == null) root = message;
     return m;
   }
   
@@ -155,6 +154,17 @@ public class Scanner {
   
   private Message pushTerminator() {
     return pushUniqueMessage(new Message("\n"));
+  }
+  
+  private void startBlock() {
+    inBlock = true;
+    argStack.push(message);
+    message = null;
+  }
+  
+  private void pushIndent(int indent) {
+    indentStack.push(indent);
+    currentIndent = indent;
   }
   
   private void debugIndent(int lineno, String action, int indent) {
