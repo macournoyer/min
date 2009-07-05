@@ -1,6 +1,10 @@
 <project name="min" default="compile">
   <target name="init">
     <mkdir dir="classes"/>
+    <dirname property="pwd" file="build.xml" />
+    <propertyfile file="classes/min/lang/default.properties">
+      <entry key="lib.path" value="${pwd}/lib"/>
+    </propertyfile>
   </target>
 
   <target name="compile" depends="init" description="Compile Java sources.">
@@ -8,6 +12,7 @@
            debug="true" target="1.5">
       <compilerarg value="-Xlint"/>
     </javac>
+    
   </target>
 
   <target name="ragel" depends="init" description="Compile Ragel state machines.">

@@ -11,12 +11,11 @@ public class Call extends MinObject {
   Message message;
   
   public Call(Message message, MinObject receiver, MinObject base, ArrayList<Message> args) {
+    super(MinObject.call);
     this.message = message;
     this.receiver = receiver;
     this.base = base;
     this.args = args;
-    
-    mimics(MinObject.call);
   }
   
   public MinObject evalArg(int at) throws MinException {

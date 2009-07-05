@@ -70,11 +70,6 @@ public class MinObject {
     throw new SlotNotFound("Slot '" + name + "' not found");
   }
   
-  public void mimics(MinObject obj) {
-    slots = obj.slots;
-    protos = obj.protos;
-  }
-  
   public Object getData() {
     return data;
   }
@@ -116,11 +111,32 @@ public class MinObject {
     return this;
   }
   
+  public static MinObject require(String file) throws MinException {
+    ArrayList<MinObject> loadPath = MinObject.lobby.getSlot("load_path").getDataAsArray();
+    String code = null;
+    for (MinObject path : loadPath) {
+      String filePath = path.getDataAsString() + "/" + file + ".min";
+      if (File.exists(filePath)) code = File.read(filePath);
+    }
+    if (code == null) throw new MinException("File not found: " + file);
+    return Message.parse(code).evalOn(MinObject.lobby);
+  }
+  
   public static MinObject newString(String str) {
     return MinObject.string.clone().with(str);
   }
 
   public static MinObject newNumber(Integer i) {
     return MinObject.number.clone().with(i);
+  }
+  
+  public static MinObject newArray(ArrayList<MinObject> items) {
+    return MinObject.array.clone().with(items);
+  }
+
+  public static MinObject newArray(MinObject[] items) {
+    ArrayList<MinObject> array = new ArrayList<MinObject>();
+    for (MinObject o : items) array.add(o);
+    return newArray(array);
   }
 }

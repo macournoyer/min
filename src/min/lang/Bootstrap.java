@@ -1,9 +1,12 @@
 package min.lang;
 
 import java.util.ArrayList;
+import java.util.Properties;
+import java.io.InputStream;
+import java.io.IOException;
 
 public class Bootstrap {
-  static public void run() throws MinException {
+  public void run() throws MinException {
     // Bootstrap base objects
     MinObject base = new MinObject();
     MinObject object = base.clone();
@@ -28,6 +31,15 @@ public class Bootstrap {
     MinObject._true = lobby.setSlot("true", object.clone().with(true).asKind("true"));
     MinObject._false = lobby.setSlot("false", object.clone().with(false).asKind("false"));
     
+    // Load properties
+    Properties properties = loadProperties();
+    
+    // Set load path
+    MinObject.lobby.slot("load_path", MinObject.newArray(new MinObject[] {
+      MinObject.newString("."),
+      MinObject.newString(properties.getProperty("lib.path"))
+    }));
+    
     /////////// Add core slots to objects ///////////
     
     // Base
@@ -51,6 +63,12 @@ public class Bootstrap {
         public MinObject activate(Call call) throws MinException {
           call.args.get(0).evalOn(call.receiver);
           return call.receiver;
+        }
+      }).
+      slot("require", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          String file = call.evalArg(0).getDataAsString();
+          return MinObject.require(file);
         }
       });
     
@@ -103,5 +121,18 @@ public class Bootstrap {
           return obj;
         }
       });
+    
+    MinObject.require("bootstrap");
+  }
+  
+  private Properties loadProperties() throws MinException {
+    Properties properties = new Properties();
+    try {
+      InputStream in = getClass().getResourceAsStream("default.properties");
+      properties.load(in);
+      return properties;
+    } catch (IOException e) {
+      throw new MinException(e);
+    }
   }
 }

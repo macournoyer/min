@@ -6,7 +6,7 @@ public class Method extends MinObject {
   String[] argNames;
   
   public Method() {
-    mimics(MinObject.method);
+    super(MinObject.method);
   }
   
   public Method(Call call) {

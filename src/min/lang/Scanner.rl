@@ -113,12 +113,14 @@ public class Scanner {
       throw new ParsingException(String.format("Syntax error at line %d around '%s...'", lineno, input.substring(p, Math.min(p+5, pe))));
     }
     
+    if (root == null) return new Message("\n");
+    
     emptyIndentStack();
     
-    if (!this.argStack.empty())
-      throw new ParsingException(this.argStack.size() + " unclosed parenthesis at line " + lineno);
+    if (!argStack.empty())
+      throw new ParsingException(argStack.size() + " unclosed parenthesis at line " + lineno);
     
-    return this.root;
+    return root;
   }
   
   private String getSlice(int start, int end) {
