@@ -1,4 +1,5 @@
 ✓ implement control flow methods in Min
+- () for order of eval
 - implement specs in Min
 - handle exceptions
 - check arguments passed vs arguments declared in method

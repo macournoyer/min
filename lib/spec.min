@@ -1,0 +1,17 @@
+Spec = Object clone:
+  initialize = method(name, object):
+    @name = name
+    @object = object
+  
+  it = method:
+    # TODO
+  
+  run = method:
+    # TODO
+
+describe = method:
+  $spec = Spec new(call args at(0) name, call eval_arg(0))
+  call args at(1) eval_on($spec)
+
+at_exit:
+  $spec run

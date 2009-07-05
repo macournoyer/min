@@ -8,6 +8,7 @@ public class MinObject {
   static public MinObject lobby;
   static public MinObject object;
   static public MinObject call;
+  static public MinObject message;
   static public MinObject method;
   static public MinObject string;
   static public MinObject number;

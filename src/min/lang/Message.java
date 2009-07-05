@@ -11,6 +11,7 @@ public class Message extends MinObject {
   MinObject cachedResponse;
   
   public Message(String name, MinObject cachedResponse) {
+    super(MinObject.message);
     this.name = name;
     this.next = null;
     this.prev = null;

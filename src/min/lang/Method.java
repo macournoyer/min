@@ -28,6 +28,7 @@ public class Method extends MinObject {
     context.setSlot("@", originatorCall.receiver);
     context.setSlot("call", call);
     context.setSlot("kind", MinObject.newString("MethodContext"));
+    context.setSlot("context", context);
     for (int i = 0; i < argNames.length; i++)
       context.setSlot(argNames[i], call.evalArg(i));
     return context;
