@@ -1,4 +1,4 @@
-- implement control flow methods in Min
+✓ implement control flow methods in Min
 - implement specs in Min
 - handle exceptions
 - check arguments passed vs arguments declared in method

@@ -52,12 +52,10 @@ public class Message extends MinObject {
     return this;
   }
 
-  public Message pop(boolean untilTerm) {
+  public Message pop() {
     Message tail = this.next;
     Message prev = null;
-    if (untilTerm) {
-      while (tail != null && !tail.isTerminator()) tail = tail.next;
-    }
+    while (tail != null && !tail.isTerminator()) tail = tail.next;
     if (tail != null) prev = tail.prev;
     this.prev.next = tail;
     this.prev = null;
@@ -71,11 +69,11 @@ public class Message extends MinObject {
       var.next = null;
       this.args = new ArrayList<Message>();
       this.args.add(var);
-      this.args.add(this.next.pop(true));
+      this.args.add(this.next.pop());
       this.prev.replace(this);
     } else if (isBinaryOperator()) {
       this.args = new ArrayList<Message>();
-      this.args.add(this.next.pop(false));
+      this.args.add(this.next.pop());
     }
     for (Message arg : this.args) arg.shuffle();
     if (this.next != null) this.next.shuffle();

@@ -49,6 +49,11 @@ public class Bootstrap {
           return call.receiver.setSlot(call.args.get(0).name, call.evalArg(1));
         }
       }).
+      slot("set_slot", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return call.receiver.setSlot(call.evalArg(0).getDataAsString(), call.evalArg(1));
+        }
+      }).
       slot("inspect", new Method() {
         public MinObject activate(Call call) throws MinException {
           return MinObject.newString(call.receiver.toString());
@@ -119,6 +124,15 @@ public class Bootstrap {
           MinObject obj = call.evalArg(0);
           call.receiver.getDataAsArray().add(obj);
           return obj;
+        }
+      });
+    
+    // Call
+    MinObject.call.
+      slot("eval_arg", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          Call c = (Call)call.receiver;
+          return c.evalArg(call.evalArg(0).getDataAsNumber());
         }
       });
     

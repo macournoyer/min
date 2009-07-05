@@ -1,0 +1,22 @@
+Object do:
+  set_slot("&&", method(call eval_arg(0)))
+  set_slot("||", method(self))
+
+false do:
+  set_slot("&&", false)
+  set_slot("||", method(call eval_arg(0)))
+
+nil do:
+  set_slot("&&", nil)
+  set_slot("||", method(call eval_arg(0)))
+
+if = method(cond):
+  cond && call eval_arg(1)
+
+unless = method(cond):
+  cond || call eval_arg(1)
+
+while = method(cond):
+  if(cond):
+    call eval_arg(1)
+    while(cond, call eval_arg(1))
