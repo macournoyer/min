@@ -2,6 +2,7 @@
   <target name="init">
     <mkdir dir="classes"/>
     <dirname property="pwd" file="build.xml" />
+    <mkdir dir="classes/min/lang"/>
     <propertyfile file="classes/min/lang/default.properties">
       <entry key="lib.path" value="${pwd}/lib"/>
     </propertyfile>

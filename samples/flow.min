@@ -1,6 +1,12 @@
+do_it = method:
+  "it" print
+
+x = 10
+
 if(x > 1):
   do_it
 
 while(x > 1):
   do_it
+  x = x - 1
 
