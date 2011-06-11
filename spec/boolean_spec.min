@@ -4,4 +4,4 @@ describe(Object):
   it: should be true
   it: should not be false
 
-Spec all each(run)
+# Spec all each(run)
