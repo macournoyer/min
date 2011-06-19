@@ -1,10 +1,10 @@
 items = Array new(1, 2, 3)
-items at(1) println
+# items at(1) println
+# 
+# items each(i): i println
+# # or
+# items each(i, i println)
+# # or
+# items each(println)
 
-items each(i): i print
-# or
-items each(i, i print)
-# or
-items each(print)
-
-# items select(> 1) map(* 2) join("\n")
+items select(> 1) println # map(* 2) join("\n")

@@ -5,22 +5,26 @@ import java.util.Collection;
 
 public class Message extends MinObject {
   String name;
+  String file;
+  int line;
   Message prev;
   Message next;
   ArrayList<Message> args;
   MinObject cachedResponse;
   
-  public Message(String name, MinObject cachedResponse) {
+  public Message(String name, String file, int line, MinObject cachedResponse) {
     super(MinObject.message);
     this.name = name;
+    this.file = file;
+    this.line = line;
     this.next = null;
     this.prev = null;
     this.args = new ArrayList<Message>();
     this.cachedResponse = cachedResponse;
   }
   
-  public Message(String name) {
-    this(name, null);
+  public Message(String name, String file, int line) {
+    this(name, file, line, null);
   }
   
   public void setNext(Message next) {
@@ -88,10 +92,17 @@ public class Message extends MinObject {
     }
     
     MinObject response = null;
-    if (this.cachedResponse == null)
-      response = on.getSlot(this.name).activate(new Call(this, on, base, args));
-    else
+    if (this.cachedResponse == null) {
+      try {
+        response = on.getSlot(this.name).activate(new Call(this, on, base, args));
+      } catch (Exception e) {
+        // TODO Handle catching exception
+        if (e instanceof MinException && e.getCause() != null) throw (MinException)e;
+        throw new MinException(String.format("%s in %s:%d", e.getMessage(), file, line), e);
+      }
+    } else {
       response = this.cachedResponse;
+    }
     
     if (this.next == null) return response;
     return this.next.evalOn(response, base);
@@ -130,14 +141,18 @@ public class Message extends MinObject {
   }
   
   public Message clone() {
-    Message m = new Message(this.name, this.cachedResponse);
+    Message m = new Message(name, file, line, cachedResponse);
     m.next = this.next;
     m.prev = this.prev;
     m.args = this.args;
     return m;
   }
   
+  static public Message parse(String code, String file) throws ParsingException {
+    return new Scanner(code, file).scan().shuffle();
+  }
+  
   static public Message parse(String code) throws ParsingException {
-    return new Scanner(code).scan().shuffle();
+    return new Scanner(code, "<eval>").scan().shuffle();
   }
 }

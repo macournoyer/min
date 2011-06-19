@@ -1,30 +1,34 @@
 Spec = Object clone do:
   all = Array new
   
-  initialize = method(name, object):
+  Matcher = Object clone do:
+    initialize = method(object):
+      @object = object
+    
+    set_slot("=="):
+      method(expected):
+        if(@object != expected):
+          "  " print
+          $current_test print
+          ". FAILED! Was: " print
+          @object println
+  
+  initialize = method(name):
     @name = name
-    @object = object
+    name println
   
-  should = method:
-    # TODO
-  
-  run = method:
-    # TODO
+  it = method(name):
+    $current_test = name
+    call args last eval_on(@)
+    $current_test = nil
 
-ShouldProxy = Object clone do:
-  initialize = method(object)
-    @object = object
-  
-  be = method(other):
-    if(@object != other): "should be but was not" println
 
-describe = method:
-  spec = Spec new(call args at(0) name, call eval_arg(0))
-  call args at(1) eval_on(spec)
+describe = method(name):
+  spec = Spec new(name)
+  call args second eval_on(spec)
   Spec all << spec
 
-Object do:
-  should = method: ShouldProxy new(self)
 
-# at_exit:
-#   Spec all each(run)
+Object do:
+  should = method:
+    Spec Matcher new(@)

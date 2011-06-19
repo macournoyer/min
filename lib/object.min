@@ -1,0 +1,5 @@
+Object do:
+  alias = method:
+    new_name = call args at(0) name
+    old_name = call args at(1) name
+    self set_slot(new_name, get_slot(old_name))

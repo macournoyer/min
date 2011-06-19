@@ -1,0 +1,13 @@
+Array do:
+  alias(@, at)
+  
+  first  = method: @at(0)
+  second = method: @at(1)
+  last   = method: @at(@size - 1)
+  
+  select = method:
+    selected = Array new
+    @each(i):
+      if(call args at(0) eval_on(i)):
+        selected << i
+    selected    

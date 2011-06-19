@@ -25,7 +25,7 @@ public class MinObject {
     protos = new ArrayList<MinObject>();
     if (proto != null) protos.add(proto);
     slots = new HashMap<String, MinObject>();
-    data = data;
+    this.data = data;
   }
   
   public MinObject(MinObject proto) {
@@ -45,6 +45,11 @@ public class MinObject {
   }
   
   public MinObject setSlot(String name, MinObject value) {
+    // If name starts w/ a capital letter, we're creating a kind.
+    // Automaticly set the slot accordingly.
+    if (Character.isUpperCase(name.charAt(0))) {
+      value.asKind(name);
+    }
     slots.put(name, value);
     return value;
   }
@@ -68,11 +73,19 @@ public class MinObject {
     for (MinObject proto : protos) {
       if (proto.hasSlot(name)) return proto.getSlot(name);
     }
-    throw new SlotNotFound("Slot '" + name + "' not found");
+    throw new SlotNotFound("Slot '" + name + "' not found on " + kind());
   }
   
   public MinObject removeSlot(String name) {
     return slots.remove(name);
+  }
+  
+  public String kind() {
+    try {
+      return getSlot("kind").getDataAsString();
+    } catch (SlotNotFound e) {
+      return "?";
+    }
   }
   
   public Object getData() {
@@ -93,8 +106,14 @@ public class MinObject {
   }
   
   public String toString() {
-    return "<data:" + (data == null ? "null" : data.toString()) +
-           " slots:" + slots.toString() + ">";
+    return "<" + kind() + "#" + getObjectID() +
+           (data == null ? "" : " data:" + data.toString()) +
+           // (slots.isEmpty() ? "" : " slots:" + slots.toString()) +
+           ">";
+  }
+  
+  public Integer getObjectID() {
+    return System.identityHashCode(this);
   }
   
   public MinObject activate(Call call) throws MinException {
@@ -102,7 +121,12 @@ public class MinObject {
   }
   
   public MinObject clone() {
-    Object data = this.data; // maybe clone data?
+    Object data = this.data;
+    if (data instanceof ArrayList) {
+      data = new ArrayList<MinObject>();
+      // TODO copy array content?
+      // Collections.copy(data, this.data);
+    }
     return new MinObject(this, data);
   }
   
@@ -121,14 +145,22 @@ public class MinObject {
     String code = null;
     for (MinObject path : loadPath) {
       String filePath = path.getDataAsString() + "/" + file + ".min";
-      if (File.exists(filePath)) code = File.read(filePath);
+      if (File.exists(filePath)) {
+        file = filePath;
+        code = File.read(filePath);
+        break;
+      }
     }
     if (code == null) throw new MinException("File not found: " + file);
-    return Message.parse(code).evalOn(MinObject.lobby);
+    return Message.parse(code, file).evalOn(MinObject.lobby);
   }
   
   public static MinObject newString(String str) {
     return MinObject.string.clone().with(str);
+  }
+  
+  public static MinObject newBool(Boolean value) {
+    return value ? _true : _false;
   }
 
   public static MinObject newNumber(Integer i) {

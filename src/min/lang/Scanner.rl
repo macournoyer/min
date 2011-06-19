@@ -4,16 +4,20 @@ import java.util.Stack;
 
 public class Scanner {
   final String input;
+  final String filename;
+  int line;
   Message root = null;
   Message message = null;
   Stack<Message> argStack = new Stack<Message>();
   Stack<Integer> indentStack = new Stack<Integer>();
   int currentIndent = 0;
   boolean inBlock = false;
+  boolean singleBlock = false;
   boolean debug = false;
 
-  public Scanner(String input) {
+  public Scanner(String input, String filename) {
     this.input = input;
+    this.filename = filename;
   }
 
   %%{
@@ -21,7 +25,7 @@ public class Scanner {
     
     action mark { mark = p; }
     
-    newline     = "\r"? "\n" %{ lineno++; };
+    newline     = "\r"? "\n" %{ line++; };
     indent      = "  " | "\t";
     block       = newline %mark indent+;
     whitespace  = " ";
@@ -47,26 +51,30 @@ public class Scanner {
         // creating new block
         startBlock();
         // add indent level
-        debugIndent(lineno, "+", indent);
         pushIndent(indent);
+        debugIndent("+", indent);
       };
       ":" => {
-        startBlock();
+        startSingleBlock();
         pushIndent(0);
+        debugIndent("+", 0);
       };
       block => {
         int indent = (te - mark) / 2;
-        if (indent > currentIndent) { // indent in same block
-          debugIndent(lineno, "/", indent);
-        } else if (indent == currentIndent) { // same block
-          debugIndent(lineno, "=", indent);
+        if (!singleBlock && indent > currentIndent) { // indent in same block
+          debugIndent("/", indent);
+        } else if (!singleBlock && indent == currentIndent) { // same block
           pushTerminator();
-        } else if (inBlock && indent < currentIndent) { // dedent
-          debugIndent(lineno, "-", indent);
-          indentStack.pop();
-          message = argStack.pop();
-          if (argStack.empty()) inBlock = false;
-          pushTerminator();
+          debugIndent("=", indent);
+        } else if (singleBlock || inBlock && indent < currentIndent) { // dedent
+          while (!indentStack.isEmpty() && indentStack.peek() != indent) {
+            indentStack.pop();
+            message = argStack.pop();
+            if (argStack.empty()) inBlock = false;
+            singleBlock = false;
+            pushTerminator();
+            debugIndent("-", indent);
+          }
         } else {
           pushTerminator();
         }
@@ -82,14 +90,14 @@ public class Scanner {
       comment;
       
       # Symbols and literals
-      string           => { pushMessage(new Message(getSlice(ts, te), MinObject.newString(getSlice(ts + 1, te - 1)))); };
-      number           => { pushMessage(new Message(getSlice(ts, te), MinObject.newNumber(Integer.parseInt(getSlice(ts, te))))); };
-      symbol           => { pushMessage(new Message(getSlice(ts, te))); };
+      string           => { pushMessage(new Message(getSlice(ts, te), filename, line, MinObject.newString(getSlice(ts + 1, te - 1)))); };
+      number           => { pushMessage(new Message(getSlice(ts, te), filename, line, MinObject.newNumber(Integer.parseInt(getSlice(ts, te))))); };
+      symbol           => { pushMessage(new Message(getSlice(ts, te), filename, line)); };
       "(" terminator*  => { argStack.push(message); message = null; };
       "," terminator*  => { message = null; };
       ")"              => {
         if (argStack.empty())
-          throw new ParsingException("Unmatched closing parenthesis at line " + lineno);
+          throw new ParsingException("Unmatched closing parenthesis at line " + line);
         message = argStack.pop();
       };
     *|;
@@ -104,20 +112,20 @@ public class Scanner {
     int eof = data.length;
     int p = 0, pe = eof, ts = 0, te = 0, act = 0, mark = 0;
     int[] stack = new int[32];
-    int lineno = 1;
+    line = 1;
     
     %% write init;
     %% write exec;
     
     if (cs == Scanner_error || p != pe)
-      throw new ParsingException(String.format("Syntax error at line %d around '%s...'", lineno, input.substring(p, Math.min(p+5, pe))));
+      throw new ParsingException(String.format("Syntax error at line %d around '%s...'", line, input.substring(p, Math.min(p+5, pe))));
     
-    if (root == null) return new Message("\n");
+    if (root == null) return new Message("\n", filename, line);
     
     emptyIndentStack();
     
     if (!argStack.empty())
-      throw new ParsingException(argStack.size() + " unclosed parenthesis at line " + lineno);
+      throw new ParsingException(argStack.size() + " unclosed parenthesis at line " + line);
     
     return root;
   }
@@ -153,11 +161,18 @@ public class Scanner {
   }
   
   private Message pushTerminator() {
-    return pushUniqueMessage(new Message("\n"));
+    return pushUniqueMessage(new Message("\n", filename, line));
   }
   
   private void startBlock() {
     inBlock = true;
+    argStack.push(message);
+    message = null;
+  }
+  
+  private void startSingleBlock() {
+    inBlock = true;
+    singleBlock = true;
     argStack.push(message);
     message = null;
   }
@@ -167,8 +182,8 @@ public class Scanner {
     currentIndent = indent;
   }
   
-  private void debugIndent(int lineno, String action, int indent) {
+  private void debugIndent(String action, int indent) {
     if (debug)
-      System.out.println(String.format("[%2d] %s to %d was %d (indentStack: %d)", lineno-1, action, indent, currentIndent, indentStack.size()));
+      System.out.println(String.format("[%s:%02d] %s to %d was %d    indentStack: %-20s  singleBlock? %b", filename, line, action, indent, currentIndent, indentStack.toString(), singleBlock));
   }
 }

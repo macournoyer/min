@@ -6,7 +6,11 @@ public class MinException extends Exception {
     super(message);
   }
 
-  public MinException(Exception inner) {
-    super(inner);
+  public MinException(Throwable cause) {
+    super(cause);
+  }
+  
+  public MinException(String message, Throwable cause) {
+    super(message, cause);
   }
 }

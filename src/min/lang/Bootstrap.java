@@ -12,13 +12,15 @@ public class Bootstrap {
     MinObject object = base.clone();
     MinObject lobby = base.clone();
     object.prependProto(lobby);
+    MinObject.object = object;
+    MinObject.string = object.clone().with("");
     
     // Introduce objects into Lobby
     MinObject.base = lobby.setSlot("Base", base);
     MinObject.lobby = lobby.setSlot("Lobby", lobby);
     lobby.setSlot("$", lobby);
-    MinObject.object = lobby.setSlot("Object", object);
-    MinObject.string = lobby.setSlot("String", object.clone().with(""));
+    lobby.setSlot("Object", MinObject.object);
+    lobby.setSlot("String", MinObject.string);
     MinObject.base.asKind("Base");
     MinObject.lobby.asKind("Lobby");
     MinObject.object.asKind("Object");
@@ -81,6 +83,11 @@ public class Bootstrap {
           String file = call.evalArg(0).getDataAsString();
           return MinObject.require(file);
         }
+      }).
+      slot("pass", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return MinObject.nil;
+        }
       });
     
     // Object
@@ -92,7 +99,17 @@ public class Bootstrap {
       }).
       slot("object_id", new Method() {
         public MinObject activate(Call call) {
-          return MinObject.newNumber(System.identityHashCode(call.receiver));
+          return MinObject.newNumber(call.receiver.getObjectID());
+        }
+      }).
+      slot("protos", new Method() {
+        public MinObject activate(Call call) {
+          return MinObject.newArray(call.receiver.protos);
+        }
+      }).
+      slot("inspect", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return MinObject.newString(call.receiver.toString());
         }
       }).
       slot("print", new Method() {
@@ -114,6 +131,16 @@ public class Bootstrap {
           if (c.hasSlot("initialize")) c.getSlot("initialize").activate(call);
           return c;
         }
+      }).
+      slot("==", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return MinObject.newBool(call.receiver.getData().equals(call.evalArg(0).getData()));
+        }
+      }).
+      slot("!=", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return MinObject.newBool(!call.receiver.getData().equals(call.evalArg(0).getData()));
+        }
       });
     
     // String
@@ -121,6 +148,11 @@ public class Bootstrap {
       slot("+", new Method() {
         public MinObject activate(Call call) throws MinException {
           return MinObject.newString(call.receiver.getDataAsString() + call.evalArg(0).getDataAsString());
+        }
+      }).
+      slot("size", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return MinObject.newNumber(call.receiver.getDataAsString().length());
         }
       });
 
@@ -159,7 +191,10 @@ public class Bootstrap {
       }).
       slot("at", new Method() {
         public MinObject activate(Call call) throws MinException {
-          return call.receiver.getDataAsArray().get(call.evalArg(0).getDataAsNumber());
+          int at = call.evalArg(0).getDataAsNumber();
+          ArrayList<MinObject> array = call.receiver.getDataAsArray();
+          if (at >= array.size()) return MinObject.nil;
+          return array.get(at);
         }
       }).
       slot("size", new Method() {
@@ -195,16 +230,27 @@ public class Bootstrap {
     
     // Message
     MinObject.message.
+      slot("new", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return Message.parse(call.evalArg(0).getDataAsString());
+        }
+      }).
       slot("name", new Method() {
         public MinObject activate(Call call) throws MinException {
           Message m = (Message)call.receiver;
           return MinObject.newString(m.name);
         }
       }).
-      slot("to_s", new Method() {
+      slot("prev", new Method() {
         public MinObject activate(Call call) throws MinException {
           Message m = (Message)call.receiver;
-          return MinObject.newString(m.toString());
+          return m.prev;
+        }
+      }).
+      slot("next", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          Message m = (Message)call.receiver;
+          return m.next;
         }
       }).
       slot("eval_on", new Method() {
@@ -226,6 +272,21 @@ public class Bootstrap {
         public MinObject activate(Call call) throws MinException {
           Call c = (Call)call.receiver;
           return MinObject.newArray(c.args.toArray(new MinObject[0]));
+        }
+      }).
+      slot("receiver", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return call.receiver;
+        }
+      }).
+      slot("base", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return call.base;
+        }
+      }).
+      slot("message", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return call.message;
         }
       });
     

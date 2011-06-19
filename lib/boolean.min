@@ -1,7 +1,12 @@
 # Defines thrutiness like Ruby said so
 Object do:
   set_slot("&&"): method(call eval_arg(0))
-  set_slot("||"): method(self)
+  set_slot("||"): method(@)
+
+set_slot("!"):
+  method(self):
+    if(self): false
+    unless(self): true
 
 false do:
   set_slot("&&"): false
