@@ -8,6 +8,12 @@ Array do:
   select = method:
     selected = Array new
     @each(i):
-      if(call args at(0) eval_on(i)):
+      if(call args first eval_on(i)):
         selected << i
-    selected    
+    selected
+  
+  map = method:
+    values = Array new
+    @each(i):
+      values << call args first eval_on(i)
+    values

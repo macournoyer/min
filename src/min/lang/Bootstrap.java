@@ -177,6 +177,16 @@ public class Bootstrap {
         public MinObject activate(Call call) throws MinException {
           return MinObject.newNumber(call.receiver.getDataAsNumber() * call.evalArg(0).getDataAsNumber());
         }
+      }).
+      slot(">", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return MinObject.newBool(call.receiver.getDataAsNumber() > call.evalArg(0).getDataAsNumber());
+        }
+      }).
+      slot("<", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return MinObject.newBool(call.receiver.getDataAsNumber() < call.evalArg(0).getDataAsNumber());
+        }
       });
 
     // Array
