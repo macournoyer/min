@@ -57,6 +57,7 @@ public class Message extends MinObject {
     return this;
   }
 
+  // Remove the message from the chain
   public Message pop() {
     Message tail = this.next;
     Message prev = null;
@@ -95,6 +96,8 @@ public class Message extends MinObject {
     if (this.cachedResponse == null) {
       try {
         response = on.getSlot(this.name).activate(new Call(this, on, base, args));
+        // Handle some Java null => Min nil conversion
+        if (response == null) response = MinObject.nil;
       } catch (Exception e) {
         // TODO Handle catching exception
         if (e instanceof MinException && e.getCause() != null) throw (MinException)e;

@@ -29,7 +29,7 @@ public class Scanner {
     indent      = "  " | "\t";
     block       = newline %mark indent+;
     whitespace  = " ";
-    comment     = whitespace* "#" (any - newline)* newline;
+    comment     = whitespace* "#" (any - newline)* newline?;
     string      = ("'" (any - "'")* "'" )
                 | ('"' (any - '"')* '"' );
     number      = [0-9]+;

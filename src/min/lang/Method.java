@@ -26,10 +26,11 @@ public class Method extends MinObject {
   
   private MinObject makeContext(Call call) throws MinException {
     MinObject context = call.receiver.clone();
-    context.setSlot("self", call.receiver);
-    context.setSlot("@", call.receiver);
-    context.setSlot("call", call);
-    context.setSlot("context", context);
+    context.asKind("MethodContext").
+            slot("self", call.receiver).
+            slot("@", call.receiver).
+            slot("call", call).
+            slot("context", context);
     for (int i = 0; i < argNames.length; i++)
       context.setSlot(argNames[i], call.evalArg(i));
     return context;

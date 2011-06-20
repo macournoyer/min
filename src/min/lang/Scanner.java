@@ -27,12 +27,12 @@ public class Scanner {
 private static byte[] init__Scanner_actions_0()
 {
 	return new byte [] {
-	    0,    1,    4,    1,   11,    1,   12,    1,   13,    1,   14,    1,
-	   15,    1,   16,    1,   18,    1,   20,    1,   21,    1,   22,    1,
-	   23,    1,   24,    1,   25,    1,   26,    2,    1,    0,    2,    1,
-	   17,    2,    1,   19,    2,    2,    3,    2,    5,    6,    2,    5,
-	    7,    2,    5,    8,    2,    5,    9,    2,    5,   10,    4,    5,
-	    1,    0,    6,    4,    5,    1,    0,    8
+	    0,    1,    2,    1,    3,    1,    4,    1,    9,    1,   10,    1,
+	   11,    1,   12,    1,   13,    1,   14,    1,   16,    1,   17,    1,
+	   18,    1,   19,    1,   20,    1,   21,    1,   22,    1,   23,    1,
+	   24,    2,    1,    0,    2,    1,   15,    2,    1,   17,    2,    4,
+	    5,    2,    4,    6,    2,    4,    7,    2,    4,    8,    4,    4,
+	    1,    0,    5,    4,    4,    1,    0,    7
 	};
 }
 
@@ -42,8 +42,8 @@ private static final byte _Scanner_actions[] = init__Scanner_actions_0();
 private static byte[] init__Scanner_key_offsets_0()
 {
 	return new byte [] {
-	    0,    0,    1,    2,    4,    5,    6,    7,    9,   10,   11,   14,
-	   43,   45,   47,   49,   49,   50,   51,   53,   54,   56,   65,   74,
+	    0,    0,    1,    2,    4,    5,    6,    8,    9,   10,   13,   42,
+	   44,   46,   48,   49,   49,   50,   51,   53,   54,   56,   65,   74,
 	   77,   79,   81
 	};
 }
@@ -54,11 +54,11 @@ private static final byte _Scanner_key_offsets[] = init__Scanner_key_offsets_0()
 private static char[] init__Scanner_trans_keys_0()
 {
 	return new char [] {
-	   32,   10,   32,   35,   10,   34,   39,    9,   32,   32,   10,   10,
-	   13,   32,   10,   13,   32,   33,   34,   35,   38,   39,   40,   41,
-	   42,   44,   58,   59,   60,   64,   94,   95,  124,   36,   47,   48,
-	   57,   61,   62,   65,   90,   97,  122,    9,   32,    9,   32,   32,
-	   35,   61,   38,   46,   59,   42,   46,   59,   33,   63,   95,   48,
+	   32,   10,   32,   35,   34,   39,    9,   32,   32,   10,   10,   13,
+	   32,   10,   13,   32,   33,   34,   35,   38,   39,   40,   41,   42,
+	   44,   58,   59,   60,   64,   94,   95,  124,   36,   47,   48,   57,
+	   61,   62,   65,   90,   97,  122,    9,   32,    9,   32,   32,   35,
+	   10,   61,   38,   46,   59,   42,   46,   59,   33,   63,   95,   48,
 	   57,   65,   90,   97,  122,   33,   63,   95,   48,   57,   65,   90,
 	   97,  122,   10,   13,   32,    9,   32,   60,   61,  124,    0
 	};
@@ -70,8 +70,8 @@ private static final char _Scanner_trans_keys[] = init__Scanner_trans_keys_0();
 private static byte[] init__Scanner_single_lengths_0()
 {
 	return new byte [] {
-	    0,    1,    1,    2,    1,    1,    1,    2,    1,    1,    3,   19,
-	    2,    2,    2,    0,    1,    1,    2,    1,    2,    3,    3,    3,
+	    0,    1,    1,    2,    1,    1,    2,    1,    1,    3,   19,    2,
+	    2,    2,    1,    0,    1,    1,    2,    1,    2,    3,    3,    3,
 	    2,    0,    1
 	};
 }
@@ -82,7 +82,7 @@ private static final byte _Scanner_single_lengths[] = init__Scanner_single_lengt
 private static byte[] init__Scanner_range_lengths_0()
 {
 	return new byte [] {
-	    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    5,
+	    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    5,    0,
 	    0,    0,    0,    0,    0,    0,    0,    0,    0,    3,    3,    0,
 	    0,    1,    0
 	};
@@ -94,8 +94,8 @@ private static final byte _Scanner_range_lengths[] = init__Scanner_range_lengths
 private static byte[] init__Scanner_index_offsets_0()
 {
 	return new byte [] {
-	    0,    0,    2,    4,    7,    9,   11,   13,   16,   18,   20,   24,
-	   49,   52,   55,   58,   59,   61,   63,   66,   68,   71,   78,   85,
+	    0,    0,    2,    4,    7,    9,   11,   14,   16,   18,   22,   47,
+	   50,   53,   56,   58,   59,   61,   63,   66,   68,   71,   78,   85,
 	   89,   92,   94
 	};
 }
@@ -106,14 +106,14 @@ private static final byte _Scanner_index_offsets[] = init__Scanner_index_offsets
 private static byte[] init__Scanner_indicies_0()
 {
 	return new byte [] {
-	    1,    0,    2,    3,    5,    6,    4,    7,    6,    9,    8,    9,
-	   10,   12,   13,   11,   14,    0,   15,   11,   15,   16,   17,   11,
-	    2,   18,   19,   20,    8,    6,   22,   10,   23,   24,   25,   26,
-	   28,   21,   29,   21,   21,   30,   31,   21,   27,   20,   30,   30,
-	    3,   33,   34,   32,    1,   36,   35,    5,    6,   37,   38,   21,
-	   39,   21,   39,   23,   23,   40,   21,   39,   26,   26,   41,   21,
-	   21,   30,   27,   30,   30,   42,   21,   21,   30,   30,   30,   30,
-	   39,   15,   16,   17,   43,   14,   45,   44,   21,   39,   21,   39,
+	    1,    0,    2,    3,    5,    6,    4,    8,    7,    8,    9,   11,
+	   12,   10,   13,    0,   14,   10,   14,   15,   16,   10,    2,   17,
+	   18,   19,    7,    6,   21,    9,   22,   23,   24,   25,   27,   20,
+	   28,   20,   20,   29,   30,   20,   26,   19,   29,   29,    3,   32,
+	   33,   31,    1,   35,   34,    5,    6,   36,   38,    6,   39,   20,
+	   40,   20,   40,   22,   22,   41,   20,   40,   25,   25,   42,   20,
+	   20,   29,   26,   29,   29,   43,   20,   20,   29,   29,   29,   29,
+	   40,   14,   15,   16,   44,   13,   46,   45,   20,   40,   20,   40,
 	    0
 	};
 }
@@ -124,10 +124,10 @@ private static final byte _Scanner_indicies[] = init__Scanner_indicies_0();
 private static byte[] init__Scanner_trans_targs_0()
 {
 	return new byte [] {
-	   11,   13,   12,    0,   11,    3,    4,   15,    5,   11,    6,   11,
-	   24,    8,   24,    7,    9,   10,    2,   14,   16,   11,   17,   18,
-	   11,   19,   20,   21,   23,   25,   22,   26,   11,   13,    1,   11,
-	    1,   11,   11,   11,   11,   11,   11,   11,   11,    8
+	   10,   12,   11,    0,   10,    3,   14,    4,   10,    5,   10,   24,
+	    7,   24,    6,    8,    9,    2,   13,   16,   10,   17,   18,   10,
+	   19,   20,   21,   23,   25,   22,   26,   10,   12,    1,   10,    1,
+	   10,   10,   15,   10,   10,   10,   10,   10,   10,   10,    7
 	};
 }
 
@@ -137,10 +137,10 @@ private static final byte _Scanner_trans_targs[] = init__Scanner_trans_targs_0()
 private static byte[] init__Scanner_trans_actions_0()
 {
 	return new byte [] {
-	   29,   49,   52,    0,   27,    0,    0,    0,    0,    3,    0,   25,
-	   58,   31,   43,    0,    0,    0,    0,   55,    0,    5,    0,    0,
-	    7,    0,    0,    0,   46,    0,    0,    0,   34,   63,   31,   13,
-	    0,   15,   37,   19,   21,   23,   17,   11,    9,    0
+	   35,   52,   55,    0,   33,    0,    0,    0,    7,    0,   31,   58,
+	   37,   46,    0,    0,    0,    0,    5,    0,    9,    0,    0,   11,
+	    0,    0,    0,   49,    0,    0,    0,   40,   63,   37,   17,    0,
+	   19,   21,    0,   43,   25,   27,   29,   23,   15,   13,    0
 	};
 }
 
@@ -150,7 +150,7 @@ private static final byte _Scanner_trans_actions[] = init__Scanner_trans_actions
 private static byte[] init__Scanner_to_state_actions_0()
 {
 	return new byte [] {
-	    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,   40,
+	    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    1,    0,
 	    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
 	    0,    0,    0
 	};
@@ -162,7 +162,7 @@ private static final byte _Scanner_to_state_actions[] = init__Scanner_to_state_a
 private static byte[] init__Scanner_from_state_actions_0()
 {
 	return new byte [] {
-	    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    1,
+	    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    3,    0,
 	    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
 	    0,    0,    0
 	};
@@ -174,19 +174,19 @@ private static final byte _Scanner_from_state_actions[] = init__Scanner_from_sta
 private static byte[] init__Scanner_eof_trans_0()
 {
 	return new byte [] {
-	    0,    1,    0,    5,    1,    0,    0,   12,    1,   12,   12,    0,
-	   33,   36,   38,   39,   40,   40,   41,   40,   42,   43,   40,   44,
-	   45,   40,   40
+	    0,    1,    0,    5,    0,    0,   11,    1,   11,   11,    0,   32,
+	   35,   37,   38,   40,   41,   41,   42,   41,   43,   44,   41,   45,
+	   46,   41,   41
 	};
 }
 
 private static final byte _Scanner_eof_trans[] = init__Scanner_eof_trans_0();
 
 
-static final int Scanner_start = 11;
+static final int Scanner_start = 10;
 static final int Scanner_error = 0;
 
-static final int Scanner_en_main = 11;
+static final int Scanner_en_main = 10;
 
 
 // line 106 "src/min/lang/Scanner.rl"
@@ -237,7 +237,7 @@ case 1:
 	_nacts = (int) _Scanner_actions[_acts++];
 	while ( _nacts-- > 0 ) {
 		switch ( _Scanner_actions[_acts++] ) {
-	case 4:
+	case 3:
 // line 1 "src/min/lang/Scanner.rl"
 	{ts = p;}
 	break;
@@ -313,39 +313,35 @@ case 3:
 // line 28 "src/min/lang/Scanner.rl"
 	{ line++; }
 	break;
-	case 5:
+	case 4:
 // line 1 "src/min/lang/Scanner.rl"
 	{te = p+1;}
 	break;
-	case 6:
+	case 5:
 // line 49 "src/min/lang/Scanner.rl"
 	{act = 1;}
 	break;
-	case 7:
+	case 6:
 // line 57 "src/min/lang/Scanner.rl"
 	{act = 2;}
 	break;
-	case 8:
+	case 7:
 // line 62 "src/min/lang/Scanner.rl"
 	{act = 3;}
 	break;
-	case 9:
+	case 8:
 // line 83 "src/min/lang/Scanner.rl"
 	{act = 4;}
 	break;
-	case 10:
-// line 89 "src/min/lang/Scanner.rl"
-	{act = 5;}
-	break;
-	case 11:
+	case 9:
 // line 93 "src/min/lang/Scanner.rl"
 	{te = p+1;{ pushMessage(new Message(getSlice(ts, te), filename, line, MinObject.newString(getSlice(ts + 1, te - 1)))); }}
 	break;
-	case 12:
+	case 10:
 // line 95 "src/min/lang/Scanner.rl"
 	{te = p+1;{ pushMessage(new Message(getSlice(ts, te), filename, line)); }}
 	break;
-	case 13:
+	case 11:
 // line 98 "src/min/lang/Scanner.rl"
 	{te = p+1;{
         if (argStack.empty())
@@ -353,7 +349,7 @@ case 3:
         message = argStack.pop();
       }}
 	break;
-	case 14:
+	case 12:
 // line 49 "src/min/lang/Scanner.rl"
 	{te = p;p--;{
         int indent = (te - mark) / 2;
@@ -364,7 +360,7 @@ case 3:
         debugIndent("+", indent);
       }}
 	break;
-	case 15:
+	case 13:
 // line 57 "src/min/lang/Scanner.rl"
 	{te = p;p--;{
         startSingleBlock();
@@ -372,7 +368,7 @@ case 3:
         debugIndent("+", 0);
       }}
 	break;
-	case 16:
+	case 14:
 // line 62 "src/min/lang/Scanner.rl"
 	{te = p;p--;{
         int indent = (te - mark) / 2;
@@ -396,38 +392,38 @@ case 3:
         currentIndent = indent;
       }}
 	break;
-	case 17:
+	case 15:
 // line 83 "src/min/lang/Scanner.rl"
 	{te = p;p--;{
         emptyIndentStack();
         pushTerminator();
       }}
 	break;
-	case 18:
+	case 16:
 // line 89 "src/min/lang/Scanner.rl"
 	{te = p;p--;}
 	break;
-	case 19:
+	case 17:
 // line 90 "src/min/lang/Scanner.rl"
 	{te = p;p--;}
 	break;
-	case 20:
+	case 18:
 // line 94 "src/min/lang/Scanner.rl"
 	{te = p;p--;{ pushMessage(new Message(getSlice(ts, te), filename, line, MinObject.newNumber(Integer.parseInt(getSlice(ts, te))))); }}
 	break;
-	case 21:
+	case 19:
 // line 95 "src/min/lang/Scanner.rl"
 	{te = p;p--;{ pushMessage(new Message(getSlice(ts, te), filename, line)); }}
 	break;
-	case 22:
+	case 20:
 // line 96 "src/min/lang/Scanner.rl"
 	{te = p;p--;{ argStack.push(message); message = null; }}
 	break;
-	case 23:
+	case 21:
 // line 97 "src/min/lang/Scanner.rl"
 	{te = p;p--;{ message = null; }}
 	break;
-	case 24:
+	case 22:
 // line 57 "src/min/lang/Scanner.rl"
 	{{p = ((te))-1;}{
         startSingleBlock();
@@ -435,16 +431,13 @@ case 3:
         debugIndent("+", 0);
       }}
 	break;
-	case 25:
+	case 23:
 // line 89 "src/min/lang/Scanner.rl"
 	{{p = ((te))-1;}}
 	break;
-	case 26:
+	case 24:
 // line 1 "src/min/lang/Scanner.rl"
 	{	switch( act ) {
-	case 0:
-	{{cs = 0; _goto_targ = 2; if (true) continue _goto;}}
-	break;
 	case 1:
 	{{p = ((te))-1;}
         int indent = (te - mark) / 2;
@@ -491,13 +484,10 @@ case 3:
         pushTerminator();
       }
 	break;
-	default:
-	{{p = ((te))-1;}}
-	break;
 	}
 	}
 	break;
-// line 501 "src/min/lang/Scanner.java"
+// line 491 "src/min/lang/Scanner.java"
 			}
 		}
 	}
@@ -511,11 +501,7 @@ case 2:
 // line 1 "src/min/lang/Scanner.rl"
 	{ts = -1;}
 	break;
-	case 3:
-// line 1 "src/min/lang/Scanner.rl"
-	{act = 0;}
-	break;
-// line 519 "src/min/lang/Scanner.java"
+// line 505 "src/min/lang/Scanner.java"
 		}
 	}
 

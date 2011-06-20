@@ -263,6 +263,24 @@ public class Bootstrap {
           return m.next;
         }
       }).
+      slot("args", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          Message m = (Message)call.receiver;
+          return MinObject.newArray(m.args.toArray(new MinObject[0]));
+        }
+      }).
+      slot("terminator?", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          Message m = (Message)call.receiver;
+          return MinObject.newBool(m.isTerminator());
+        }
+      }).
+      slot("pop", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          Message m = (Message)call.receiver;
+          return m.pop();
+        }
+      }).
       slot("eval_on", new Method() {
         public MinObject activate(Call call) throws MinException {
           Message m = (Message)call.receiver;
@@ -286,17 +304,20 @@ public class Bootstrap {
       }).
       slot("receiver", new Method() {
         public MinObject activate(Call call) throws MinException {
-          return call.receiver;
+          Call c = (Call)call.receiver;
+          return c.receiver;
         }
       }).
       slot("base", new Method() {
         public MinObject activate(Call call) throws MinException {
-          return call.base;
+          Call c = (Call)call.receiver;
+          return c.base;
         }
       }).
       slot("message", new Method() {
         public MinObject activate(Call call) throws MinException {
-          return call.message;
+          Call c = (Call)call.receiver;
+          return c.message;
         }
       });
     

@@ -26,4 +26,14 @@ public class Call extends MinObject {
     if (at >= args.size()) return MinObject.nil;
     return args.get(at).evalOn(base);
   }
+  
+  public String toString() {
+    return "<" + kind() + "#" + getObjectID() +
+           " message:" + message.toString() +
+           " receiver:" + receiver.toString() +
+           " base:" + base.toString() +
+           " args:" + args.toString() +
+           ">";
+  }
+  
 }

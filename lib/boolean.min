@@ -17,8 +17,15 @@ nil do:
   set_slot("||"): method(call eval_arg(0))
 
 # Control flow methods
-if = method(cond):
-  cond && call eval_arg(1)
+if = method:
+  call eval_arg(0) && call eval_arg(1)
+
+# If with else block support.
+# if = method:
+#   next_message = call message next next
+#   else_message = next_message ?name == "else" && next_message pop
+#   condition = call eval_arg(0)
+#   condition && call eval_arg(1) || else_message ?eval_arg(0)
 
 unless = method(cond):
   cond || call eval_arg(1)
