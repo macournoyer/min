@@ -2,3 +2,4 @@
 - () for order of eval
 - handle exceptions
 - string interpolation in "... #{...} ..."
+- implement `return`

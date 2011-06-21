@@ -73,20 +73,23 @@ public class Message extends MinObject {
     return this;
   }
   
-  public Message shuffle() {
+  public Message shuffle() throws ParsingException {
     if (isTernaryOperator()) {
-      Message var = this.prev.clone();
+      if (prev == null) throw new ParsingException("Missing variable name before =", file, line);
+      Message var = prev.clone();
       var.next = null;
-      this.args = new ArrayList<Message>();
-      this.args.add(var);
-      this.args.add(this.next.pop());
-      this.prev.replace(this);
+      args = new ArrayList<Message>();
+      args.add(var);
+      if (next == null) throw new ParsingException(String.format("Missing value after %s =", var.name), file, line);
+      args.add(next.pop());
+      prev.replace(this);
     } else if (isBinaryOperator()) {
       this.args = new ArrayList<Message>();
-      this.args.add(this.next.pop());
+      if (next == null) throw new ParsingException(String.format("Missing value after %s", name), file, line);
+      args.add(next.pop());
     }
-    for (Message arg : this.args) arg.shuffle();
-    if (this.next != null) this.next.shuffle();
+    for (Message arg : args) arg.shuffle();
+    if (next != null) next.shuffle();
     return this;
   }
   

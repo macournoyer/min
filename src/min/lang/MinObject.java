@@ -47,7 +47,7 @@ public class MinObject {
   public MinObject setSlot(String name, MinObject value) {
     // If name starts w/ a capital letter, we're creating a kind.
     // Automaticly set the slot accordingly.
-    if (Character.isUpperCase(name.charAt(0))) {
+    if (name.length() > 0 && Character.isUpperCase(name.charAt(0))) {
       value.asKind(name);
     }
     slots.put(name, value);

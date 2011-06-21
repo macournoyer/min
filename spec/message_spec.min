@@ -10,4 +10,10 @@ describe("+ shuffling"):
 describe("&& shuffling"):
   it("includes entire message chain"):
     Message new("1 && 2 print") inspect should == "1 &&(2 print)"
+
+describe("(...)"):
+  it("parses parenthesis as anonymous message"):
+    Message new("(holla)") inspect should == "(holla)"
   
+  it("parses parenthesis after assignation"):
+    Message new("x = (1 + 2)") inspect should == "=(x, (1 +(2)))"

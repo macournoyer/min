@@ -42,7 +42,7 @@ public class Scanner {
                 | "==" | "!=" | "!"
                 | "="
                 | "?";
-    terminator  = ";" | ".";
+    terminator  = ".";
     symbol      = single | identifier | operator | terminator;
     
     main := |*
@@ -94,7 +94,11 @@ public class Scanner {
       string           => { pushMessage(new Message(getSlice(ts, te), filename, line, MinObject.newString(getSlice(ts + 1, te - 1)))); };
       number           => { pushMessage(new Message(getSlice(ts, te), filename, line, MinObject.newNumber(Integer.parseInt(getSlice(ts, te))))); };
       symbol           => { pushMessage(new Message(getSlice(ts, te), filename, line)); };
-      "(" terminator*  => { argStack.push(message); message = null; };
+      "(" terminator*  => {
+        if (message == null) pushMessage(new Message("", filename, line));
+        argStack.push(message);
+        message = null;
+      };
       "," terminator*  => { message = null; };
       ")"              => {
         if (argStack.empty())
