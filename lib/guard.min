@@ -1,0 +1,8 @@
+# Implement guarded method invogation operator `?`.
+# Usage: potential_nil ?println # println will be called unless potential_nil is nil
+
+Base do:
+  set_slot("?"): method(call args at(0) eval_on(@))
+
+nil do:
+  set_slot("?"): nil

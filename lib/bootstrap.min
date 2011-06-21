@@ -1,5 +1,6 @@
 # This file is required in Java code after the bootstrap process
 
 require("boolean")
+require("guard")
 require("object")
 require("array")

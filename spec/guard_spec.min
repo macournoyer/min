@@ -1,0 +1,7 @@
+require("spec")
+
+describe("?(...)"):
+  it("calls method when not nil"):
+    "holla" ?size should == 5
+  it("do not call method when nil"):
+    nil ?size should == nil

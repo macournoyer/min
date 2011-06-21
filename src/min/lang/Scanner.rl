@@ -40,7 +40,8 @@ public class Scanner {
                 | "<<"
                 | "<=" | "<" | ">=" | ">"
                 | "==" | "!=" | "!"
-                | "=";
+                | "="
+                | "?";
     terminator  = ";" | ".";
     symbol      = single | identifier | operator | terminator;
     

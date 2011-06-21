@@ -46,7 +46,7 @@ public class Message extends MinObject {
            this.name.equals("**") || this.name.equals("^") || this.name.equals("%") || this.name.equals("||") ||
            this.name.equals("|") || this.name.equals("&&") || this.name.equals("&") || this.name.equals("<<") ||
            this.name.equals("<=") || this.name.equals("<") || this.name.equals(">=") || this.name.equals(">") ||
-           this.name.equals("==") || this.name.equals("!=") || this.name.equals("!");
+           this.name.equals("==") || this.name.equals("!=") || this.name.equals("!") || this.name.equals("?");
   }
   
   public Message replace(Message with) {

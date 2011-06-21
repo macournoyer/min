@@ -42,9 +42,9 @@ private static final byte _Scanner_actions[] = init__Scanner_actions_0();
 private static byte[] init__Scanner_key_offsets_0()
 {
 	return new byte [] {
-	    0,    0,    1,    2,    4,    5,    6,    8,    9,   10,   13,   42,
-	   44,   46,   48,   49,   49,   50,   51,   53,   54,   56,   65,   74,
-	   77,   79,   81
+	    0,    0,    1,    2,    4,    5,    6,    8,    9,   10,   13,   43,
+	   45,   47,   49,   50,   50,   51,   52,   54,   55,   57,   66,   75,
+	   78,   80,   82
 	};
 }
 
@@ -56,11 +56,11 @@ private static char[] init__Scanner_trans_keys_0()
 	return new char [] {
 	   32,   10,   32,   35,   34,   39,    9,   32,   32,   10,   10,   13,
 	   32,   10,   13,   32,   33,   34,   35,   38,   39,   40,   41,   42,
-	   44,   58,   59,   60,   64,   94,   95,  124,   36,   47,   48,   57,
-	   61,   62,   65,   90,   97,  122,    9,   32,    9,   32,   32,   35,
-	   10,   61,   38,   46,   59,   42,   46,   59,   33,   63,   95,   48,
-	   57,   65,   90,   97,  122,   33,   63,   95,   48,   57,   65,   90,
-	   97,  122,   10,   13,   32,    9,   32,   60,   61,  124,    0
+	   44,   58,   59,   60,   94,   95,  124,   36,   47,   48,   57,   61,
+	   62,   63,   64,   65,   90,   97,  122,    9,   32,    9,   32,   32,
+	   35,   10,   61,   38,   46,   59,   42,   46,   59,   33,   63,   95,
+	   48,   57,   65,   90,   97,  122,   33,   63,   95,   48,   57,   65,
+	   90,   97,  122,   10,   13,   32,    9,   32,   60,   61,  124,    0
 	};
 }
 
@@ -70,7 +70,7 @@ private static final char _Scanner_trans_keys[] = init__Scanner_trans_keys_0();
 private static byte[] init__Scanner_single_lengths_0()
 {
 	return new byte [] {
-	    0,    1,    1,    2,    1,    1,    2,    1,    1,    3,   19,    2,
+	    0,    1,    1,    2,    1,    1,    2,    1,    1,    3,   18,    2,
 	    2,    2,    1,    0,    1,    1,    2,    1,    2,    3,    3,    3,
 	    2,    0,    1
 	};
@@ -82,7 +82,7 @@ private static final byte _Scanner_single_lengths[] = init__Scanner_single_lengt
 private static byte[] init__Scanner_range_lengths_0()
 {
 	return new byte [] {
-	    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    5,    0,
+	    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    6,    0,
 	    0,    0,    0,    0,    0,    0,    0,    0,    0,    3,    3,    0,
 	    0,    1,    0
 	};
@@ -109,7 +109,7 @@ private static byte[] init__Scanner_indicies_0()
 	    1,    0,    2,    3,    5,    6,    4,    8,    7,    8,    9,   11,
 	   12,   10,   13,    0,   14,   10,   14,   15,   16,   10,    2,   17,
 	   18,   19,    7,    6,   21,    9,   22,   23,   24,   25,   27,   20,
-	   28,   20,   20,   29,   30,   20,   26,   19,   29,   29,    3,   32,
+	   28,   20,   29,   30,   20,   26,   19,   20,   29,   29,    3,   32,
 	   33,   31,    1,   35,   34,    5,    6,   36,   38,    6,   39,   20,
 	   40,   20,   40,   22,   22,   41,   20,   40,   25,   25,   42,   20,
 	   20,   29,   26,   29,   29,   43,   20,   20,   29,   29,   29,   29,
@@ -189,7 +189,7 @@ static final int Scanner_error = 0;
 static final int Scanner_en_main = 10;
 
 
-// line 106 "src/min/lang/Scanner.rl"
+// line 107 "src/min/lang/Scanner.rl"
 
   
   @SuppressWarnings("fallthrough")
@@ -210,7 +210,7 @@ static final int Scanner_en_main = 10;
 	act = 0;
 	}
 
-// line 118 "src/min/lang/Scanner.rl"
+// line 119 "src/min/lang/Scanner.rl"
     
 // line 216 "src/min/lang/Scanner.java"
 	{
@@ -318,31 +318,31 @@ case 3:
 	{te = p+1;}
 	break;
 	case 5:
-// line 49 "src/min/lang/Scanner.rl"
+// line 50 "src/min/lang/Scanner.rl"
 	{act = 1;}
 	break;
 	case 6:
-// line 57 "src/min/lang/Scanner.rl"
+// line 58 "src/min/lang/Scanner.rl"
 	{act = 2;}
 	break;
 	case 7:
-// line 62 "src/min/lang/Scanner.rl"
+// line 63 "src/min/lang/Scanner.rl"
 	{act = 3;}
 	break;
 	case 8:
-// line 83 "src/min/lang/Scanner.rl"
+// line 84 "src/min/lang/Scanner.rl"
 	{act = 4;}
 	break;
 	case 9:
-// line 93 "src/min/lang/Scanner.rl"
+// line 94 "src/min/lang/Scanner.rl"
 	{te = p+1;{ pushMessage(new Message(getSlice(ts, te), filename, line, MinObject.newString(getSlice(ts + 1, te - 1)))); }}
 	break;
 	case 10:
-// line 95 "src/min/lang/Scanner.rl"
+// line 96 "src/min/lang/Scanner.rl"
 	{te = p+1;{ pushMessage(new Message(getSlice(ts, te), filename, line)); }}
 	break;
 	case 11:
-// line 98 "src/min/lang/Scanner.rl"
+// line 99 "src/min/lang/Scanner.rl"
 	{te = p+1;{
         if (argStack.empty())
           throw new ParsingException("Unmatched closing parenthesis at line " + line);
@@ -350,7 +350,7 @@ case 3:
       }}
 	break;
 	case 12:
-// line 49 "src/min/lang/Scanner.rl"
+// line 50 "src/min/lang/Scanner.rl"
 	{te = p;p--;{
         int indent = (te - mark) / 2;
         // creating new block
@@ -361,7 +361,7 @@ case 3:
       }}
 	break;
 	case 13:
-// line 57 "src/min/lang/Scanner.rl"
+// line 58 "src/min/lang/Scanner.rl"
 	{te = p;p--;{
         startSingleBlock();
         pushIndent(0);
@@ -369,7 +369,7 @@ case 3:
       }}
 	break;
 	case 14:
-// line 62 "src/min/lang/Scanner.rl"
+// line 63 "src/min/lang/Scanner.rl"
 	{te = p;p--;{
         int indent = (te - mark) / 2;
         if (!singleBlock && indent > currentIndent) { // indent in same block
@@ -393,38 +393,38 @@ case 3:
       }}
 	break;
 	case 15:
-// line 83 "src/min/lang/Scanner.rl"
+// line 84 "src/min/lang/Scanner.rl"
 	{te = p;p--;{
         emptyIndentStack();
         pushTerminator();
       }}
 	break;
 	case 16:
-// line 89 "src/min/lang/Scanner.rl"
-	{te = p;p--;}
-	break;
-	case 17:
 // line 90 "src/min/lang/Scanner.rl"
 	{te = p;p--;}
 	break;
+	case 17:
+// line 91 "src/min/lang/Scanner.rl"
+	{te = p;p--;}
+	break;
 	case 18:
-// line 94 "src/min/lang/Scanner.rl"
+// line 95 "src/min/lang/Scanner.rl"
 	{te = p;p--;{ pushMessage(new Message(getSlice(ts, te), filename, line, MinObject.newNumber(Integer.parseInt(getSlice(ts, te))))); }}
 	break;
 	case 19:
-// line 95 "src/min/lang/Scanner.rl"
+// line 96 "src/min/lang/Scanner.rl"
 	{te = p;p--;{ pushMessage(new Message(getSlice(ts, te), filename, line)); }}
 	break;
 	case 20:
-// line 96 "src/min/lang/Scanner.rl"
+// line 97 "src/min/lang/Scanner.rl"
 	{te = p;p--;{ argStack.push(message); message = null; }}
 	break;
 	case 21:
-// line 97 "src/min/lang/Scanner.rl"
+// line 98 "src/min/lang/Scanner.rl"
 	{te = p;p--;{ message = null; }}
 	break;
 	case 22:
-// line 57 "src/min/lang/Scanner.rl"
+// line 58 "src/min/lang/Scanner.rl"
 	{{p = ((te))-1;}{
         startSingleBlock();
         pushIndent(0);
@@ -432,7 +432,7 @@ case 3:
       }}
 	break;
 	case 23:
-// line 89 "src/min/lang/Scanner.rl"
+// line 90 "src/min/lang/Scanner.rl"
 	{{p = ((te))-1;}}
 	break;
 	case 24:
@@ -528,7 +528,7 @@ case 5:
 	break; }
 	}
 
-// line 119 "src/min/lang/Scanner.rl"
+// line 120 "src/min/lang/Scanner.rl"
     
     if (cs == Scanner_error || p != pe)
       throw new ParsingException(String.format("Syntax error at line %d around '%s...'", line, input.substring(p, Math.min(p+5, pe))));
