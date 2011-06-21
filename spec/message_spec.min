@@ -3,5 +3,11 @@ require("spec")
 describe("+ shuffling"):
   it("supports simple equation"):
     Message new("1 + 2") inspect should == "1 +(2)"
+  
   it("excludes next message from equation"):
     Message new("1 + 2 println") inspect should == "1 +(2) println"
+
+describe("&& shuffling"):
+  it("includes entire message chain"):
+    Message new("1 && 2 print") inspect should == "1 &&(2 print)"
+  

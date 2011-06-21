@@ -1,6 +1,7 @@
 package min.lang;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 public class Message extends MinObject {
@@ -11,6 +12,14 @@ public class Message extends MinObject {
   Message next;
   ArrayList<Message> args;
   MinObject cachedResponse;
+  
+  // Same as in Scanner.rl
+  // IMPORTANT: needs to be sorted!
+  static String terminators[]      = new String[] { "\n", "\r\n", "." };
+  static String ternaryOperators[] = new String[] { "=" };
+  static String binaryOperators[]  = new String[] { "!", "!=", "%", "&", "&&", "*", "**",
+                                                    "+", "-", "/", "<", "<<", "<=", "=",
+                                                    "==", ">", ">=", "?", "^", "|", "||" };
   
   public Message(String name, String file, int line, MinObject cachedResponse) {
     super(MinObject.message);
@@ -33,20 +42,15 @@ public class Message extends MinObject {
   }
   
   public boolean isTerminator() {
-    return this.name.equals("\n") || this.name.equals("\r\n") || this.name.equals(".");
+    return Arrays.binarySearch(terminators, name) >= 0;
   }
 
   public boolean isTernaryOperator() {
-    return this.name.equals("=");
+    return Arrays.binarySearch(ternaryOperators, name) >= 0;
   }
   
   public boolean isBinaryOperator() {
-    // Same as in Scanne.rl
-    return this.name.equals("+") || this.name.equals("-") || this.name.equals("*") || this.name.equals("/") ||
-           this.name.equals("**") || this.name.equals("^") || this.name.equals("%") || this.name.equals("||") ||
-           this.name.equals("|") || this.name.equals("&&") || this.name.equals("&") || this.name.equals("<<") ||
-           this.name.equals("<=") || this.name.equals("<") || this.name.equals(">=") || this.name.equals(">") ||
-           this.name.equals("==") || this.name.equals("!=") || this.name.equals("!") || this.name.equals("?");
+    return Arrays.binarySearch(binaryOperators, name) >= 0;
   }
   
   public Message replace(Message with) {
