@@ -29,8 +29,3 @@ if = method:
 
 unless = method(cond):
   cond || call eval_arg(1)
-
-while = method(cond):
-  if(cond):
-    call eval_arg(1)
-    while(cond): call eval_arg(1)

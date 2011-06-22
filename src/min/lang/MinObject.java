@@ -93,11 +93,11 @@ public class MinObject {
   }
   
   public Integer getDataAsNumber() {
-    return (data instanceof Integer) ? (Integer)data : null;
+    return (Integer)((data instanceof Integer) ? data : null);
   }
   
   public String getDataAsString() {
-    return (data instanceof String) ? (String)data : null;
+    return (String)((data instanceof String) ? data : null);
   }
   
   @SuppressWarnings("unchecked")
@@ -138,6 +138,14 @@ public class MinObject {
   public MinObject asKind(String kind) {
     setSlot("kind", newString(kind));
     return this;
+  }
+  
+  public boolean isFalse() {
+    return this == nil || this == _false;
+  }
+  
+  public boolean isTrue() {
+    return !isFalse();
   }
   
   public static MinObject require(String file) throws MinException {
