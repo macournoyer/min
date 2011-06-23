@@ -1,19 +1,16 @@
 require("spec")
 
-describe("+ shuffling"):
+describe("arithmetic shuffling"):
   it("supports simple equation"):
     Message new("1 + 2") inspect should == "1 +(2)"
-  
-  it("excludes next message from equation"):
-    Message new("1 + 2 println") inspect should == "1 +(2) println"
 
-describe("&& shuffling"):
+describe("logical shuffling"):
   it("includes entire message chain"):
     Message new("1 && 2 print") inspect should == "1 &&(2 print)"
 
-describe("(...)"):
+describe("parenthesis"):
   it("parses parenthesis as anonymous message"):
     Message new("(holla)") inspect should == "(holla)"
   
   it("parses parenthesis after assignation"):
-    Message new("x = (1 + 2)") inspect should == "=(x, (1 +(2)))"
+    Message new("x = (1 + 2)") inspect should == "=(x, 1 +(2))"

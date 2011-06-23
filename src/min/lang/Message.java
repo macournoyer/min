@@ -74,7 +74,7 @@ public class Message extends MinObject {
   }
   
   public Message shuffle() throws ParsingException {
-    if (!args.isEmpty()) {
+    if (!isTernaryOperator() && !args.isEmpty()) {
       // Do no shuffle message if args are provided
     } else if (isTernaryOperator()) {
       if (prev == null) throw new ParsingException("Missing variable name before =", file, line);
