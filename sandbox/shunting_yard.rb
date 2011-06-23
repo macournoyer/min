@@ -1,3 +1,4 @@
+# Source: http://en.wikipedia.org/wiki/Shunting-yard_algorithm
 class Message
   class Operator
     attr_reader :name, :precedence, :type
