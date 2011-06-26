@@ -62,10 +62,11 @@ def M(*args)
   Message.new(*args)
 end
 
+m = M("1", M("+", M("2")))
 # m = M("1", M("+", M("2", M("*", M("3")))))
 # m = M("1", M("*", M("2", M("+", M("3")))))
 # m = M("x", M("=", M("2", M("+", M("3")))))
-m = M("x", M("=", M("!", M("2", M("+", M("3", M("*", M("1"))))))))
+# m = M("x", M("=", M("!", M("2", M("+", M("3", M("*", M("1"))))))))
 puts m.fullname
 
 #### Shunting yard algo ####
@@ -93,6 +94,7 @@ end
 
 # Convert from RPN
 stack = []
+p output_queue
 while m = output_queue.shift
   if m.operator
     case true

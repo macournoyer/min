@@ -1,8 +1,8 @@
 package min.lang;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.Stack;
+import java.util.LinkedList;
 
 public class Message extends MinObject {
   String name;
@@ -12,14 +12,7 @@ public class Message extends MinObject {
   Message next;
   ArrayList<Message> args;
   MinObject cachedResponse;
-  
-  // Same as in Scanner.rl
-  // IMPORTANT: needs to be sorted!
-  static String terminators[]      = new String[] { "\n", "\r\n", "." };
-  static String ternaryOperators[] = new String[] { "=" };
-  static String binaryOperators[]  = new String[] { "!", "!=", "%", "&", "&&", "*", "**",
-                                                    "+", "-", "/", "<", "<<", "<=", "=",
-                                                    "==", ">", ">=", "?", "^", "|", "||" };
+  Operator operator;
   
   public Message(String name, String file, int line, MinObject cachedResponse) {
     super(MinObject.message);
@@ -30,6 +23,8 @@ public class Message extends MinObject {
     this.prev = null;
     this.args = new ArrayList<Message>();
     this.cachedResponse = cachedResponse;
+    this.operator = Operator.table.get(name);
+    if (operator == null) this.operator = Operator.nullOperator;
   }
   
   public Message(String name, String file, int line) {
@@ -42,15 +37,12 @@ public class Message extends MinObject {
   }
   
   public boolean isTerminator() {
-    return Arrays.binarySearch(terminators, name) >= 0;
+    // Same as in Scanner.rl
+    return name.equals("\n") || name.equals("\r\n") || name.equals(".");
   }
 
-  public boolean isTernaryOperator() {
-    return Arrays.binarySearch(ternaryOperators, name) >= 0;
-  }
-  
-  public boolean isBinaryOperator() {
-    return Arrays.binarySearch(binaryOperators, name) >= 0;
+  public boolean isOperator() {
+    return operator != Operator.nullOperator;
   }
   
   public Message replace(Message with) {
@@ -60,6 +52,17 @@ public class Message extends MinObject {
     this.args = with.args;
     return this;
   }
+  
+  public Message tail() {
+    Message tail = this;
+    while (tail.next != null && !tail.next.isTerminator()) tail = tail.next;
+    return tail;
+  }
+  
+  public Message append(Message m) {
+    tail().setNext(m);
+    return this;
+  }
 
   // Remove the message from the chain
   public Message pop() {
@@ -67,32 +70,89 @@ public class Message extends MinObject {
     Message prev = null;
     while (tail != null && !tail.isTerminator()) tail = tail.next;
     if (tail != null) prev = tail.prev;
-    this.prev.next = tail;
+    if (this.prev != null) this.prev.next = tail;
     this.prev = null;
     if (tail != null) prev.next = null;
     return this;
   }
   
   public Message shuffle() throws ParsingException {
-    if (!isTernaryOperator() && !args.isEmpty()) {
-      // Do no shuffle message if args are provided
-    } else if (isTernaryOperator()) {
-      if (prev == null) throw new ParsingException("Missing variable name before =", file, line);
-      Message var = prev.clone();
-      var.next = null;
-      args = new ArrayList<Message>();
-      args.add(var);
-      if (next == null) throw new ParsingException(String.format("Missing value after %s =", var.name), file, line);
-      args.add(next.pop());
-      prev.replace(this);
-    } else if (isBinaryOperator()) {
-      this.args = new ArrayList<Message>();
-      if (next == null) throw new ParsingException(String.format("Missing value after %s", name), file, line);
-      args.add(next.pop());
+    Message m = this, m2 = null;
+    Stack<Message> stack = new Stack<Message>();
+    LinkedList<Message> queue = new LinkedList<Message>();
+    
+    while (m != null) {
+      if (m.isOperator()) {
+        if (!stack.isEmpty()) m2 = stack.peek();
+        while (!stack.isEmpty() && ((m.operator.isLeftToRight() && m.operator.precedence <= m2.operator.precedence) ||
+                                   (m.operator.isRightToLeft() && m.operator.precedence < m2.operator.precedence))) {
+           queue.add(stack.pop());
+           if (!stack.isEmpty()) m2 = stack.peek();
+        }
+        stack.push(m);
+        
+      } else if (m.prev == null || m.prev.isOperator()) { // Non-operator
+        queue.add(m);
+        
+      }
+      
+      for (Message arg : m.args) arg.shuffle();
+      m = m.next;
     }
-    for (Message arg : args) arg.shuffle();
-    if (next != null) next.shuffle();
-    return this;
+    
+    while (!stack.isEmpty()) {
+      queue.add(stack.pop());
+    }
+    
+    // Convert from the queue RPN to a message chain.
+    while(!queue.isEmpty()) {
+      m = queue.remove();
+      
+      Message operand1, operand2;
+      
+      if (m.isOperator()) {
+        if (m.operator.isNullary()) {
+          operand1 = stack.pop();
+          
+          if (!stack.isEmpty()) {
+            operand2 = stack.pop();
+            m.setNext(operand1); // post terminator message
+            m2 = operand2.pop();
+          } else {
+            m2 = operand1;
+          }
+          m2.append(m);
+          
+          stack.push(m2);
+          
+        } else if (m.operator.isUnary()) {
+          m.pop();
+          m.args.add(stack.pop().pop());
+          stack.push(m);
+          
+        } else if (m.operator.isBinary()) {
+          m.pop();
+          m.args.add(stack.pop().pop());
+          m2 = stack.pop().pop();
+          m2.append(m);
+          stack.push(m2);
+          
+        } else if (m.operator.isTernary()) {
+          m.pop();
+          m2 = stack.pop().pop();
+          m.args.add(stack.pop().pop());
+          m.args.add(m2);
+          stack.push(m);
+          
+        }
+        
+      } else {
+        stack.push(m.pop());
+        
+      }
+    }
+    
+    return stack.pop();
   }
   
   public MinObject evalOn(MinObject on, MinObject base) throws MinException {
@@ -124,11 +184,19 @@ public class Message extends MinObject {
     return evalOn(on, on);
   }
   
+  // public String toString() {
+  //   return name;
+  // }
+
   public String toString() {
-    return toString("");
+    return fullName();
   }
   
-  public String toString(String indent) {
+  public String fullName() {
+    return fullName("");
+  }
+  
+  private String fullName(String indent) {
     StringBuilder b = new StringBuilder();
     
     b.append(this.name);
@@ -139,14 +207,14 @@ public class Message extends MinObject {
       String argIndent = indent + "  ";
       for (Message arg : this.args) {
         if (arg != this.args.get(0)) b.append(", ");
-        b.append(arg.toString(argIndent));
+        b.append(arg.fullName(argIndent));
       }
       b.append(")");
     }
     
     if (this.next != null) {
       if (!isTerminator()) b.append(" ");
-      b.append(this.next.toString());
+      b.append(this.next.fullName());
     }
     
     return b.toString();

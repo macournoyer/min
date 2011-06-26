@@ -26,7 +26,7 @@ public class main {
 
     new Bootstrap().run();
     Message message = Message.parse(code, file);
-    if (debug) System.out.println(message.toString());
+    if (debug) System.out.println(message.fullName());
     message.evalOn(MinObject.lobby);
   }
 }

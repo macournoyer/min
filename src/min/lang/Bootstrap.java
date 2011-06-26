@@ -183,7 +183,7 @@ public class Bootstrap {
       }).
       slot("/", new Method() {
         public MinObject activate(Call call) throws MinException {
-          return MinObject.newNumber(call.receiver.getDataAsNumber() * call.evalArg(0).getDataAsNumber());
+          return MinObject.newNumber(call.receiver.getDataAsNumber() / call.evalArg(0).getDataAsNumber());
         }
       }).
       slot(">", new Method() {
@@ -329,7 +329,7 @@ public class Bootstrap {
         }
       });
     
-    MinObject.require("bootstrap");
+    // MinObject.require("bootstrap");
   }
   
   private Properties loadProperties() throws MinException {
