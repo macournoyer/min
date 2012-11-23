@@ -41,20 +41,53 @@ class Message
     Operator.new("!", 4, :unary, :right)
   ]
   
-  attr_reader :name, :next, :operator
+  attr_reader :name, :operator
+  attr_accessor :next, :args
   
   def initialize(name, _next=nil)
     @name = name
     @next = _next
     @operator = Operators.detect { |o| o.name == @name }
+    @args = []
   end
   
   def fullname
-    [@name, (@next.fullname if @next)] * " "
+    args_fullnames = @args.map(&:fullname).join(', ')
+    [@name + (@args.any? ? "(#{args_fullnames})" : ""), (@next.fullname if @next)].compact.join(" ")
   end
   
   def to_s
     @name
+  end
+
+  def detatch
+    @next = nil
+    self
+  end
+
+  def tail
+    if @next
+      @next.tail
+    else
+      self
+    end
+  end
+
+  def pop
+    if @next.nil?
+      nil
+    elsif @next.next.nil?
+      n = @next
+      @next = nil
+      n
+    else
+      @next.pop
+    end
+  end
+
+  def append(m)
+    tail.next = m
+    self
   end
 end
 
@@ -62,12 +95,17 @@ def M(*args)
   Message.new(*args)
 end
 
-m = M("1", M("+", M("2")))
+# m = M("1", M("+", M("2")))
 # m = M("1", M("+", M("2", M("*", M("3")))))
 # m = M("1", M("*", M("2", M("+", M("3")))))
 # m = M("x", M("=", M("2", M("+", M("3")))))
 # m = M("x", M("=", M("!", M("2", M("+", M("3", M("*", M("1"))))))))
-puts m.fullname
+m = M("object", M("prop", M("=", M("x", M("y")))))
+# m = M("object", M("=", M("x", M("y", M("x")))))
+# m = M("x", M("a", M("=", M("e", M("d")))))
+# m = M("a", M("b", M("+", M("c", M("d")))))
+puts "input: " + m.fullname
+
 
 #### Shunting yard algo ####
 output_queue = []
@@ -84,33 +122,56 @@ while m
     stack.push m
   else
     output_queue.push m
+    # Advance to the next operator
+    # TODO perhaps could refactor to combine w/ parent while?
+    m = m.next until m.next.nil? || m.next.operator
   end
-  m = m.next
+
+  # Cut it from the message chain
+  next_m = m.next
+  m.next = nil
+  m = next_m
 end
 
 while operator = stack.pop
   output_queue.push operator
 end
 
+print "output_queue: "
+p output_queue.map(&:fullname)
+
+
 # Convert from RPN
 stack = []
-p output_queue
 while m = output_queue.shift
   if m.operator
     case true
     when m.operator.unary?
-      stack.push "#{m}(#{stack.pop})"
+      m.args = [stack.pop]
+      stack.push m
     when m.operator.binary?
-      arg = stack.pop
-      stack.push "#{stack.pop} #{m}(#{arg})"
+      m.args = [stack.pop]
+      m2 = stack.pop
+      m2.append m
+      stack.push m2
     when m.operator.ternary?
       val = stack.pop
-      stack.push "#{m}(#{stack.pop}, #{val})"
+      receiver = stack.pop
+      if name = receiver.pop
+        m.args = [name, val]
+        receiver.append m
+        stack.push receiver
+      else
+        m.args = [receiver, val]
+        stack.push m
+      end
     end
   else
     stack.push m
   end
 end
 
-# 3 *(2) +(1)
-puts stack.first
+raise "Parsing error: things left on the stack" unless stack.size == 1
+
+
+puts "output: " + stack.first.fullname
