@@ -16,32 +16,32 @@ public class Operator {
   static {
     int precedence = 1;
     
-    //                       arity, rightToLeft, names
-    operators(precedence++,  0,     true,        ".", "\n", "\r\n");
-    
-    operators(precedence++,  3,     true,        "=");
-    
-    operators(precedence++,  2,     false,       "||");
-    operators(precedence++,  2,     false,       "&&");
-    
-    operators(precedence++,  2,     false,       "|");
-    operators(precedence++,  2,     false,       "^");
-    operators(precedence++,  2,     false,       "&");
-    
-    operators(precedence++,  2,     false,       "==", "!=");
-    
-    operators(precedence++,  2,     false,       "<", "<=", ">", ">=");
-    
-    operators(precedence++,  2,     false,       "<<", ">>");
-    
-    operators(precedence++,  2,     false,       "+", "-");
-    
-    operators(precedence++,  2,     false,       "*", "/", "%");
-    
-    operators(precedence++,  1,     true,        "!", "~");
+    //
+    //           == Operator precedence table ==
+    //
+    //                            arity, rightToLeft?, names
+    defineOperators(precedence++, 3,     true,         "=",
+                                                       "+=", "-=", "*=", "/=",
+                                                       "&=", "|=",
+                                                       "&&=", "||=");
+    defineOperators(precedence++, 2,     false,        "||", "or");
+    defineOperators(precedence++, 2,     false,        "&&", "and");
+    defineOperators(precedence++, 2,     false,        "|");
+    defineOperators(precedence++, 2,     false,        "^");
+    defineOperators(precedence++, 2,     false,        "&");
+    defineOperators(precedence++, 2,     false,        "==", "!=", "is",
+                                                       "=~", "!~");
+    defineOperators(precedence++, 2,     false,        "<", "<=", ">", ">=");
+    defineOperators(precedence++, 2,     false,        "<<", ">>");
+    defineOperators(precedence++, 2,     false,        "+", "-");
+    defineOperators(precedence++, 2,     false,        "*", "/", "%");
+    defineOperators(precedence++, 1,     true,         "!", "not",
+                                                       "~", "@",
+                                                       "-@", "+@", "*@", "&@");
+
   };
   
-  private static void operators(int precedence, int arity, boolean rightToLeft, String... names) {
+  private static void defineOperators(int precedence, int arity, boolean rightToLeft, String... names) {
     for (String name : names) {
       table.put(name, new Operator(name, precedence,  arity, rightToLeft));
     }

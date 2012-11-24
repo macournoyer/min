@@ -8,7 +8,6 @@ public class Message extends MinObject {
   String name;
   String file;
   int line;
-  Message prev;
   Message next;
   ArrayList<Message> args;
   MinObject cachedResponse;
@@ -20,7 +19,6 @@ public class Message extends MinObject {
     this.file = file;
     this.line = line;
     this.next = null;
-    this.prev = null;
     this.args = new ArrayList<Message>();
     this.cachedResponse = cachedResponse;
     this.operator = Operator.table.get(name);
@@ -33,7 +31,16 @@ public class Message extends MinObject {
   
   public void setNext(Message next) {
     this.next = next;
-    if (next != null) next.prev = this;
+  }
+
+  public boolean isLast() {
+    return this.next == null;
+  }
+
+  public Message detatch() {
+    Message m = next;
+    this.next = null;
+    return m;
   }
   
   public boolean isTerminator() {
@@ -43,14 +50,6 @@ public class Message extends MinObject {
 
   public boolean isOperator() {
     return operator != Operator.nullOperator;
-  }
-  
-  public Message replace(Message with) {
-    this.name = with.name;
-    this.next = with.next;
-    this.prev = with.prev;
-    this.args = with.args;
-    return this;
   }
   
   public Message tail() {
@@ -66,93 +65,19 @@ public class Message extends MinObject {
 
   // Remove the message from the chain
   public Message pop() {
-    Message tail = this.next;
-    Message prev = null;
-    while (tail != null && !tail.isTerminator()) tail = tail.next;
-    if (tail != null) prev = tail.prev;
-    if (this.prev != null) this.prev.next = tail;
-    this.prev = null;
-    if (tail != null) prev.next = null;
-    return this;
+    if (isLast()) {
+      return null;
+    } else if (next.isLast()) {
+      return detatch();
+    } else {
+      return next.pop();
+    }
   }
   
   public Message shuffle() throws ParsingException {
-    Message m = this, m2 = null;
-    Stack<Message> stack = new Stack<Message>();
-    LinkedList<Message> queue = new LinkedList<Message>();
-    
-    while (m != null) {
-      if (m.isOperator()) {
-        if (!stack.isEmpty()) m2 = stack.peek();
-        while (!stack.isEmpty() && ((m.operator.isLeftToRight() && m.operator.precedence <= m2.operator.precedence) ||
-                                   (m.operator.isRightToLeft() && m.operator.precedence < m2.operator.precedence))) {
-           queue.add(stack.pop());
-           if (!stack.isEmpty()) m2 = stack.peek();
-        }
-        stack.push(m);
-        
-      } else if (m.prev == null || m.prev.isOperator()) { // Non-operator
-        queue.add(m);
-        
-      }
-      
-      for (Message arg : m.args) arg.shuffle();
-      m = m.next;
-    }
-    
-    while (!stack.isEmpty()) {
-      queue.add(stack.pop());
-    }
-    
-    // Convert from the queue RPN to a message chain.
-    while(!queue.isEmpty()) {
-      m = queue.remove();
-      
-      Message operand1, operand2;
-      
-      if (m.isOperator()) {
-        if (m.operator.isNullary()) {
-          operand1 = stack.pop();
-          
-          if (!stack.isEmpty()) {
-            operand2 = stack.pop();
-            m.setNext(operand1); // post terminator message
-            m2 = operand2.pop();
-          } else {
-            m2 = operand1;
-          }
-          m2.append(m);
-          
-          stack.push(m2);
-          
-        } else if (m.operator.isUnary()) {
-          m.pop();
-          m.args.add(stack.pop().pop());
-          stack.push(m);
-          
-        } else if (m.operator.isBinary()) {
-          m.pop();
-          m.args.add(stack.pop().pop());
-          m2 = stack.pop().pop();
-          m2.append(m);
-          stack.push(m2);
-          
-        } else if (m.operator.isTernary()) {
-          m.pop();
-          m2 = stack.pop().pop();
-          m.args.add(stack.pop().pop());
-          m.args.add(m2);
-          stack.push(m);
-          
-        }
-        
-      } else {
-        stack.push(m.pop());
-        
-      }
-    }
-    
-    return stack.pop();
+    ArrayList<Message> outputQueue = new ArrayList<Message>();
+
+    return this;
   }
   
   public MinObject evalOn(MinObject on, MinObject base) throws MinException {
@@ -223,7 +148,6 @@ public class Message extends MinObject {
   public Message clone() {
     Message m = new Message(name, file, line, cachedResponse);
     m.next = this.next;
-    m.prev = this.prev;
     m.args = this.args;
     return m;
   }
