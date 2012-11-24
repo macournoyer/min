@@ -3,7 +3,7 @@ class Message
   class Operator
     attr_reader :name, :precedence, :type
     
-    def initialize(name, precedence, type, associativity=:right)
+    def initialize(name, precedence, type, associativity)
       @name = name
       @precedence = precedence
       @type = type
@@ -31,15 +31,35 @@ class Message
     end
   end
   
-  Operators = [
-    Operator.new("=", 1, :ternary, :right),
-    Operator.new("+", 2, :binary, :left),
-    Operator.new("-", 2, :binary, :left),
-    Operator.new("*", 3, :binary, :left),
-    Operator.new("/", 3, :binary, :left),
-    Operator.new("%", 3, :binary, :left),
-    Operator.new("!", 4, :unary, :right)
-  ]
+  Operators = {}
+  def self.add_operator(names, *args)
+    @precedence ||= 0
+    @precedence += 1
+    [names].flatten.each do |name|
+      Operators[name] = Operator.new(name, @precedence, *args)      
+    end
+  end
+
+  #
+  #            == Operator precedence table ==
+  #
+  #                                      type       assoc
+  add_operator ["=", "+=", "-=", "*=",
+                "/=", "&=", "|=",
+                "&&=", "||="],           :ternary,  :right
+  add_operator ["||", "or"],             :binary,   :left
+  add_operator ["&&", "and"],            :binary,   :left
+  add_operator ["|"],                    :binary,   :left
+  add_operator ["^"],                    :binary,   :left
+  add_operator ["&"],                    :binary,   :left
+  add_operator ["==", "!=", "is",
+                "=~", "!~"],             :binary,   :left
+  add_operator ["<", "<=", ">", ">="],   :binary,   :left
+  add_operator ["<<", ">>"],             :binary,   :left
+  add_operator ["+", "-"],               :binary,   :left
+  add_operator ["*", "/", "%"],          :binary,   :left
+  add_operator ["!", "not", "~", "@",
+                "-@", "+@", "*@", "&@"], :unary,    :right
   
   attr_reader :name, :operator
   attr_accessor :next, :args
@@ -47,7 +67,7 @@ class Message
   def initialize(name, _next=nil)
     @name = name
     @next = _next
-    @operator = Operators.detect { |o| o.name == @name }
+    @operator = Operators[name]
     @args = []
   end
   
@@ -133,7 +153,9 @@ class Message
       if m.operator
         case true
         when m.operator.unary?
-          m.args = [stack.pop]
+          arg = stack.pop
+          m.next = arg.detatch
+          m.args = [arg]
           stack.push m
         when m.operator.binary?
           m.args = [stack.pop]
@@ -157,31 +179,57 @@ class Message
       end
     end
 
-    raise "Parsing error: things left on the stack" unless stack.size == 1
-
-    stack.first
+    # Empty the stack
+    prev = nil
+    while m = stack.pop
+      m.append prev
+      prev = m
+    end
+    return prev
   end
 end
 
-def M(*args)
-  Message.new(*args)
+# def M(*args)
+#   Message.new(*args)
+# end
+
+def M(names)
+  m = nil
+  while name = names.pop
+    m = Message.new(name, m)
+  end
+  m
 end
 
 if __FILE__ == $PROGRAM_NAME
   require "test/unit"
   
   class ShufflingTest < Test::Unit::TestCase
-    def test_case_name
-      assert_equal "1 +(2)", M("1", M("+", M("2"))).shuffle.fullname
-      assert_equal "1 +(2 *(3))", M("1", M("+", M("2", M("*", M("3"))))).shuffle.fullname
-      assert_equal "1 *(2) +(3)", M("1", M("*", M("2", M("+", M("3"))))).shuffle.fullname
-      assert_equal "=(x, 2 +(3))", M("x", M("=", M("2", M("+", M("3"))))).shuffle.fullname
-      assert_equal "=(x, !(2) +(3 *(1)))", M("x", M("=", M("!", M("2", M("+", M("3", M("*", M("1")))))))).shuffle.fullname
-      assert_equal "object =(prop, x y)", M("object", M("prop", M("=", M("x", M("y"))))).shuffle.fullname
-      assert_equal "=(object, x y x)", M("object", M("=", M("x", M("y", M("x"))))).shuffle.fullname
-      assert_equal "x =(a, e d)", M("x", M("a", M("=", M("e", M("d"))))).shuffle.fullname
-      assert_equal "a b +(c d)", M("a", M("b", M("+", M("c", M("d"))))).shuffle.fullname
-      assert_equal "=(a, =(b, c))", M("a", M("=", M("b", M("=", M("c"))))).shuffle.fullname
+    def test_simple
+      assert_equal "1 +(2)", M(%w( 1 + 2 )).shuffle.fullname
+      assert_equal "1 +(2 *(3))", M(%w( 1 + 2 * 3 )).shuffle.fullname
+      assert_equal "1 *(2) +(3)", M(%w( 1 * 2 + 3 )).shuffle.fullname
+    end
+
+    def test_assign
+      assert_equal "=(x, 2 +(3))", M(%w( x = 2 + 3 )).shuffle.fullname
+      assert_equal "object =(prop, x y)", M(%w( object prop = x y )).shuffle.fullname
+      assert_equal "=(object, x y x)", M(%w( object = x y x )).shuffle.fullname
+      assert_equal "x =(a, e d)", M(%w( x a = e d )).shuffle.fullname
+      assert_equal "a b +(c d)", M(%w( a b + c d )).shuffle.fullname
+      assert_equal "=(a, =(b, c))", M(%w( a = b = c )).shuffle.fullname
+      assert_equal "||=(a, &&=(b, c))", M(%w( a ||= b &&= c )).shuffle.fullname
+    end
+
+    def test_unary
+      assert_equal "-@(a)", M(%w( -@ a )).shuffle.fullname
+      assert_equal "!(a)", M(%w( ! a )).shuffle.fullname
+      assert_equal "not(a)", M(%w( not a )).shuffle.fullname
+      assert_equal "!(@(a))", M(%w( ! @ a )).shuffle.fullname
+      assert_equal "!(!(a))", M(%w( ! ! a )).shuffle.fullname
+      assert_equal "a @(b)", M(%w( a @ b )).shuffle.fullname
+      assert_equal "a !(b) c", M(%w( a ! b c )).shuffle.fullname
+      assert_equal "=(x, !(2) +(3 *(1)))", M(%w( x = ! 2 + 3 * 1 )).shuffle.fullname
     end
   end
 end
