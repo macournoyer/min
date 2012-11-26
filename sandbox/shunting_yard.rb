@@ -18,6 +18,10 @@ class Message
       @associativity == :left
     end
     
+    def nullary?
+      @type == :nullary
+    end
+    
     def unary?
       @type == :unary
     end
@@ -42,8 +46,10 @@ class Message
 
   #
   #            == Operator precedence table ==
+  #               (from lowest to highest)
   #
   #                                      type       assoc
+  add_operator [".", "\n", "\r\n"],      :nullary,  :left
   add_operator ["=", "+=", "-=", "*=",
                 "/=", "&=", "|=",
                 "&&=", "||="],           :ternary,  :right
@@ -62,11 +68,12 @@ class Message
                 "-@", "+@", "*@", "&@"], :unary,    :right
   
   attr_reader :name, :operator
-  attr_accessor :next, :args
+  attr_accessor :next, :prev, :args
   
   def initialize(name, _next=nil)
     @name = name
-    @next = _next
+    self.next = _next
+    @prev = nil
     @operator = Operators[name]
     @args = []
   end
@@ -80,24 +87,27 @@ class Message
     @name
   end
 
-  # Detatch the next message and returns it
-  def detatch
-    m = @next
-    @next = nil
-    m
+  def terminator?
+    %w( . \n \r\n ).include? @name
+  end
+
+  def next=(n)
+    @next = n
+    n.prev = self if n
+    n
   end
 
   # Get the tail of this message chain
   def tail
-    if @next
-      @next.tail
-    else
+    if last?
       self
+    else
+      @next.tail
     end
   end
 
   def last?
-    @next.nil?
+    @next.nil? || terminator?
   end
 
   # Detach the last message from the chain
@@ -111,10 +121,31 @@ class Message
     end
   end
 
-  # Append the message as the tail of the chain
+  # Insert `m` right after the current message.
+  # Before: <prev> <self> <next>
+  # After:  <prev> <self> <m> <next>
+  def insert(m)
+    @next.prev = m if @next
+    self.next = m
+    m
+  end
+
+  # Append the message at the tail of the chain
+  # Before: <self> <next> ... <last> <terminator?> ...
+  # After:  <self> <next> ... <last> <m> <terminator?> ...
   def append(m)
-    tail.next = m
+    tail.insert m
     self
+  end
+
+  # Detatch the next message chain (up to a terminator or end) and returns it.
+  # Before: <self> <next> ... <tail> <terminator?>
+  # After:  <self> <terminator?>
+  def detatch
+    tail = tail.next if tail
+    m = @next
+    self.next = tail
+    m
   end
 
   def shuffle
@@ -152,9 +183,15 @@ class Message
     while m = output_queue.shift
       if m.operator
         case true
+        when m.operator.nullary?
+          after = stack.pop
+          before = stack.pop
+          before.append m
+          m.append after
+          stack.push before
         when m.operator.unary?
           arg = stack.pop
-          m.next = arg.detatch
+          m.insert arg.detatch
           m.args = [arg]
           stack.push m
         when m.operator.binary?
@@ -180,12 +217,14 @@ class Message
     end
 
     # Empty the stack
-    prev = nil
-    while m = stack.pop
-      m.append prev
-      prev = m
+    m = nil
+    until stack.empty?
+      n = m
+      m = stack.pop
+      m.append n if n
     end
-    return prev
+
+    m
   end
 end
 
@@ -227,9 +266,18 @@ if __FILE__ == $PROGRAM_NAME
       assert_equal "not(a)", M(%w( not a )).shuffle.fullname
       assert_equal "!(@(a))", M(%w( ! @ a )).shuffle.fullname
       assert_equal "!(!(a))", M(%w( ! ! a )).shuffle.fullname
-      assert_equal "a @(b)", M(%w( a @ b )).shuffle.fullname
+      assert_equal "a b @(c)", M(%w( a b @ c )).shuffle.fullname
       assert_equal "a !(b) c", M(%w( a ! b c )).shuffle.fullname
+      assert_equal "a +(!(b) c)", M(%w( a + ! b c )).shuffle.fullname
       assert_equal "=(x, !(2) +(3 *(1)))", M(%w( x = ! 2 + 3 * 1 )).shuffle.fullname
+    end
+
+    def test_with_terminator
+      assert_equal "1 . 2", M(%w( 1 . 2 )).shuffle.fullname
+      assert_equal "1 +(2) . 1", M(%w( 1 + 2 . 1 )).shuffle.fullname
+      assert_equal "1 +(2) . 1", M(%w( 1 + 2 . 1 )).shuffle.fullname
+      assert_equal "=(x, 2) . =(y, 3 +(4))", M(%w( x = 2 . y = 3 + 4 )).shuffle.fullname
+      assert_equal "a =(x, 2 +(3)) . 1", M(%w( a x = 2 + 3 . 1 )).shuffle.fullname
     end
   end
 end

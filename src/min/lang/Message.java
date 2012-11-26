@@ -1,6 +1,7 @@
 package min.lang;
 
 import java.util.ArrayList;
+import java.util.Queue;
 import java.util.Stack;
 import java.util.LinkedList;
 
@@ -75,7 +76,30 @@ public class Message extends MinObject {
   }
   
   public Message shuffle() throws ParsingException {
-    ArrayList<Message> outputQueue = new ArrayList<Message>();
+    Queue<Message> outputQueue = new LinkedList<Message>();
+    Stack<Message> stack = new Stack<Message>();
+    
+    Message m = this,
+            m2;
+
+    while (m != null) {
+      if (m.isOperator()) {
+        m2 = stack.peek();
+        while (m2 && ((m.operator.isLeftToRight() && m.operator.precedence <= m2.operator.precedence) ||
+                      (m.operator.isRightToLeft() && m.operator.precedence < m2.operator.precedence))) {
+          output_queue.push(stack.pop());
+          m2 = stack.peek();
+        }
+        stack.push(m);
+      } else {
+        output_queue.push(m);
+        // Advance to the next operator
+        // TODO perhaps could refactor to combine w/ parent while?
+        while (m.next != null && !m.next.isOperator()) {
+          m = m.next
+        }
+      }
+    }
 
     return this;
   }
