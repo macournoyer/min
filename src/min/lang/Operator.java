@@ -17,9 +17,10 @@ public class Operator {
     int precedence = 1;
     
     //
-    //           == Operator precedence table ==
+    //               == Operator precedence table ==
     //
     //                            arity, rightToLeft?, names
+    defineOperators(precedence++, 0,     false,        ".", "\n", "\r\n");
     defineOperators(precedence++, 3,     true,         "=",
                                                        "+=", "-=", "*=", "/=",
                                                        "&=", "|=",

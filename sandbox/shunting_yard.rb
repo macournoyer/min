@@ -142,9 +142,9 @@ class Message
   # Before: <self> <next> ... <tail> <terminator?>
   # After:  <self> <terminator?>
   def detatch
-    tail = tail.next if tail
     m = @next
-    self.next = tail
+    # self.next = tail.next ????
+    self.next = nil
     m
   end
 
@@ -228,10 +228,6 @@ class Message
   end
 end
 
-# def M(*args)
-#   Message.new(*args)
-# end
-
 def M(names)
   m = nil
   while name = names.pop
@@ -244,12 +240,6 @@ if __FILE__ == $PROGRAM_NAME
   require "test/unit"
   
   class ShufflingTest < Test::Unit::TestCase
-    def test_simple
-      assert_equal "1 +(2)", M(%w( 1 + 2 )).shuffle.fullname
-      assert_equal "1 +(2 *(3))", M(%w( 1 + 2 * 3 )).shuffle.fullname
-      assert_equal "1 *(2) +(3)", M(%w( 1 * 2 + 3 )).shuffle.fullname
-    end
-
     def test_assign
       assert_equal "=(x, 2 +(3))", M(%w( x = 2 + 3 )).shuffle.fullname
       assert_equal "object =(prop, x y)", M(%w( object prop = x y )).shuffle.fullname
@@ -270,6 +260,13 @@ if __FILE__ == $PROGRAM_NAME
       assert_equal "a !(b) c", M(%w( a ! b c )).shuffle.fullname
       assert_equal "a +(!(b) c)", M(%w( a + ! b c )).shuffle.fullname
       assert_equal "=(x, !(2) +(3 *(1)))", M(%w( x = ! 2 + 3 * 1 )).shuffle.fullname
+    end
+
+    def test_binary
+      assert_equal "1 +(2)", M(%w( 1 + 2 )).shuffle.fullname
+      assert_equal "1 +(2 *(3))", M(%w( 1 + 2 * 3 )).shuffle.fullname
+      assert_equal "1 *(2) +(3)", M(%w( 1 * 2 + 3 )).shuffle.fullname
+      # assert_equal "1 *(2) println", M(%w( 1 + 2 print )).shuffle.fullname
     end
 
     def test_with_terminator

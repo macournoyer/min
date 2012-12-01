@@ -1,15 +1,13 @@
 package min.lang;
 
+import min.lang.ParsingException;
 import java.util.ArrayList;
-import java.util.Queue;
-import java.util.Stack;
-import java.util.LinkedList;
 
 public class Message extends MinObject {
   String name;
   String file;
   int line;
-  Message next;
+  Message next, prev;
   ArrayList<Message> args;
   MinObject cachedResponse;
   Operator operator;
@@ -20,6 +18,7 @@ public class Message extends MinObject {
     this.file = file;
     this.line = line;
     this.next = null;
+    this.prev = null;
     this.args = new ArrayList<Message>();
     this.cachedResponse = cachedResponse;
     this.operator = Operator.table.get(name);
@@ -35,15 +34,9 @@ public class Message extends MinObject {
   }
 
   public boolean isLast() {
-    return this.next == null;
+    return this.next == null || isTerminator();
   }
 
-  public Message detatch() {
-    Message m = next;
-    this.next = null;
-    return m;
-  }
-  
   public boolean isTerminator() {
     // Same as in Scanner.rl
     return name.equals("\n") || name.equals("\r\n") || name.equals(".");
@@ -53,18 +46,40 @@ public class Message extends MinObject {
     return operator != Operator.nullOperator;
   }
   
+  // Get the tail of this message chain
   public Message tail() {
-    Message tail = this;
-    while (tail.next != null && !tail.next.isTerminator()) tail = tail.next;
-    return tail;
-  }
-  
-  public Message append(Message m) {
-    tail().setNext(m);
-    return this;
+    if (isLast()) {
+      return this;
+    } else {
+      return next.tail();
+    }
   }
 
-  // Remove the message from the chain
+  // Insert `m` right after the current message.
+  // Before: <prev> <self> <next>
+  // After:  <prev> <self> <m> <next>
+  public Message insert(Message m) {
+    if (this.next != null) this.next.prev = m;
+    this.next = m;
+    return m;
+  }
+  
+  // Append the message at the tail of the chain
+  // Before: <self> <next> ... <last> <terminator?> ...
+  // After:  <self> <next> ... <last> <m> <terminator?> ...
+  public Message append(Message m) {
+    tail().insert(m);
+    return m;
+  }
+
+  // Detatch the next message chain and returns it.
+  public Message detatch() {
+    Message m = next;
+    this.next = null;
+    return m;
+  }
+
+  // Detach the last message from the chain
   public Message pop() {
     if (isLast()) {
       return null;
@@ -73,35 +88,6 @@ public class Message extends MinObject {
     } else {
       return next.pop();
     }
-  }
-  
-  public Message shuffle() throws ParsingException {
-    Queue<Message> outputQueue = new LinkedList<Message>();
-    Stack<Message> stack = new Stack<Message>();
-    
-    Message m = this,
-            m2;
-
-    while (m != null) {
-      if (m.isOperator()) {
-        m2 = stack.peek();
-        while (m2 && ((m.operator.isLeftToRight() && m.operator.precedence <= m2.operator.precedence) ||
-                      (m.operator.isRightToLeft() && m.operator.precedence < m2.operator.precedence))) {
-          output_queue.push(stack.pop());
-          m2 = stack.peek();
-        }
-        stack.push(m);
-      } else {
-        output_queue.push(m);
-        // Advance to the next operator
-        // TODO perhaps could refactor to combine w/ parent while?
-        while (m.next != null && !m.next.isOperator()) {
-          m = m.next
-        }
-      }
-    }
-
-    return this;
   }
   
   public MinObject evalOn(MinObject on, MinObject base) throws MinException {
@@ -175,12 +161,14 @@ public class Message extends MinObject {
     m.args = this.args;
     return m;
   }
-  
+
   static public Message parse(String code, String file) throws ParsingException {
-    return new Scanner(code, file).scan().shuffle();
+    Message m = new Scanner(code, file).scan();
+    m = new Shuffler().shuffle(m);
+    return m;
   }
   
   static public Message parse(String code) throws ParsingException {
-    return new Scanner(code, "<eval>").scan().shuffle();
+    return parse(code, "<eval>");
   }
 }
