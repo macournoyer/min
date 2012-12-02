@@ -1,24 +1,24 @@
 say = method(this,
-  this println
+  this.println
 )
 # is the same as
 say = method(this):
-  this println
+  this.println
 
 say("hello")
 
-Need = Object clone do:
+Need = Object.clone:
   a = method(what):
-    "I need a " println
-    what println
+    "I need a ".println
+    what.println
     "now"
 
-i_need = Need clone
+i_need = Need.clone
 
 # indentation w/o the ':', allows you to continue
 # the message chain on different lines
-i_need
-      a("muffin")
-        println
+i_need.
+      a("muffin").
+      println
 
-single_line_block = method: with(block) on single line
+single_line_block = method: with(block).on.single.line

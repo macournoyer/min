@@ -1,11 +1,11 @@
 meta = method:
-  "# of args: " print
-  call args size println
+  "# of args: ".print
+  call.args.size.println
   # We can play w/ arguments w/o evaling them
-  arg = call args at(0)
-  arg to_s print
+  arg = call.args@0
+  arg.to_s.print
   # We can control where we want to eval the argument
   that_s_dope = ", indeed!"
-  arg eval_on(context) println
+  arg.eval_on(context).println
 
 meta(that_s_dope, yeah!)

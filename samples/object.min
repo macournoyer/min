@@ -1,4 +1,4 @@
-Post = Object clone do:
+Post = Object.clone:
   initialize = method(title, content):
     @title = title
     @content = content
@@ -7,6 +7,6 @@ Post = Object clone do:
     "<h1>#{@title}</h1>" +
       "<p>#{@content}</p>"
 
-post = Post new("Min", "It is the awesome!")
+post = Post.new("Min", "It is the awesome!")
 
-post to_html println
+post.to_html.println

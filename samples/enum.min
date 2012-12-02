@@ -1,18 +1,18 @@
-items = Array new(1, 2, 3)
+items = Array.new(1, 2, 3)
 
-# items at(0) println
+# items.at(0).println
 # # or
-# items first println
+# items.first.println
 # # or
-items@(0) println
+items@0.println
 # >> 1
 
-# items each(i): i println
+# items.each(i): i.println
 # # or
-# items each(i, i println)
+# items.each(i, i.println)
 # # or
-# items each(println)
+# items.each(println)
 
-items select(> 1) map(* 2) each(println)
+items.select(>1).map(*2).each(println)
 # >> 4
 # >> 6

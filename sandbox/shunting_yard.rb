@@ -49,7 +49,7 @@ class Message
   #               (from lowest to highest)
   #
   #                                      type       assoc
-  add_operator [".", "\n", "\r\n"],      :nullary,  :left
+  add_operator ["\n", "\r\n", ";"],      :nullary,  :left
   add_operator ["=", "+=", "-=", "*=",
                 "/=", "&=", "|=",
                 "&&=", "||="],           :ternary,  :right
@@ -66,6 +66,7 @@ class Message
   add_operator ["*", "/", "%"],          :binary,   :left
   add_operator ["!", "not", "~", "@",
                 "-@", "+@", "*@", "&@"], :unary,    :right
+  add_operator ["."],                    :nullary,  :left
   
   attr_reader :name, :operator
   attr_accessor :next, :prev, :args
@@ -80,7 +81,7 @@ class Message
   
   def fullname
     args_fullnames = @args.map(&:fullname).join(', ')
-    [@name + (@args.any? ? "(#{args_fullnames})" : ""), (@next.fullname if @next)].compact.join(" ")
+    [@name + (@args.any? ? "(#{args_fullnames})" : ""), (@next.fullname if @next)].compact.join
   end
   
   def to_s
@@ -107,7 +108,7 @@ class Message
   end
 
   def last?
-    @next.nil? || terminator?
+    @next.nil? #|| terminator?
   end
 
   # Detach the last message from the chain
@@ -191,14 +192,14 @@ class Message
           stack.push before
         when m.operator.unary?
           arg = stack.pop
-          m.insert arg.detatch
           m.args = [arg]
           stack.push m
         when m.operator.binary?
-          m.args = [stack.pop]
-          m2 = stack.pop
-          m2.append m
-          stack.push m2
+          arg = stack.pop
+          m.args = [arg]
+          receiver = stack.pop
+          receiver.append m
+          stack.push receiver
         when m.operator.ternary?
           val = stack.pop
           receiver = stack.pop
@@ -240,41 +241,45 @@ if __FILE__ == $PROGRAM_NAME
   require "test/unit"
   
   class ShufflingTest < Test::Unit::TestCase
-    def test_assign
-      assert_equal "=(x, 2 +(3))", M(%w( x = 2 + 3 )).shuffle.fullname
-      assert_equal "object =(prop, x y)", M(%w( object prop = x y )).shuffle.fullname
-      assert_equal "=(object, x y x)", M(%w( object = x y x )).shuffle.fullname
-      assert_equal "x =(a, e d)", M(%w( x a = e d )).shuffle.fullname
-      assert_equal "a b +(c d)", M(%w( a b + c d )).shuffle.fullname
+    def xtest_nullary
+      assert_equal "a.b.c", M(%w( a . b . c )).shuffle.fullname
+      assert_equal "a.b;c", M(%w( a . b ; c )).shuffle.fullname
+    end
+
+    def xtest_ternary
+      assert_equal "=(x, 2+(3))", M(%w( x = 2 + 3 )).shuffle.fullname
+      assert_equal "object.=(prop, x.y)", M(%w( object . prop = x . y )).shuffle.fullname
+      assert_equal "=(object, x.y.x)", M(%w( object = x . y . x )).shuffle.fullname
+      assert_equal "x.=(a, e.d)", M(%w( x . a = e . d )).shuffle.fullname
       assert_equal "=(a, =(b, c))", M(%w( a = b = c )).shuffle.fullname
       assert_equal "||=(a, &&=(b, c))", M(%w( a ||= b &&= c )).shuffle.fullname
+    end
+
+    def test_binary
+      assert_equal "1+(2)", M(%w( 1 + 2 )).shuffle.fullname
+      assert_equal "1+(2*(3))", M(%w( 1 + 2 * 3 )).shuffle.fullname
+      assert_equal "1*(2)+(3)", M(%w( 1 * 2 + 3 )).shuffle.fullname
+      assert_equal "1+(2.to_i)", M(%w( 1 + 2 . to_i )).shuffle.fullname
+      assert_equal "a.b+(c.d)", M(%w( a . b + c . d )).shuffle.fullname      
     end
 
     def test_unary
       assert_equal "-@(a)", M(%w( -@ a )).shuffle.fullname
       assert_equal "!(a)", M(%w( ! a )).shuffle.fullname
       assert_equal "not(a)", M(%w( not a )).shuffle.fullname
+      assert_equal "not(a.b)", M(%w( not a . b )).shuffle.fullname
       assert_equal "!(@(a))", M(%w( ! @ a )).shuffle.fullname
       assert_equal "!(!(a))", M(%w( ! ! a )).shuffle.fullname
-      assert_equal "a b @(c)", M(%w( a b @ c )).shuffle.fullname
-      assert_equal "a !(b) c", M(%w( a ! b c )).shuffle.fullname
-      assert_equal "a +(!(b) c)", M(%w( a + ! b c )).shuffle.fullname
-      assert_equal "=(x, !(2) +(3 *(1)))", M(%w( x = ! 2 + 3 * 1 )).shuffle.fullname
-    end
-
-    def test_binary
-      assert_equal "1 +(2)", M(%w( 1 + 2 )).shuffle.fullname
-      assert_equal "1 +(2 *(3))", M(%w( 1 + 2 * 3 )).shuffle.fullname
-      assert_equal "1 *(2) +(3)", M(%w( 1 * 2 + 3 )).shuffle.fullname
-      # assert_equal "1 *(2) println", M(%w( 1 + 2 print )).shuffle.fullname
+      assert_equal "a.b@(c)", M(%w( a . b @ c )).shuffle.fullname
+      assert_equal "a+(!(b.c))", M(%w( a + ! b . c )).shuffle.fullname
+      assert_equal "=(x, !(2)+(3*(1)))", M(%w( x = ! 2 + 3 * 1 )).shuffle.fullname
     end
 
     def test_with_terminator
-      assert_equal "1 . 2", M(%w( 1 . 2 )).shuffle.fullname
-      assert_equal "1 +(2) . 1", M(%w( 1 + 2 . 1 )).shuffle.fullname
-      assert_equal "1 +(2) . 1", M(%w( 1 + 2 . 1 )).shuffle.fullname
-      assert_equal "=(x, 2) . =(y, 3 +(4))", M(%w( x = 2 . y = 3 + 4 )).shuffle.fullname
-      assert_equal "a =(x, 2 +(3)) . 1", M(%w( a x = 2 + 3 . 1 )).shuffle.fullname
+      assert_equal "1\n2", M(%W( 1 \n 2 )).shuffle.fullname
+      assert_equal "1+(2)\n1", M(%W( 1 + 2 \n 1 )).shuffle.fullname
+      assert_equal "=(x, 2)\n=(y, 3+(4))", M(%W( x = 2 \n y = 3 + 4 )).shuffle.fullname
+      assert_equal "a.=(x, 2+(3))\n1", M(%W( a . x = 2 + 3 \n 1 )).shuffle.fullname
     end
   end
 end
