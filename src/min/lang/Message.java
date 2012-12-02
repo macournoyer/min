@@ -39,7 +39,12 @@ public class Message extends MinObject {
 
   public boolean isTerminator() {
     // Same as in Scanner.rl
-    return name.equals("\n") || name.equals("\r\n") || name.equals(".");
+    return name.equals("\n") || name.equals("\r\n") || name.equals(";");
+  }
+
+  public boolean isNoop() {
+    // Same as in Scanner.rl
+    return name.equals(".");
   }
 
   public boolean isOperator() {
@@ -91,11 +96,18 @@ public class Message extends MinObject {
   }
   
   public MinObject evalOn(MinObject on, MinObject base) throws MinException {
-    if (this.isTerminator()) {
-      if (this.next == null) return on;
-      return this.next.evalOn(base);
+    // Noop operator just pass the message down the chain.
+    if (isNoop()) {
+      if (next == null) return on;
+      return next.evalOn(on, base);
     }
     
+    // Terminators reset the receiver to base
+    if (isTerminator()) {
+      if (next == null) return on;
+      return next.evalOn(base);
+    }
+
     MinObject response = null;
     if (this.cachedResponse == null) {
       try {
@@ -148,7 +160,7 @@ public class Message extends MinObject {
     }
     
     if (this.next != null) {
-      if (!isTerminator()) b.append(" ");
+      if (!isNoop() && !next.isNoop()) b.append(" ");
       b.append(this.next.fullName());
     }
     

@@ -41,8 +41,9 @@ public class Scanner {
                 | "<=" | "<" | ">=" | ">"
                 | "==" | "!=" | "!"
                 | "="
-                | "?";
-    terminator  = ".";
+                | "?"
+                | ".";
+    terminator  = ";";
     symbol      = single | identifier | operator | terminator;
     
     main := |*
