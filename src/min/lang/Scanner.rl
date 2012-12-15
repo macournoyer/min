@@ -3,8 +3,8 @@ package min.lang;
 import java.util.Stack;
 
 public class Scanner {
-  final String input;
-  final String filename;
+  String input;
+  String filename;
   int line;
   Message root = null;
   Message message = null;
@@ -27,7 +27,7 @@ public class Scanner {
     
     newline     = "\r"? "\n" %{ line++; };
     indent      = "  " | "\t";
-    block       = newline %mark indent+;
+    block       = newline+ %mark indent+;
     whitespace  = " ";
     comment     = whitespace* "#" (any - newline)* newline?;
     string      = ("'" (any - "'")* "'" )
@@ -42,9 +42,10 @@ public class Scanner {
                 | "==" | "!=" | "!"
                 | "="
                 | "?"
-                | ".";
-    terminator  = ";";
-    symbol      = single | identifier | operator | terminator;
+                | "."
+                | ";";
+    terminator  = newline | ";";
+    symbol      = single | identifier | operator;
     
     main := |*
       # Indentation magic
@@ -82,9 +83,9 @@ public class Scanner {
         }
         currentIndent = indent;
       };
-      newline         => {
+      terminator  => {
         emptyIndentStack();
-        pushTerminator();
+        pushTerminator(getSlice(ts, te));
       };
       
       # Ignored tokens
@@ -167,7 +168,11 @@ public class Scanner {
   }
   
   private Message pushTerminator() {
-    return pushUniqueMessage(new Message("\n", filename, line));
+    return pushTerminator("\n");
+  }
+  
+  private Message pushTerminator(String name) {
+    return pushUniqueMessage(new Message(name, filename, line));
   }
   
   private void startBlock() {

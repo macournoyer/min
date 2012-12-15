@@ -1,0 +1,22 @@
+=(Shuffler, Object.clone)
+
+Shuffler.set_slot("shuffle", method(m):
+  =(output_queue, Array.new)
+  =(stack, Array.new)
+
+  while (m):
+    # TODO shuffle args
+
+    if (m.operator?):
+      stack.push(m)
+
+    if (not(m.operator?)):
+      output_queue.push(m)
+      =(m, m.next)
+
+    =(m, m.detatch)
+
+  output_queue
+)
+
+Shuffler.shuffle(Message.new("1 a")).println

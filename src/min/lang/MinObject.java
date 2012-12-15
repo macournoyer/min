@@ -73,6 +73,7 @@ public class MinObject {
     for (MinObject proto : protos) {
       if (proto.hasSlot(name)) return proto.getSlot(name);
     }
+    if (name == "kind") throw new SlotNotFound("Slot '" + name + "' not found on unknown object");
     throw new SlotNotFound("Slot '" + name + "' not found on " + kind());
   }
   

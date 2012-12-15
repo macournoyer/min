@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class main {
   public static void main(String[] args) throws Exception {
     String code = null;
-    String file = null;
+    String file = "<eval>";
     boolean debug = false;
     
     for (int i = 0; i < args.length; i++) {

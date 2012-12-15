@@ -176,7 +176,7 @@ public class Message extends MinObject {
 
   static public Message parse(String code, String file) throws ParsingException {
     Message m = new Scanner(code, file).scan();
-    m = new Shuffler().shuffle(m);
+    // m = new Shuffler().shuffle(m);
     return m;
   }
   

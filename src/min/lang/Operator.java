@@ -20,7 +20,7 @@ public class Operator {
     //               == Operator precedence table ==
     //
     //                            arity, rightToLeft?, names
-    defineOperators(precedence++, 0,     false,        ".", "\n", "\r\n");
+    defineOperators(precedence++, 0,     false,        ";", "\n", "\r\n");
     defineOperators(precedence++, 3,     true,         "=",
                                                        "+=", "-=", "*=", "/=",
                                                        "&=", "|=",
@@ -39,6 +39,7 @@ public class Operator {
     defineOperators(precedence++, 1,     true,         "!", "not",
                                                        "~", "@",
                                                        "-@", "+@", "*@", "&@");
+    defineOperators(precedence++, 0,     false,        ".");
 
   };
   

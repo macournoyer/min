@@ -75,10 +75,23 @@ public class Bootstrap {
       }).
       slot("while", new Method() {
         public MinObject activate(Call call) throws MinException {
-          while(call.evalArg(0).isTrue()) {
+          while (call.evalArg(0).isTrue()) {
             call.evalArg(1);
           }
           return MinObject.nil;
+        }
+      }).
+      slot("if", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          if (call.evalArg(0).isTrue()) {
+            return call.evalArg(1);
+          }
+          return MinObject.nil;
+        }
+      }).
+      slot("not", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          return MinObject.newBool(!call.evalArg(0).isTrue());
         }
       }).
       slot("do", new Method() {
@@ -220,11 +233,25 @@ public class Bootstrap {
           return MinObject.newNumber(call.receiver.getDataAsArray().size());
         }
       }).
-      slot("<<", new Method() {
+      slot("push", new Method() {
         public MinObject activate(Call call) throws MinException {
           MinObject obj = call.evalArg(0);
           call.receiver.getDataAsArray().add(obj);
           return obj;
+        }
+      }).
+      slot("pop", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          ArrayList<MinObject> array = call.receiver.getDataAsArray();
+          if (array.isEmpty()) return MinObject.nil;
+          return array.remove(0);
+        }
+      }).
+      slot("shift", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          ArrayList<MinObject> array = call.receiver.getDataAsArray();
+          if (array.isEmpty()) return MinObject.nil;
+          return array.remove(array.size() - 1);
         }
       }).
       slot("each", new Method() {
@@ -259,6 +286,12 @@ public class Bootstrap {
           return MinObject.newString(m.name);
         }
       }).
+      slot("full_name", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          Message m = (Message)call.receiver;
+          return MinObject.newString(m.fullName());
+        }
+      }).
       slot("prev", new Method() {
         public MinObject activate(Call call) throws MinException {
           Message m = (Message)call.receiver;
@@ -277,10 +310,40 @@ public class Bootstrap {
           return MinObject.newArray(m.args.toArray(new MinObject[0]));
         }
       }).
-      slot("terminator?", new Method() {
+      slot("last?", new Method() {
         public MinObject activate(Call call) throws MinException {
           Message m = (Message)call.receiver;
-          return MinObject.newBool(m.isTerminator());
+          return MinObject.newBool(m.isLast());
+        }
+      }).
+      slot("operator?", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          Message m = (Message)call.receiver;
+          return MinObject.newBool(m.isOperator());
+        }
+      }).
+      slot("tail", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          Message m = (Message)call.receiver;
+          return m.tail();
+        }
+      }).
+      slot("insert", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          Message m = (Message)call.receiver;
+          return m.insert((Message)call.evalArg(0));
+        }
+      }).
+      slot("append", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          Message m = (Message)call.receiver;
+          return m.append((Message)call.evalArg(0));
+        }
+      }).
+      slot("detatch", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          Message m = (Message)call.receiver;
+          return m.detatch();
         }
       }).
       slot("pop", new Method() {
@@ -328,8 +391,8 @@ public class Bootstrap {
           return c.message;
         }
       });
-    
-    // MinObject.require("bootstrap");
+
+    MinObject.require("bootstrap");
   }
   
   private Properties loadProperties() throws MinException {

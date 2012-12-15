@@ -11,15 +11,22 @@ public class Shuffler {
   public Message shuffle(Message m) throws ParsingException {
     LinkedList<Message> outputQueue = new LinkedList<Message>();
     LinkedList<Message> stack = new LinkedList<Message>();
+
+    // System.out.println("Before shuffling: '" + m.fullName() + "'");
     
     Message m2;
 
     while (m != null) {
+      // Shuffle args
+      for (Message arg : m.args) {
+        m.args.set(m.args.indexOf(arg), shuffle(arg));
+      }
+
       if (m.isOperator()) {
         m2 = stack.peek();
         while (m2 != null &&
-               (m.operator.isLeftToRight() && m.operator.precedence <= m2.operator.precedence) ||
-               (m.operator.isRightToLeft() && m.operator.precedence < m2.operator.precedence)) {
+               ((m.operator.isLeftToRight() && m.operator.precedence <= m2.operator.precedence) ||
+                (m.operator.isRightToLeft() && m.operator.precedence < m2.operator.precedence))) {
           outputQueue.add(stack.pop());
           m2 = stack.peek();
         }
@@ -46,21 +53,25 @@ public class Shuffler {
       m = outputQueue.pop();
       if (m.isOperator()) {
         if (m.operator.isNullary()) {
-          Message after = stack.pop();
-          Message before = stack.pop();
-          before.append(m);
-          m.append(after);
-          stack.push(before);
+          Message after = null, before = null;
+          if (!stack.isEmpty()) after = stack.pop();
+          if (!stack.isEmpty()) before = stack.pop();
+          if (after != null) m.append(after);
+          if (before != null) {
+            before.append(m);
+            stack.push(before);
+          } else {
+            stack.push(m);
+          }
         } else if (m.operator.isUnary()) {
           Message arg = stack.pop();
-          m.insert(arg.detatch());
           m.args.add(arg);
           stack.push(m);
         } else if (m.operator.isBinary()) {
           m.args.add(stack.pop());
-          m2 = stack.pop();
-          m2.append(m);
-          stack.push(m2);
+          Message receiver = stack.pop();
+          receiver.append(m);
+          stack.push(receiver);
         } else if (m.operator.isTernary()) {
           Message val = stack.pop();
           Message receiver = stack.pop();
@@ -88,8 +99,6 @@ public class Shuffler {
       m = stack.pop();
       if (n != null) m.append(n);
     }
-
-    System.out.println("ok");
 
     return m;
   }

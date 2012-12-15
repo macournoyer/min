@@ -71,12 +71,12 @@ class Message
   attr_reader :name, :operator
   attr_accessor :next, :prev, :args
   
-  def initialize(name, _next=nil)
+  def initialize(name, _next=nil, args=[])
     @name = name
     self.next = _next
     @prev = nil
     @operator = Operators[name]
-    @args = []
+    @args = args
   end
   
   def fullname
@@ -156,6 +156,8 @@ class Message
     m = self
 
     while m
+      m.args = m.args.map { |arg| arg.shuffle }
+      
       if m.operator
         m2 = stack.last
         while m2 && ((m.operator.left_to_right? && m.operator.precedence <= m2.operator.precedence) ||
@@ -186,10 +188,13 @@ class Message
         case true
         when m.operator.nullary?
           after = stack.pop
-          before = stack.pop
-          before.append m
-          m.append after
-          stack.push before
+          m.append after if after
+          if before = stack.pop
+            before.append m
+            stack.push before
+          else
+            stack.push m
+          end
         when m.operator.unary?
           arg = stack.pop
           m.args = [arg]
@@ -229,10 +234,11 @@ class Message
   end
 end
 
-def M(names)
+def M(names, args=[])
   m = nil
+  names = Array(names)
   while name = names.pop
-    m = Message.new(name, m)
+    m = Message.new(name, m, args.dup)
   end
   m
 end
@@ -241,12 +247,14 @@ if __FILE__ == $PROGRAM_NAME
   require "test/unit"
   
   class ShufflingTest < Test::Unit::TestCase
-    def xtest_nullary
+    def test_nullary
       assert_equal "a.b.c", M(%w( a . b . c )).shuffle.fullname
       assert_equal "a.b;c", M(%w( a . b ; c )).shuffle.fullname
+      assert_equal "\n", M(%W( \n )).shuffle.fullname
+      assert_equal "\na", M(%W( \n a )).shuffle.fullname
     end
 
-    def xtest_ternary
+    def test_ternary
       assert_equal "=(x, 2+(3))", M(%w( x = 2 + 3 )).shuffle.fullname
       assert_equal "object.=(prop, x.y)", M(%w( object . prop = x . y )).shuffle.fullname
       assert_equal "=(object, x.y.x)", M(%w( object = x . y . x )).shuffle.fullname
@@ -280,6 +288,10 @@ if __FILE__ == $PROGRAM_NAME
       assert_equal "1+(2)\n1", M(%W( 1 + 2 \n 1 )).shuffle.fullname
       assert_equal "=(x, 2)\n=(y, 3+(4))", M(%W( x = 2 \n y = 3 + 4 )).shuffle.fullname
       assert_equal "a.=(x, 2+(3))\n1", M(%W( a . x = 2 + 3 \n 1 )).shuffle.fullname
+    end
+
+    def test_nested
+      assert_equal "a(1+(2))", M("a", [M(%W( 1 + 2 ))]).shuffle.fullname
     end
   end
 end

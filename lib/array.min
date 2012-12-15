@@ -6,9 +6,9 @@ Array do:
   last   = method: @at(@size - 1)
   
   select = method:
-    selected = Array new
+    selected = Array.new
     @each(i):
-      if(call args first eval_on(i)):
+      if (call.args.first.eval_on(i)):
         selected << i
     selected
   
