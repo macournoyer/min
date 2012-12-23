@@ -120,10 +120,16 @@ public class Scanner {
     int p = 0, pe = eof, ts = 0, te = 0, act = 0, mark = 0;
     int[] stack = new int[32];
     line = 1;
+
+    if (debug) {
+      System.out.println("=== Parsing " + filename + " ===");
+      System.out.println(input);
+      System.out.println("===============");
+    }
     
     %% write init;
     %% write exec;
-    
+
     if (cs == Scanner_error || p != pe)
       throw new ParsingException(String.format("Syntax error at line %d around '%s...'", line, input.substring(p, Math.min(p+5, pe))));
     
@@ -133,6 +139,12 @@ public class Scanner {
     
     if (!argStack.empty())
       throw new ParsingException(argStack.size() + " unclosed parenthesis at line " + line);
+
+    if (debug) {
+      System.out.println("=== Done parsing ===");
+      System.out.println(root.fullName());
+      System.out.println("====================");
+    }
     
     return root;
   }
@@ -142,20 +154,25 @@ public class Scanner {
   }
   
   private void emptyIndentStack() {
+    if (debug && !indentStack.empty()) System.out.println("Emptying indent stack");
     while (!indentStack.empty()) {
-      indentStack.pop();
+      int indent = indentStack.pop();
       message = argStack.pop();
+      debugIndent("-", indent);
     }
     currentIndent = 0;
     inBlock = false;
   }
   
   private Message pushMessage(Message m) {
-    if (message != null)
+    if (debug) System.out.println("pushMessage: '" + m.name + "'");
+    
+    if (message != null) {
       message.setNext(m);
-    else if (!argStack.empty())
+    } else if (!argStack.empty()) {
       argStack.peek().args.add(m);
-      
+    }
+    
     message = m;
     
     if (root == null) root = message;
@@ -195,6 +212,6 @@ public class Scanner {
   
   private void debugIndent(String action, int indent) {
     if (debug)
-      System.out.println(String.format("[%s:%02d] %s to %d was %d    indentStack: %-20s  singleBlock? %b", filename, line, action, indent, currentIndent, indentStack.toString(), singleBlock));
+      System.out.println(String.format("[%s:%02d] %s to %d    indentStack: %-20s  singleBlock? %b", filename, line, action, indent, indentStack.toString(), singleBlock));
   }
 }

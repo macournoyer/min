@@ -104,6 +104,12 @@ public class Bootstrap {
         public MinObject activate(Call call) throws MinException {
           return MinObject.nil;
         }
+      }).
+      slot("puts", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          System.out.println(call.evalArg(0).getData());
+          return call.receiver;
+        }
       });
     
     // Object
@@ -131,18 +137,6 @@ public class Bootstrap {
       slot("inspect", new Method() {
         public MinObject activate(Call call) throws MinException {
           return MinObject.newString(call.receiver.toString());
-        }
-      }).
-      slot("print", new Method() {
-        public MinObject activate(Call call) {
-          System.out.print(call.receiver.getData());
-          return call.receiver;
-        }
-      }).
-      slot("println", new Method() {
-        public MinObject activate(Call call) {
-          System.out.println(call.receiver.getData());
-          return call.receiver;
         }
       }).
       slot("new", new Method() {

@@ -3,11 +3,18 @@ package min.lang;
 import min.lang.ParsingException;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 // The fancy message shuffler.
 // Based on the Shunting yard algo.
 public class Shuffler {
+  public void shuffleAllInPlace(ArrayList<Message> messages) throws ParsingException {
+    for (Message m : messages) {
+      messages.set(messages.indexOf(m), shuffle(m));
+    }
+  }
+
   public Message shuffle(Message m) throws ParsingException {
     LinkedList<Message> outputQueue = new LinkedList<Message>();
     LinkedList<Message> stack = new LinkedList<Message>();
@@ -17,11 +24,6 @@ public class Shuffler {
     Message m2;
 
     while (m != null) {
-      // Shuffle args
-      for (Message arg : m.args) {
-        m.args.set(m.args.indexOf(arg), shuffle(arg));
-      }
-
       if (m.isOperator()) {
         m2 = stack.peek();
         while (m2 != null &&
@@ -35,8 +37,10 @@ public class Shuffler {
         outputQueue.add(m);
         // Advance to the next operator
         // TODO perhaps could refactor to combine w/ parent while?
+        shuffleAllInPlace(m.args);
         while (m.next != null && !m.next.isOperator()) {
           m = m.next;
+          shuffleAllInPlace(m.args);
         }
       }
 

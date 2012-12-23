@@ -2,4 +2,4 @@ Base do:
   # Parenthesis (...)
   set_slot(""):
     method:
-      call eval_arg(0)
+      call.eval_arg(0)

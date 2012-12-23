@@ -1,7 +1,7 @@
 # This file is required in Java code after the bootstrap process
 
-# require("boolean")
-# require("base")
+require("boolean")
+require("base")
 # require("guard")
-# require("object")
-# require("array")
+require("object")
+require("array")

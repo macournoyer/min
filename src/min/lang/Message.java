@@ -34,7 +34,7 @@ public class Message extends MinObject {
   }
 
   public boolean isLast() {
-    return this.next == null || isTerminator();
+    return this.next == null; //|| isTerminator();
   }
 
   public boolean isTerminator() {
@@ -131,10 +131,6 @@ public class Message extends MinObject {
     return evalOn(on, on);
   }
   
-  // public String toString() {
-  //   return name;
-  // }
-
   public String toString() {
     return fullName();
   }
@@ -146,7 +142,8 @@ public class Message extends MinObject {
   private String fullName(String indent) {
     StringBuilder b = new StringBuilder();
     
-    b.append(this.name);
+    // b.append(name.equals("\n") ? "<\\n>" : name);
+    b.append(name);
     if (isTerminator()) b.append(indent);
     
     if (this.args.size() > 0) {
@@ -176,7 +173,7 @@ public class Message extends MinObject {
 
   static public Message parse(String code, String file) throws ParsingException {
     Message m = new Scanner(code, file).scan();
-    // m = new Shuffler().shuffle(m);
+    m = new Shuffler().shuffle(m);
     return m;
   }
   

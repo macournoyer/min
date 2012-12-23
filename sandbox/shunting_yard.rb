@@ -156,7 +156,7 @@ class Message
     m = self
 
     while m
-      m.args = m.args.map { |arg| arg.shuffle }
+      # m.args = m.args.map { |arg| arg.shuffle }
       
       if m.operator
         m2 = stack.last
@@ -170,7 +170,11 @@ class Message
         output_queue.push m
         # Advance to the next operator
         # TODO perhaps could refactor to combine w/ parent while?
-        m = m.next until m.next.nil? || m.next.operator
+        m.args = m.args.map { |arg| arg.shuffle }
+        until m.next.nil? || m.next.operator
+          m = m.next
+          m.args = m.args.map { |arg| arg.shuffle }
+        end
       end
 
       # Cut it from the message chain
@@ -234,17 +238,25 @@ class Message
   end
 end
 
-def M(names, args=[])
-  m = nil
-  names = Array(names)
-  while name = names.pop
-    m = Message.new(name, m, args.dup)
-  end
-  m
-end
 
 if __FILE__ == $PROGRAM_NAME
   require "test/unit"
+  
+  def M(*names)
+    names = Array(names)
+    names = names.first if names.size == 1
+    m = nil
+    while name = names.pop
+      if name.is_a?(Array)
+        args = name
+        name = names.pop
+      else
+        args = []
+      end
+      m = Message.new(name, m, args)
+    end
+    m
+  end
   
   class ShufflingTest < Test::Unit::TestCase
     def test_nullary
@@ -292,6 +304,7 @@ if __FILE__ == $PROGRAM_NAME
 
     def test_nested
       assert_equal "a(1+(2))", M("a", [M(%W( 1 + 2 ))]).shuffle.fullname
+      assert_equal "a(1+(2))b(3*(4))", M("a",[M(%W( 1 + 2 ))], "b",[M(%w(3 * 4))]).shuffle.fullname
     end
   end
 end

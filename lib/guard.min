@@ -1,4 +1,4 @@
-# Implement guarded method invogation operator `?`.
+# Implement guarded method invocation operator `?`.
 # Usage: potential_nil ?println # println will be called unless potential_nil is nil
 
 Base do:
