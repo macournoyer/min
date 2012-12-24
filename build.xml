@@ -1,4 +1,4 @@
-<project name="min" default="compile">
+<project name="min" default="spec">
   <target name="init">
     <mkdir dir="classes"/>
     <dirname property="pwd" file="build.xml" />
@@ -20,6 +20,12 @@
     <exec executable="ragel">
       <arg value="-J"/>
       <arg value="src/min/lang/Scanner.rl"/>
+    </exec>
+  </target>
+
+  <target name="spec" depends="compile" description="Run specs.">
+    <exec executable="bin/min">
+      <arg value="spec/all.min"/>
     </exec>
   </target>
 

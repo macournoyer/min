@@ -1,6 +1,4 @@
 Array do:
-  # alias(@, at)
-  
   first  = method: self.at(0)
   second = method: self.at(1)
   last   = method: self.at(self.size - 1)
