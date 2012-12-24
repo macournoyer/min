@@ -28,6 +28,7 @@ public class Method extends MinObject {
     MinObject context = call.receiver.clone();
     context.asKind("MethodContext").
             slot("self", call.receiver).
+            slot("@", call.receiver).
             slot("call", call).
             slot("context", context);
     for (int i = 0; i < argNames.length; i++)

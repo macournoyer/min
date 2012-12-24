@@ -37,7 +37,7 @@ public class Operator {
     defineOperators(precedence++, 2,     false,        "+", "-");
     defineOperators(precedence++, 2,     false,        "*", "/", "%");
     defineOperators(precedence++, 1,     true,         "!", "not",
-                                                       "~", "@",
+                                                       "~", "?",
                                                        "-@", "+@", "*@", "&@");
     defineOperators(precedence++, 0,     false,        ".");
 

@@ -2,15 +2,18 @@ require("spec")
 
 describe("arithmetic shuffling"):
   it("supports simple equation"):
-    Message new("1 + 2") inspect should == "1 +(2)"
+    Message.new("1 + 2").inspect should == "1 +(2)"
+  it("respects operator precedence"):
+    Message.new("1 + 2 * 3").inspect should == "1 +(2 *(3))"
+    Message.new("1 * 2 + 3").inspect should == "1 *(2) +(3)"
 
 describe("logical shuffling"):
   it("includes entire message chain"):
-    Message new("1 && 2 print") inspect should == "1 &&(2 print)"
+    Message.new("1 && 2 print").inspect should == "1 &&(2 print)"
+  it("respects operator precedence"):
+    Message.new("1 || 2 && 4").inspect should == "1 ||(2 &&(4))"
+    Message.new("1 || !2 && 4").inspect should == "1 ||(!(2) &&(4))"
 
 describe("parenthesis"):
   it("parses parenthesis as anonymous message"):
-    Message new("(holla)") inspect should == "(holla)"
-  
-  it("parses parenthesis after assignation"):
-    Message new("x = (1 + 2)") inspect should == "=(x, 1 +(2))"
+    Message.new("(holla)").inspect should == "(holla)"

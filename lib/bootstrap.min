@@ -2,6 +2,6 @@
 
 require("boolean")
 require("base")
-# require("guard")
+require("guard")
 require("object")
 require("array")

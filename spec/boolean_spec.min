@@ -1,7 +1,25 @@
 require("spec")
 
 describe("true"):
-  it("equal to true"):
+  it("is true"):
     true should == true
-  it("not equal to false"):
+  it("is not false"):
     true should != false
+  it("is not equal to object"):
+    true should != "cookie"
+
+describe("false"):
+  it("is false"):
+    false should == false
+  it("is not true"):
+    true should != true
+
+describe("nil"):
+  it("is nil"):
+    nil should == nil
+  it("is not false"):
+    nil should != false
+  it("is not true"):
+    nil should != true
+  it("is not equal to string"):
+    nil should != "muffin"

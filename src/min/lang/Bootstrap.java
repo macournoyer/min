@@ -110,6 +110,12 @@ public class Bootstrap {
           System.out.println(call.evalArg(0).getData());
           return call.receiver;
         }
+      }).
+      slot("print", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          System.out.print(call.evalArg(0).getData());
+          return call.receiver;
+        }
       });
     
     // Object
@@ -157,6 +163,22 @@ public class Bootstrap {
           return MinObject.newBool(!call.receiver.getData().equals(call.evalArg(0).getData()));
         }
       });
+
+    // nil
+    MinObject.nil.
+      slot("==", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          MinObject arg = call.evalArg(0);
+          return MinObject.newBool(arg == MinObject.nil);
+        }
+      }).
+      slot("!=", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          MinObject arg = call.evalArg(0);
+          return MinObject.newBool(arg != MinObject.nil);
+        }
+      });
+
     
     // String
     MinObject.string.

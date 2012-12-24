@@ -1,34 +1,34 @@
-Spec = Object clone do:
-  all = Array new
+Spec = Object.clone do:
+  all = Array.new
   
-  Matcher = Object clone do:
+  Matcher = Object.clone do:
     initialize = method(object):
       @object = object
     
-    set_slot("=="):
-      method(expected):
-        if(@object != expected):
-          "  " print
-          $current_test print
-          ". FAILED! Was: " print
-          @object println
+    set_slot("=="): method(expected):
+      if (@object != expected):   puts("    FAILED! Expected: " + expected + ", Was: " + @object)
+    
+    set_slot("!="): method(unexpected):
+      if (@object == unexpected): puts("    FAILED! Expected not: " + unexpected)
   
   initialize = method(name):
     @name = name
-    name println
+    puts(name)
   
   it = method(name):
-    $current_test = name
-    call args last eval_on(@)
-    $current_test = nil
+    puts("  " + name)
+    call.args.last.eval_on(self)
+  
+  xit = method(name):
+    puts("  pending: " + name)
 
 
 describe = method(name):
-  spec = Spec new(name)
-  call args second eval_on(spec)
-  Spec all << spec
+  spec = Spec.new(name)
+  call.args.second.eval_on(spec)
+  Spec.all.push(spec)
 
 
 Object do:
   should = method:
-    Spec Matcher new(@)
+    Spec.Matcher.new(self)
