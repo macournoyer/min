@@ -1,0 +1,7 @@
+# TCPSocket.new('google.com', 80):
+#   @write("GET / HTTP/1.1\r\n")
+#   @write("\r\n")
+#   puts(@read)
+
+content = File.read("README")
+puts(content)

@@ -38,15 +38,6 @@ public class Scheduler {
       evaluator.yield();
       if (evaluator.isDone()) evaluators.remove(evaluator);
     }
-
-    // Iterator<Evaluator> it = evaluators.iterator();
-    // while (it.hasNext()) {
-    //   Evaluator evaluator = it.next();
-
-    //   evaluator.yield();
-
-    //   if (evaluator.isDone()) it.remove();
-    // }
   }
 
   public static Scheduler current() {
