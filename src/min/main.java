@@ -1,10 +1,6 @@
 package min;
 
-import min.lang.MinObject;
-import min.lang.Message;
-import min.lang.Method;
-import min.lang.File;
-import min.lang.Bootstrap;
+import min.lang.*;
 import java.util.ArrayList;
 
 public class main {
@@ -27,6 +23,8 @@ public class main {
     new Bootstrap().run();
     Message message = Message.parse(code, file);
     if (debug) System.out.println(message.fullName());
-    message.evalOn(MinObject.lobby);
+
+    Scheduler.current().schedule(message);
+    Scheduler.current().run();
   }
 }

@@ -20,10 +20,6 @@ public class Method extends MinObject {
     return message.evalOn(makeContext(call));
   }
   
-  public MinObject callOn(MinObject on) throws MinException {
-    return activate(new Call(on));
-  }
-  
   private MinObject makeContext(Call call) throws MinException {
     MinObject context = call.receiver.clone();
     context.asKind("MethodContext").

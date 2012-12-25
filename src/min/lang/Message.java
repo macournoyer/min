@@ -96,35 +96,37 @@ public class Message extends MinObject {
   }
   
   public MinObject evalOn(MinObject on, MinObject base) throws MinException {
-    // Noop operator just pass the message down the chain.
-    if (isNoop()) {
-      if (next == null) return on;
-      return next.evalOn(on, base);
-    }
-    
-    // Terminators reset the receiver to base
-    if (isTerminator()) {
-      if (next == null) return on;
-      return next.evalOn(base);
-    }
+    return Scheduler.current().runAndWaitForReturn(this, on, base);
 
-    MinObject response = null;
-    if (this.cachedResponse == null) {
-      try {
-        response = on.getSlot(this.name).activate(new Call(this, on, base, args));
-        // Handle some Java null => Min nil conversion
-        if (response == null) response = MinObject.nil;
-      } catch (Exception e) {
-        // TODO Handle catching exception
-        if (e instanceof MinException && e.getCause() != null) throw (MinException)e;
-        throw new MinException(String.format("%s in %s:%d", e.getMessage(), file, line), e);
-      }
-    } else {
-      response = this.cachedResponse;
-    }
+    // // Noop operator just pass the message down the chain.
+    // if (isNoop()) {
+    //   if (next == null) return on;
+    //   return next.evalOn(on, base);
+    // }
     
-    if (this.next == null) return response;
-    return this.next.evalOn(response, base);
+    // // Terminators reset the receiver to base
+    // if (isTerminator()) {
+    //   if (next == null) return on;
+    //   return next.evalOn(base);
+    // }
+
+    // MinObject response = null;
+    // if (this.cachedResponse == null) {
+    //   try {
+    //     response = on.getSlot(this.name).activate(new Call(this, on, base, args));
+    //     // Handle some Java null => Min nil conversion
+    //     if (response == null) response = MinObject.nil;
+    //   } catch (Exception e) {
+    //     // TODO Handle catching exception
+    //     if (e instanceof MinException && e.getCause() != null) throw (MinException)e;
+    //     throw new MinException(String.format("%s in %s:%d", e.getMessage(), file, line), e);
+    //   }
+    // } else {
+    //   response = this.cachedResponse;
+    // }
+    
+    // if (this.next == null) return response;
+    // return this.next.evalOn(response, base);
   }
   
   public MinObject evalOn(MinObject on) throws MinException {

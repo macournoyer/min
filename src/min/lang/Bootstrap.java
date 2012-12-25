@@ -62,6 +62,13 @@ public class Bootstrap {
           return call.receiver.getSlot(call.evalArg(0).getDataAsString());
         }
       }).
+      slot("async", new Method() {
+        public MinObject activate(Call call) throws MinException {
+          Message message = call.args.get(0);
+          Scheduler.current().schedule(message, call.receiver, call.base);
+          return MinObject.nil;
+        }
+      }).
       slot("method", new Method() {
         public MinObject activate(Call call) throws MinException {
           return new Method(call);

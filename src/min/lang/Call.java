@@ -18,10 +18,6 @@ public class Call extends MinObject {
     this.args = args;
   }
   
-  public Call(MinObject receiver) {
-    this(null, receiver, receiver, new ArrayList<Message>());
-  }
-  
   public MinObject evalArg(int at) throws MinException {
     if (at >= args.size()) return MinObject.nil;
     return args.get(at).evalOn(base);
