@@ -1,9 +1,10 @@
 package min.lang;
 
-import min.lang.ParsingException;
+//import min.lang.ParsingException;
 import java.util.ArrayList;
 
 public class Message extends MinObject {
+
   String name;
   String file;
   int line;
@@ -108,7 +109,7 @@ public class Message extends MinObject {
       return next.evalOn(base);
     }
 
-    MinObject response = null;
+    MinObject response;
     if (this.cachedResponse == null) {
       try {
         response = on.getSlot(this.name).activate(new Call(this, on, base, args));
@@ -164,6 +165,7 @@ public class Message extends MinObject {
     return b.toString();
   }
   
+  @Override
   public Message clone() {
     Message m = new Message(name, file, line, cachedResponse);
     m.next = this.next;
@@ -180,4 +182,5 @@ public class Message extends MinObject {
   static public Message parse(String code) throws ParsingException {
     return parse(code, "<eval>");
   }
+
 }

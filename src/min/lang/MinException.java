@@ -2,6 +2,7 @@ package min.lang;
 
 @SuppressWarnings("serial")
 public class MinException extends Exception {
+
   public MinException(String message) {
     super(message);
   }
@@ -13,4 +14,5 @@ public class MinException extends Exception {
   public MinException(String message, Throwable cause) {
     super(message, cause);
   }
+
 }

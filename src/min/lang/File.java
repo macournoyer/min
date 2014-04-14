@@ -6,6 +6,7 @@ import java.nio.channels.FileChannel;
 import java.nio.MappedByteBuffer;
 
 public class File extends MinObject {
+
   // Taken from http://stackoverflow.com/questions/326390/how-to-create-a-java-string-from-the-contents-of-a-file
   static public String read(String path) throws MinException {
     try {
@@ -26,4 +27,5 @@ public class File extends MinObject {
   static public boolean exists(String path) throws MinException {
     return new java.io.File(path).exists();
   }
+
 }

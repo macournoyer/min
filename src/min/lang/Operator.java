@@ -3,6 +3,7 @@ package min.lang;
 import java.util.HashMap;
 
 public class Operator {
+
   String name;
   int precedence;
   int arity;
@@ -79,4 +80,5 @@ public class Operator {
   public boolean isTernary() {
     return arity == 3;
   }
+
 }

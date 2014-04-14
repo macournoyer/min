@@ -3,6 +3,7 @@ package min.lang;
 import java.util.ArrayList;
 
 public class Call extends MinObject {
+
   static public MinObject object;
   
   ArrayList<Message> args;

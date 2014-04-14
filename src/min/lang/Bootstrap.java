@@ -6,25 +6,31 @@ import java.io.InputStream;
 import java.io.IOException;
 
 public class Bootstrap {
+
   public void run() throws MinException {
+
     // Bootstrap base objects
     MinObject base = new MinObject();
     MinObject object = base.clone();
     MinObject lobby = base.clone();
     object.prependProto(lobby);
+
     MinObject.object = object;
     MinObject.string = object.clone().with("");
     
     // Introduce objects into Lobby
     MinObject.base = lobby.setSlot("Base", base);
     MinObject.lobby = lobby.setSlot("Lobby", lobby);
+
     lobby.setSlot("$", lobby);
     lobby.setSlot("Object", MinObject.object);
     lobby.setSlot("String", MinObject.string);
+
     MinObject.base.asKind("Base");
     MinObject.lobby.asKind("Lobby");
     MinObject.object.asKind("Object");
     MinObject.string.asKind("String");
+
     MinObject.call = lobby.setSlot("Call", object.clone().asKind("Call"));
     MinObject.method = lobby.setSlot("Method", object.clone().asKind("Method"));
     MinObject.message = lobby.setSlot("Message", object.clone().asKind("Message"));

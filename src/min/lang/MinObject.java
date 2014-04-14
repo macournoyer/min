@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 
 public class MinObject {
+
   static public MinObject base;
   static public MinObject lobby;
   static public MinObject object;
@@ -46,7 +47,7 @@ public class MinObject {
   
   public MinObject setSlot(String name, MinObject value) {
     // If name starts w/ a capital letter, we're creating a kind.
-    // Automaticly set the slot accordingly.
+    // Automatically set the slot accordingly.
     if (name.length() > 0 && Character.isUpperCase(name.charAt(0))) {
       value.asKind(name);
     }
@@ -121,6 +122,7 @@ public class MinObject {
     return this;
   }
   
+  @Override
   public MinObject clone() {
     Object data = this.data;
     if (data instanceof ArrayList) {
@@ -185,4 +187,5 @@ public class MinObject {
     for (MinObject o : items) array.add(o);
     return newArray(array);
   }
+
 }

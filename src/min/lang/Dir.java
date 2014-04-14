@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.File;
 
 public class Dir extends MinObject {
+
   static public String current() throws MinException {
     try {
       return new File(".").getCanonicalPath();
@@ -11,4 +12,5 @@ public class Dir extends MinObject {
       throw new MinException(e);
     }
   }
+
 }

@@ -1,6 +1,7 @@
 package min.lang;
 
 public class Method extends MinObject {
+
   Message message;
   String[] argNames;
   
@@ -35,4 +36,5 @@ public class Method extends MinObject {
       context.setSlot(argNames[i], call.evalArg(i));
     return context;
   }
+
 }
