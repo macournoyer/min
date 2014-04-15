@@ -33,3 +33,5 @@ describe("nil"):
     nil should != "muffin"
   it("is not 0"):
     nil should != 0
+  it("is not -1"):
+    nil should != 0-1 #Ugly workaround too, see above
