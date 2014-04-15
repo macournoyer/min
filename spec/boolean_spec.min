@@ -7,12 +7,21 @@ describe("true"):
     true should != false
   it("is not equal to object"):
     true should != "cookie"
+  it("is not 1"):
+    true should != 1
+  it("is not 0"):
+    true should != 0
 
 describe("false"):
   it("is false"):
     false should == false
   it("is not true"):
     false should != true
+  it("is not 0"):
+    false should != 0
+# BUUUUUG
+#  it("is not -1"):
+#    false should =! -1
 
 describe("nil"):
   it("is nil"):
@@ -23,3 +32,5 @@ describe("nil"):
     nil should != true
   it("is not equal to string"):
     nil should != "muffin"
+  it("is not 0"):
+    nil should != 0
