@@ -12,7 +12,7 @@ describe("false"):
   it("is false"):
     false should == false
   it("is not true"):
-    true should != true
+    false should != true
 
 describe("nil"):
   it("is nil"):
