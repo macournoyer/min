@@ -7,7 +7,7 @@ import min.lang.File;
 import min.lang.Bootstrap;
 //import java.util.ArrayList;
 
-public class main {
+public class Min {
   public static void main(String[] args) throws Exception {
     String code = null;
     String file = "<eval>";
