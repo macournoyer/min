@@ -32,8 +32,10 @@ public class Min {
             usage();
         }
 
-        /* Run bootstrap, parse & eval code */
+        /* Run bootstrap */
         new Bootstrap().run();
+
+        /* run the scanner & eval code */
         Message message = Message.parse(code, file);
         if (debug) System.out.println(message.fullName());
         message.evalOn(MinObject.lobby);
