@@ -122,7 +122,8 @@ public class MinObject {
     return this;
   }
   
-  @Override
+
+  @SuppressWarnings("CloneDoesntCallSuperClone")
   public MinObject clone() {
     Object data = this.data;
     if (data instanceof ArrayList) {

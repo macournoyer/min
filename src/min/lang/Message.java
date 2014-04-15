@@ -165,7 +165,7 @@ public class Message extends MinObject {
     return b.toString();
   }
   
-  @Override
+  @SuppressWarnings("CloneDoesntCallSuperClone")
   public Message clone() {
     Message m = new Message(name, file, line, cachedResponse);
     m.next = this.next;

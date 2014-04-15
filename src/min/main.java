@@ -2,10 +2,10 @@ package min;
 
 import min.lang.MinObject;
 import min.lang.Message;
-import min.lang.Method;
+//import min.lang.Method;
 import min.lang.File;
 import min.lang.Bootstrap;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 public class main {
   public static void main(String[] args) throws Exception {
