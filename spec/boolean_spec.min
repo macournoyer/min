@@ -19,9 +19,8 @@ describe("false"):
     false should != true
   it("is not 0"):
     false should != 0
-# BUUUUUG
-#  it("is not -1"):
-#    false should =! -1
+  it("is not -1"):
+    false should =! 0-1 #Ugly workaround because -1 doesn't work
 
 describe("nil"):
   it("is nil"):
