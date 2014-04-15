@@ -16,12 +16,12 @@ public class main {
     for (int i = 0; i < args.length; i++) {
       if (args[i].equals("-e")) code = args[++i];
       else if (args[i].equals("-d")) debug = true;
+      else if (args[i].equals("-h")) usage();
       else code = File.read(file = args[i]);
     }
     
     if (code == null) {
-      System.out.println("usage: min [-d] < -e code | file.min >");
-      System.exit(1);
+      usage();
     }
 
     new Bootstrap().run();
@@ -29,4 +29,10 @@ public class main {
     if (debug) System.out.println(message.fullName());
     message.evalOn(MinObject.lobby);
   }
+
+  public static void usage() {
+    System.out.println("usage: min [-d] < -e code | file.min >");
+    System.exit(1);
+  }
+
 }
