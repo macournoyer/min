@@ -1,10 +1,13 @@
 
-                                THE MIN LANGUAGE
+# THE MIN LANGUAGE
 
 Min is a Prototype-based language with syntax inspired by Io and Ruby, topped
 with Python's indentation (but only when you want to). It's aimed at being the
 most readable and powerful language ever, really!
 Oh, and not too slow (running on the JVM).
+
+
+‘‘‘
 
   Min = Io clone do:
     you_can indent to("create blocks")
@@ -18,22 +21,23 @@ Oh, and not too slow (running on the JVM).
     if(indentation == confusing?("sometimes"),
       use () like in(Io)
     )
+‘‘‘
 
-== Philosophies
+## Philosophies
 * Everything is an object.
 * Everything is a message, no special magic statements (if, def, while, +, &&).
 * As little parenthesis as possible.
 * Most of the core is open.
 * As close to English as possible.
 
-== Features
+## Features
 * Running on the JVM
 * Indentation is an option
 * Ruby-like syntax
 * More to come...
 
-== License
+## License
 MIT License, (c) macournoyer
 
-== Status on tarvis-ci.org
+## Status on tarvis-ci.org
 [![Build Status](https://travis-ci.org/ker2x/min.svg?branch=master)](https://travis-ci.org/ker2x/min)
