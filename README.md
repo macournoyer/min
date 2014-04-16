@@ -1,4 +1,3 @@
-
 # THE MIN LANGUAGE
 
 Min is a Prototype-based language with syntax inspired by Io and Ruby, topped
@@ -7,7 +6,7 @@ most readable and powerful language ever, really!
 Oh, and not too slow (running on the JVM).
 
 
-‘‘‘
+```
 
   Min = Io clone do:
     you_can indent to("create blocks")
@@ -21,7 +20,7 @@ Oh, and not too slow (running on the JVM).
     if(indentation == confusing?("sometimes"),
       use () like in(Io)
     )
-‘‘‘
+```
 
 ## Philosophies
 * Everything is an object.
