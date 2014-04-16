@@ -32,4 +32,6 @@
     <target name="clean" description="Remove generated files and directories.">
         <delete dir="classes"/>
     </target>
+
+    <target name="test" description="Just for travis-ci" depends="spec"/>
 </project>
