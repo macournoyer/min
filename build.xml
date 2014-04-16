@@ -9,8 +9,7 @@
     </target>
 
     <target name="compile" depends="init" description="Compile Java sources.">
-        <javac srcdir="src" destdir="classes" includeJavaRuntime="yes"
-               debug="true" target="1.6">
+        <javac srcdir="src" destdir="classes" includeJavaRuntime="yes" debug="true">
             <compilerarg value="-Xlint"/>
         </javac>
 
