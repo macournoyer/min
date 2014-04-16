@@ -13,6 +13,7 @@ public class Bootstrap {
         MinObject base = new MinObject();
         MinObject object = base.clone();
         MinObject lobby = base.clone();
+
         object.prependProto(lobby);
 
         MinObject.object = object;
@@ -52,6 +53,7 @@ public class Bootstrap {
         /////////// Add core slots to objects ///////////
 
         // Base
+        // Implement the very core methods of the language
         MinObject.base.
                 slot("=", new Method() {
                     public MinObject activate(Call call) throws MinException {
@@ -171,6 +173,7 @@ public class Bootstrap {
                 });
 
         // nil
+        // test equality against nil
         MinObject.nil.
                 slot("==", new Method() {
                     public MinObject activate(Call call) throws MinException {
@@ -187,6 +190,7 @@ public class Bootstrap {
 
 
         // String
+        // Concatenation and size of string
         MinObject.string.
                 slot("+", new Method() {
                     public MinObject activate(Call call) throws MinException {
@@ -200,6 +204,7 @@ public class Bootstrap {
                 });
 
         // Number
+        // Basic math operation on numbers
         MinObject.number.
                 slot("+", new Method() {
                     public MinObject activate(Call call) throws MinException {
@@ -233,6 +238,7 @@ public class Bootstrap {
                 });
 
         // Array
+        // Basic methods on array
         MinObject.array.
                 slot("initialize", new Method() {
                     public MinObject activate(Call call) throws MinException {
