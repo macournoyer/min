@@ -44,7 +44,6 @@ public class Operator {
 
     }
 
-    ;
 
     private static void defineOperators(int precedence, int arity, boolean rightToLeft, String... names) {
         for (String name : names) {
