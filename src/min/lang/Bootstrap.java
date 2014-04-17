@@ -124,7 +124,13 @@ public class Bootstrap {
                         System.out.print(call.evalArg(0).getData());
                         return call.receiver;
                     }
-                });
+                }).
+                slot("-", new Method() {
+                    public MinObject activate(Call call) throws MinException {
+                        return MinObject.newNumber(- call.evalArg(0).getDataAsNumber());
+                    }
+                })
+        ;
 
         // Object
         MinObject.object.

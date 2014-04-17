@@ -20,7 +20,7 @@ describe("false"):
   it("is not 0"):
     false should != 0
   it("is not -1"):
-    false should =! 0-1 #Ugly workaround because -1 doesn't work
+    false should =! -1 #Ugly workaround because -1 doesn't work
 
 describe("nil"):
   it("is nil"):
@@ -34,4 +34,4 @@ describe("nil"):
   it("is not 0"):
     nil should != 0
   it("is not -1"):
-    nil should != 0-1 #Ugly workaround too, see above
+    nil should != -1 #Ugly workaround too, see above

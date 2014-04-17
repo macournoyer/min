@@ -16,7 +16,6 @@ public class Scanner {
     Stack<Message> argStack = new Stack<Message>();
     Stack<Integer> indentStack = new Stack<Integer>();
 
-
     boolean inBlock = false;
     boolean singleBlock = false;
     boolean debug = false;
@@ -136,9 +135,11 @@ public class Scanner {
             System.out.println(input);
             System.out.println("===============");
         }
-    
+
+        // RAGEL STUFF HERE TOO
         %% write init;
         %% write exec;
+        ////
 
         if (cs == Scanner_error || p != pe)
             throw new ParsingException(String.format("Syntax error at line %d around '%s...'", line, input.substring(p, Math.min(p+5, pe))));

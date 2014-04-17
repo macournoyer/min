@@ -18,7 +18,6 @@ public class Scanner {
     Stack<Message> argStack = new Stack<Message>();
     Stack<Integer> indentStack = new Stack<Integer>();
 
-
     boolean inBlock = false;
     boolean singleBlock = false;
     boolean debug = false;
@@ -31,7 +30,7 @@ public class Scanner {
 // RAGEL STUFF BELOW
 
     
-// line 35 "src/min/lang/Scanner.java"
+// line 34 "src/min/lang/Scanner.java"
 private static byte[] init__Scanner_actions_0()
 {
 	return new byte [] {
@@ -201,7 +200,7 @@ static final int Scanner_error = 0;
 static final int Scanner_en_main = 14;
 
 
-// line 121 "src/min/lang/Scanner.rl"
+// line 120 "src/min/lang/Scanner.rl"
 
 
     // END OF RAGEL STUFF
@@ -220,7 +219,8 @@ static final int Scanner_en_main = 14;
             System.out.println(input);
             System.out.println("===============");
         }
-    
+
+        // RAGEL STUFF HERE TOO
         
 // line 226 "src/min/lang/Scanner.java"
 	{
@@ -325,11 +325,11 @@ case 3:
 			switch ( _Scanner_actions[_acts++] )
 			{
 	case 0:
-// line 34 "src/min/lang/Scanner.rl"
+// line 33 "src/min/lang/Scanner.rl"
 	{ mark = p; }
 	break;
 	case 1:
-// line 36 "src/min/lang/Scanner.rl"
+// line 35 "src/min/lang/Scanner.rl"
 	{ line++; }
 	break;
 	case 4:
@@ -337,38 +337,38 @@ case 3:
 	{te = p+1;}
 	break;
 	case 5:
-// line 60 "src/min/lang/Scanner.rl"
+// line 59 "src/min/lang/Scanner.rl"
 	{act = 1;}
 	break;
 	case 6:
-// line 68 "src/min/lang/Scanner.rl"
+// line 67 "src/min/lang/Scanner.rl"
 	{act = 2;}
 	break;
 	case 7:
-// line 73 "src/min/lang/Scanner.rl"
+// line 72 "src/min/lang/Scanner.rl"
 	{act = 3;}
 	break;
 	case 8:
-// line 94 "src/min/lang/Scanner.rl"
+// line 93 "src/min/lang/Scanner.rl"
 	{act = 4;}
 	break;
 	case 9:
-// line 94 "src/min/lang/Scanner.rl"
+// line 93 "src/min/lang/Scanner.rl"
 	{te = p+1;{
             emptyIndentStack();
             pushTerminator(getSlice(ts, te));
         }}
 	break;
 	case 10:
-// line 104 "src/min/lang/Scanner.rl"
+// line 103 "src/min/lang/Scanner.rl"
 	{te = p+1;{ pushMessage(new Message(getSlice(ts, te), filename, line, MinObject.newString(getSlice(ts + 1, te - 1)))); }}
 	break;
 	case 11:
-// line 106 "src/min/lang/Scanner.rl"
+// line 105 "src/min/lang/Scanner.rl"
 	{te = p+1;{ pushMessage(new Message(getSlice(ts, te), filename, line)); }}
 	break;
 	case 12:
-// line 113 "src/min/lang/Scanner.rl"
+// line 112 "src/min/lang/Scanner.rl"
 	{te = p+1;{
             if (argStack.empty())
                 throw new ParsingException("Unmatched closing parenthesis at line " + line);
@@ -376,7 +376,7 @@ case 3:
         }}
 	break;
 	case 13:
-// line 60 "src/min/lang/Scanner.rl"
+// line 59 "src/min/lang/Scanner.rl"
 	{te = p;p--;{
             int indent = (te - mark) / 2;
             // creating new block
@@ -387,7 +387,7 @@ case 3:
         }}
 	break;
 	case 14:
-// line 68 "src/min/lang/Scanner.rl"
+// line 67 "src/min/lang/Scanner.rl"
 	{te = p;p--;{
             startSingleBlock();
             pushIndent(0);
@@ -395,7 +395,7 @@ case 3:
         }}
 	break;
 	case 15:
-// line 73 "src/min/lang/Scanner.rl"
+// line 72 "src/min/lang/Scanner.rl"
 	{te = p;p--;{
             int indent = (te - mark) / 2;
             if (!singleBlock && indent > currentIndent) { // indent in same block
@@ -419,30 +419,30 @@ case 3:
         }}
 	break;
 	case 16:
-// line 94 "src/min/lang/Scanner.rl"
+// line 93 "src/min/lang/Scanner.rl"
 	{te = p;p--;{
             emptyIndentStack();
             pushTerminator(getSlice(ts, te));
         }}
 	break;
 	case 17:
-// line 100 "src/min/lang/Scanner.rl"
+// line 99 "src/min/lang/Scanner.rl"
 	{te = p;p--;}
 	break;
 	case 18:
-// line 101 "src/min/lang/Scanner.rl"
+// line 100 "src/min/lang/Scanner.rl"
 	{te = p;p--;}
 	break;
 	case 19:
-// line 105 "src/min/lang/Scanner.rl"
+// line 104 "src/min/lang/Scanner.rl"
 	{te = p;p--;{ pushMessage(new Message(getSlice(ts, te), filename, line, MinObject.newNumber(Integer.parseInt(getSlice(ts, te))))); }}
 	break;
 	case 20:
-// line 106 "src/min/lang/Scanner.rl"
+// line 105 "src/min/lang/Scanner.rl"
 	{te = p;p--;{ pushMessage(new Message(getSlice(ts, te), filename, line)); }}
 	break;
 	case 21:
-// line 107 "src/min/lang/Scanner.rl"
+// line 106 "src/min/lang/Scanner.rl"
 	{te = p;p--;{
             if (message == null) pushMessage(new Message("", filename, line));
             argStack.push(message);
@@ -450,11 +450,11 @@ case 3:
         }}
 	break;
 	case 22:
-// line 112 "src/min/lang/Scanner.rl"
+// line 111 "src/min/lang/Scanner.rl"
 	{te = p;p--;{ message = null; }}
 	break;
 	case 23:
-// line 68 "src/min/lang/Scanner.rl"
+// line 67 "src/min/lang/Scanner.rl"
 	{{p = ((te))-1;}{
             startSingleBlock();
             pushIndent(0);
@@ -462,18 +462,18 @@ case 3:
         }}
 	break;
 	case 24:
-// line 94 "src/min/lang/Scanner.rl"
+// line 93 "src/min/lang/Scanner.rl"
 	{{p = ((te))-1;}{
             emptyIndentStack();
             pushTerminator(getSlice(ts, te));
         }}
 	break;
 	case 25:
-// line 100 "src/min/lang/Scanner.rl"
+// line 99 "src/min/lang/Scanner.rl"
 	{{p = ((te))-1;}}
 	break;
 	case 26:
-// line 107 "src/min/lang/Scanner.rl"
+// line 106 "src/min/lang/Scanner.rl"
 	{{p = ((te))-1;}{
             if (message == null) pushMessage(new Message("", filename, line));
             argStack.push(message);
@@ -481,7 +481,7 @@ case 3:
         }}
 	break;
 	case 27:
-// line 112 "src/min/lang/Scanner.rl"
+// line 111 "src/min/lang/Scanner.rl"
 	{{p = ((te))-1;}{ message = null; }}
 	break;
 	case 28:
@@ -578,6 +578,7 @@ case 5:
 	}
 
 // line 142 "src/min/lang/Scanner.rl"
+        ////
 
         if (cs == Scanner_error || p != pe)
             throw new ParsingException(String.format("Syntax error at line %d around '%s...'", line, input.substring(p, Math.min(p+5, pe))));
