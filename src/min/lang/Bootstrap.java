@@ -201,7 +201,18 @@ public class Bootstrap {
                     public MinObject activate(Call call) throws MinException {
                         return MinObject.newNumber(call.receiver.getDataAsString().length());
                     }
-                });
+                }).
+                slot("toUpper", new Method() {
+                    public MinObject activate(Call call) throws MinException {
+                        return MinObject.newString(call.receiver.getDataAsString().toUpperCase());
+                    }
+                }).
+                slot("toLower", new Method() {
+                    public MinObject activate(Call call) throws MinException {
+                        return MinObject.newString(call.receiver.getDataAsString().toLowerCase());
+                    }
+                })
+        ;
 
         // Number
         // Basic math operation on numbers
