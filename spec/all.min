@@ -1,3 +1,4 @@
 require("spec/boolean_spec")
 require("spec/guard_spec")
 require("spec/message_spec")
+require("spec/string_spec")

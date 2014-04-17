@@ -1,0 +1,11 @@
+require("spec")
+
+describe("string"):
+  it("toUpper is STRING"):
+    "string".toUpper == "STRING"
+  it("size is 6"):
+    "string".size == 6
+
+describe("STRING"):
+  it("toLower is string"):
+    "STRING".toLower == "string"
