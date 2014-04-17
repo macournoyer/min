@@ -125,7 +125,7 @@ public class Bootstrap {
                         return call.receiver;
                     }
                 }).
-                slot("-", new Method() {
+                slot("-", new Method() {    /* negative numbers! woot woot!! */
                     public MinObject activate(Call call) throws MinException {
                         return MinObject.newNumber(- call.evalArg(0).getDataAsNumber());
                     }
