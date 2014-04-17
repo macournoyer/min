@@ -3,6 +3,9 @@ package min.lang;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+/* This stuff is mostly used and called by the bootstrap
+   to create the base object, lobby & co
+ */
 public class MinObject {
 
     static public MinObject base;
