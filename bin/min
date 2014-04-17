@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-CLASSPATH=classes java min.main "$@"
+CLASSPATH=classes java min.Min "$@"
