@@ -25,6 +25,7 @@ public class Min {
             if (args[i].equals("-e")) code = args[++i];
             else if (args[i].equals("-d")) debug = true;
             else if (args[i].equals("-h")) usage();
+            else if (args[i].equals("--help")) usage();
             else code = File.read(file = args[i]);
         }
 
@@ -43,7 +44,7 @@ public class Min {
     }
 
     /* Print help and exit */
-    public static void usage() {
+    private static void usage() {
         System.out.println("usage: min [-d] < -e code | file.min >");
         System.exit(1);
     }

@@ -22,7 +22,7 @@ public class MinObject {
     static public MinObject _false;
 
     ArrayList<MinObject> protos;
-    HashMap<String, MinObject> slots;
+    private HashMap<String, MinObject> slots;
     Object data;
 
     public MinObject(MinObject proto, Object data) {

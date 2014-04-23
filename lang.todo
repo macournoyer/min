@@ -3,4 +3,5 @@
 - handle exceptions
 - string interpolation in "... #{...} ..."
 - implement `return`
-- fix negative number
+- fix negative number : now stuff like -3 is working as expected
+                        But -(2+3) isn't, something is still wrong somewhere :(
