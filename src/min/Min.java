@@ -25,6 +25,7 @@ public class Min {
             if (args[i].equals("-e")) code = args[++i];
             else if (args[i].equals("-d")) debug = true;
             else if (args[i].equals("-h")) usage();
+            else if (args[i].equals("--help")) usage();
             else code = File.read(file = args[i]);
         }
 
