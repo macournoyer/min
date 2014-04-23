@@ -7,11 +7,11 @@ import java.util.ArrayList;
 public class Message extends MinObject {
 
     String name;
-    String file;
-    int line;
+    private String file;
+    private int line;
     Message next, prev;
     ArrayList<Message> args;
-    MinObject cachedResponse;
+    private MinObject cachedResponse;
     Operator operator;
 
     public Message(String name, String file, int line, MinObject cachedResponse) {

@@ -2,8 +2,8 @@ package min.lang;
 
 public class Method extends MinObject {
 
-    Message message;
-    String[] argNames;
+    private Message message;
+    private String[] argNames;
 
     public Method() {
         super(MinObject.method);

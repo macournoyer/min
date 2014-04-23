@@ -4,10 +4,10 @@ import java.util.HashMap;
 
 public class Operator {
 
-    String name;
+    private String name;
     int precedence;
-    int arity;
-    boolean rightToLeft;
+    private int arity;
+    private boolean rightToLeft;
 
     static HashMap<String, Operator> table = new HashMap<String, Operator>();
 
