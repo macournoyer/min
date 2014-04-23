@@ -43,7 +43,7 @@ public class Min {
     }
 
     /* Print help and exit */
-    public static void usage() {
+    private static void usage() {
         System.out.println("usage: min [-d] < -e code | file.min >");
         System.exit(1);
     }
