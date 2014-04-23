@@ -1,14 +1,13 @@
 package min.lang;
 
-//import min.lang.ParsingException;
-//import java.util.Queue;
-//import java.util.Stack;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-// The fancy message shuffler.
-// Based on the Shunting yard algo.
+/* The fancy message shuffler.
+ *  Based on the Shunting yard algorithm
+ *  see : http://en.wikipedia.org/wiki/Shunting-yard_algorithm
+ */
 public class Shuffler {
 
     public void shuffleAllInPlace(ArrayList<Message> messages) throws ParsingException {
