@@ -1,11 +1,9 @@
 package min;
 
-import min.lang.MinObject;
-import min.lang.Message;
-import min.lang.File;
-import min.lang.Bootstrap;
+import jline.ConsoleReader;
+import min.lang.*;
 
-import java.util.Scanner;
+import java.io.IOException;
 
 /*  Simplest of the simple stuff
     Entry point for main :
@@ -16,11 +14,14 @@ import java.util.Scanner;
 public class Min {
 
     /* main ! duh ! */
+
+    public static boolean debug = false;
+
     public static void main(String[] args) throws Exception {
 
         String code = null;
         String file = "<eval>";
-        boolean debug = false;
+        Boolean launchRepl = false;
 
         /* parsing args */
         for (int i = 0; i < args.length; i++) {
@@ -28,16 +29,16 @@ public class Min {
             else if (args[i].equals("-d")) debug = true;
             else if (args[i].equals("-h")) usage();
             else if (args[i].equals("--help")) usage();
-            else if (args[i].equals("-x")) repl();
+            else if (args[i].equals("-x")) launchRepl = true;
             else code = File.read(file = args[i]);
-        }
-
-        if (code == null) {
-            usage();
         }
 
         /* Run bootstrap */
         new Bootstrap().run();
+
+        if(launchRepl) repl();
+        if (code == null) usage();
+
 
         /* run the scanner & eval code */
         Message message = Message.parse(code, file);
@@ -49,25 +50,37 @@ public class Min {
     /* Print help and exit */
     private static void usage() {
         System.out.println("usage: min [-d] < -e code | file.min >");
-        System.out.println("       -x REPL (not implemented yet)");
+        System.out.println("       -x REPL (experimental)");
         System.exit(1);
     }
 
-    private static void repl() {
+    private static void repl() throws MinException, IOException {
         Boolean LoopAgain = true;
-        Scanner scanner = new Scanner(System.in);
-        String input;
+        ConsoleReader console = new ConsoleReader();
+        console.setDefaultPrompt("min> ");
 
-        System.out.println("REPL not implemented yet");
-        System.out.println("------------------------");
+        String input;
+        Message message;
+
+        System.out.println("REPL (experimental)");
+        System.out.println("-------------------");
         System.out.println("Type 'bye' to exit\n");
 
         while(LoopAgain) {
-            System.out.print("min> ");
-            input = scanner.nextLine();
-            System.out.println(input);
-            if(input.equals("bye")) LoopAgain = false;
+            input = console.readLine();
+            if(input.equals("bye"))  break;
+
+            try {
+                message = Message.parse(input, "<eval>");
+                if(debug) System.out.println("debug >> " + message.fullName());
+                System.out.print(">> ");
+                message.evalOn(MinObject.lobby);
+                System.out.println("");
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
+
         System.out.println("Bye!\n");
         System.exit(1);
     }

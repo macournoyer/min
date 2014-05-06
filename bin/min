@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-CLASSPATH=classes java min.Min "$@"
+
+CLASSPATH=classes:bin/jline-1.0.jar java min.Min "$@"
