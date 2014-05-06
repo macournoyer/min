@@ -13,11 +13,13 @@ import java.util.Scanner;
 public class Min {
 
     /* main ! duh ! */
+
+    public static boolean debug = false;
+
     public static void main(String[] args) throws Exception {
 
         String code = null;
         String file = "<eval>";
-        boolean debug = false;
 
         /* parsing args */
         for (int i = 0; i < args.length; i++) {
@@ -46,7 +48,7 @@ public class Min {
     /* Print help and exit */
     private static void usage() {
         System.out.println("usage: min [-d] < -e code | file.min >");
-        System.out.println("       -x REPL (not implemented yet)");
+        System.out.println("       -x REPL (experimental)");
         System.exit(1);
     }
 
@@ -58,8 +60,8 @@ public class Min {
 
         new Bootstrap().run();
 
-        System.out.println("REPL not implemented yet");
-        System.out.println("------------------------");
+        System.out.println("REPL (experimental)");
+        System.out.println("-------------------");
         System.out.println("Type 'bye' to exit\n");
 
         while(LoopAgain) {
@@ -70,11 +72,11 @@ public class Min {
 
             try {
                 message = Message.parse(input, "<eval>");
-                System.out.print(input + " > ");
+                if(debug) System.out.println("debug >> " + message.fullName());
+                System.out.print(">> ");
                 message.evalOn(MinObject.lobby);
                 System.out.println("");
             } catch (Exception e) {
-
                 System.out.println(e);
             }
         }
