@@ -58,7 +58,6 @@ public class Min {
 
         new Bootstrap().run();
 
-
         System.out.println("REPL not implemented yet");
         System.out.println("------------------------");
         System.out.println("Type 'bye' to exit\n");
@@ -66,12 +65,20 @@ public class Min {
         while(LoopAgain) {
             System.out.print("min> ");
             input = scanner.nextLine();
-            if(input.equals("bye")) { break; }
-            message = Message.parse(input, "<eval>");
-            System.out.print(input + " > ");
-            message.evalOn(MinObject.lobby);
-            System.out.println("");
+
+            if(input.equals("bye"))  break;
+
+            try {
+                message = Message.parse(input, "<eval>");
+                System.out.print(input + " > ");
+                message.evalOn(MinObject.lobby);
+                System.out.println("");
+            } catch (Exception e) {
+
+                System.out.println(e);
+            }
         }
+
         System.out.println("Bye!\n");
         System.exit(1);
     }
