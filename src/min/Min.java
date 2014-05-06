@@ -1,9 +1,6 @@
 package min;
 
-import min.lang.MinObject;
-import min.lang.Message;
-import min.lang.File;
-import min.lang.Bootstrap;
+import min.lang.*;
 
 import java.util.Scanner;
 
@@ -53,10 +50,14 @@ public class Min {
         System.exit(1);
     }
 
-    private static void repl() {
+    private static void repl() throws MinException {
         Boolean LoopAgain = true;
         Scanner scanner = new Scanner(System.in);
         String input;
+        Message message;
+
+        new Bootstrap().run();
+
 
         System.out.println("REPL not implemented yet");
         System.out.println("------------------------");
@@ -65,8 +66,11 @@ public class Min {
         while(LoopAgain) {
             System.out.print("min> ");
             input = scanner.nextLine();
-            System.out.println(input);
-            if(input.equals("bye")) LoopAgain = false;
+            if(input.equals("bye")) { break; }
+            message = Message.parse(input, "<eval>");
+            System.out.print(input + " > ");
+            message.evalOn(MinObject.lobby);
+            System.out.println("");
         }
         System.out.println("Bye!\n");
         System.exit(1);
