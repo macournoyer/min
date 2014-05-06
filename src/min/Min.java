@@ -1,8 +1,9 @@
 package min;
 
+import jline.ConsoleReader;
 import min.lang.*;
 
-import java.util.Scanner;
+import java.io.IOException;
 
 /*  Simplest of the simple stuff
     Entry point for main :
@@ -20,6 +21,7 @@ public class Min {
 
         String code = null;
         String file = "<eval>";
+        Boolean launchRepl = false;
 
         /* parsing args */
         for (int i = 0; i < args.length; i++) {
@@ -27,16 +29,16 @@ public class Min {
             else if (args[i].equals("-d")) debug = true;
             else if (args[i].equals("-h")) usage();
             else if (args[i].equals("--help")) usage();
-            else if (args[i].equals("-x")) repl();
+            else if (args[i].equals("-x")) launchRepl = true;
             else code = File.read(file = args[i]);
-        }
-
-        if (code == null) {
-            usage();
         }
 
         /* Run bootstrap */
         new Bootstrap().run();
+
+        if(launchRepl) repl();
+        if (code == null) usage();
+
 
         /* run the scanner & eval code */
         Message message = Message.parse(code, file);
@@ -52,22 +54,20 @@ public class Min {
         System.exit(1);
     }
 
-    private static void repl() throws MinException {
+    private static void repl() throws MinException, IOException {
         Boolean LoopAgain = true;
-        Scanner scanner = new Scanner(System.in);
+        ConsoleReader console = new ConsoleReader();
+        console.setDefaultPrompt("min> ");
+
         String input;
         Message message;
-
-        new Bootstrap().run();
 
         System.out.println("REPL (experimental)");
         System.out.println("-------------------");
         System.out.println("Type 'bye' to exit\n");
 
         while(LoopAgain) {
-            System.out.print("min> ");
-            input = scanner.nextLine();
-
+            input = console.readLine();
             if(input.equals("bye"))  break;
 
             try {

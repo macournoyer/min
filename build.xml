@@ -9,7 +9,13 @@
     </target>
 
     <target name="compile" depends="init" description="Compile Java sources.">
+        <path id="external.classpath">
+            <pathelement location="bin/jline-1.0.jar"/>
+        </path>
         <javac srcdir="src" destdir="classes" includeJavaRuntime="yes" debug="true">
+            <classpath>
+                <path refid="external.classpath"/>
+            </classpath>
             <compilerarg value="-Xlint"/>
         </javac>
 
