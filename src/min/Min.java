@@ -77,7 +77,7 @@ public class Min {
                 message.evalOn(MinObject.lobby);
                 System.out.println("");
             } catch (Exception e) {
-                System.out.println(e);
+                System.err.println(e);
             }
         }
 

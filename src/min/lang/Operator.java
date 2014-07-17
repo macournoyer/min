@@ -4,14 +4,13 @@ import java.util.HashMap;
 
 public class Operator {
 
-    private String name;
-    int precedence;
-    private int arity;
-    private boolean rightToLeft;
+    final int precedence;
+    private final int arity;
+    private final boolean rightToLeft;
 
-    static HashMap<String, Operator> table = new HashMap<String, Operator>();
+    static final HashMap<String, Operator> table = new HashMap<String, Operator>();
 
-    static Operator nullOperator = new Operator(null, 0, 0, false);
+    static final Operator nullOperator = new Operator(null, 0, 0, false);
 
     // Declare operators
     static {
@@ -40,7 +39,7 @@ public class Operator {
         defineOperators(precedence++, 1, true, "!", "not",
                 "~", "?",
                 "-@", "+@", "*@", "&@", "-");
-        defineOperators(precedence++, 0, false, ".");
+        defineOperators(precedence, 0, false, ".");
 
     }
 
@@ -52,7 +51,7 @@ public class Operator {
     }
 
     public Operator(String name, int precedence, int arity, boolean rightToLeft) {
-        this.name = name;
+        //String name1 = name;
         this.precedence = precedence;
         this.arity = arity;
         this.rightToLeft = rightToLeft;

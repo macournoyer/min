@@ -1,5 +1,6 @@
 package min.lang;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.ArrayList;
 
@@ -21,8 +22,8 @@ public class MinObject {
     static public MinObject _true;
     static public MinObject _false;
 
-    ArrayList<MinObject> protos;
-    private HashMap<String, MinObject> slots;
+    final ArrayList<MinObject> protos;
+    private final HashMap<String, MinObject> slots;
     Object data;
 
     public MinObject(MinObject proto, Object data) {
@@ -77,7 +78,7 @@ public class MinObject {
         for (MinObject proto : protos) {
             if (proto.hasSlot(name)) return proto.getSlot(name);
         }
-        if (name == "kind") throw new SlotNotFound("Slot '" + name + "' not found on unknown object");
+        if (name.equals("kind")) throw new SlotNotFound("Slot '" + name + "' not found on unknown object");
         throw new SlotNotFound("Slot '" + name + "' not found on " + kind());
     }
 
@@ -188,7 +189,7 @@ public class MinObject {
 
     public static MinObject newArray(MinObject[] items) {
         ArrayList<MinObject> array = new ArrayList<MinObject>();
-        for (MinObject o : items) array.add(o);
+        Collections.addAll(array, items);
         return newArray(array);
     }
 
