@@ -21,7 +21,7 @@ public class Min {
 
         String code = null;
         String file = "<eval>";
-        Boolean launchRepl = false;
+        Boolean launchREPL = false;
 
         /* parsing args */
         for (int i = 0; i < args.length; i++) {
@@ -29,14 +29,14 @@ public class Min {
             else if (args[i].equals("-d")) debug = true;
             else if (args[i].equals("-h")) usage();
             else if (args[i].equals("--help")) usage();
-            else if (args[i].equals("-x")) launchRepl = true;
+            else if (args[i].equals("-x")) launchREPL = true;
             else code = File.read(file = args[i]);
         }
 
         /* Run bootstrap */
         new Bootstrap().run();
 
-        if(launchRepl) repl();
+        if(launchREPL) repl();
         if (code == null) usage();
 
 
@@ -55,7 +55,7 @@ public class Min {
     }
 
     private static void repl() throws MinException, IOException {
-        Boolean LoopAgain = true;
+        //Boolean LoopAgain = true;
         ConsoleReader console = new ConsoleReader();
         console.setDefaultPrompt("min> ");
 
@@ -66,7 +66,7 @@ public class Min {
         System.out.println("-------------------");
         System.out.println("Type 'bye' to exit\n");
 
-        while(LoopAgain) {
+        while(true) {
             input = console.readLine();
             if(input.equals("bye"))  break;
 
