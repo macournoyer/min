@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 public class Call extends MinObject {
 
-    static public MinObject object;
+    // --Commented out by Inspection (17/07/2014 14:20):static public MinObject object;
 
-    ArrayList<Message> args;
+    final ArrayList<Message> args;
     MinObject receiver;
-    MinObject base;
-    Message message;
+    final MinObject base;
+    final Message message;
 
     public Call(Message message, MinObject receiver, MinObject base, ArrayList<Message> args) {
         super(MinObject.call);

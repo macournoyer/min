@@ -6,12 +6,12 @@ import java.util.ArrayList;
 
 public class Message extends MinObject {
 
-    String name;
-    private String file;
-    private int line;
+    final String name;
+    private final String file;
+    private final int line;
     Message next, prev;
     ArrayList<Message> args;
-    private MinObject cachedResponse;
+    private final MinObject cachedResponse;
     Operator operator;
 
     public Message(String name, String file, int line, MinObject cachedResponse) {
