@@ -38,5 +38,5 @@ Oh, and not too slow (running on the JVM).
 ## License
 MIT License, (c) macournoyer
 
-## Status on tarvis-ci.org
+## Status on travis-ci.org
 [![Build Status](https://travis-ci.org/ker2x/min.svg?branch=master)](https://travis-ci.org/ker2x/min)
